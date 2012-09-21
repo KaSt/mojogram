@@ -1,0 +1,106 @@
+<div class="palm-hasheader">
+	<div class="palm-header" id="headerTitle">
+		Preferences
+	</div>
+</div>
+
+<div class="palm-header-spacer"></div>
+
+<div class="palm-group">
+	<div class="palm-group-title" id="personGroupTitle">
+		Persons
+	</div>
+	<div class="palm-list">
+		<div class="palm-row first" x-mojo-touch-feedback="delayed">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ListSelector" id="personSoundSelector"></div>
+			</div>
+		</div>
+		<div class="palm-row" x-mojo-tap-highlight="momentary" id="personTonePathRow">
+			<div class="palm-row-wrapper">
+				<div class="label right" id="personToneLabel">Tone</div>				
+				<div class="title left" id="personTonePath"></div>
+			</div>
+		</div>		
+		<div class="palm-row">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="personVibrateToggle"></div>
+				<div class="title left truncating-text" id="personVibrateLabel">
+					Vibrate
+				</div>
+			</div>
+		</div>
+		<div class="palm-row">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="personBannerToggle"></div>
+				<div class="title left truncating-text" id="personBannerLabel">
+					Show Banner
+				</div>
+			</div>
+		</div>
+		<div class="palm-row last">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="personBlinkToggle"></div>
+				<div class="title left truncating-text" id="personBlinkLabel">
+					Light Bar
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="palm-group">
+	<div class="palm-group-title" id="groupGroupTitle">
+		Groups
+	</div>
+	<div class="palm-list">
+		<div class="palm-row first" x-mojo-touch-feedback="delayed">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ListSelector" id="groupSoundSelector"></div>
+			</div>
+		</div>
+		<div class="palm-row" id="groupTonePathRow" x-mojo-tap-highlight="momentary">
+			<div class="palm-row-wrapper" id="groupTonePathRow">
+				<div class="label right" id="groupToneLabel">Tone</div>
+				<div class="title left" id="groupTonePath"></div>
+			</div>
+		</div>			
+		<div class="palm-row">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="groupVibrateToggle"></div>
+				<div class="title left truncating-text" id="groupVibrateLabel">
+					Vibrar
+				</div>
+			</div>
+		</div>
+		<div class="palm-row">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="groupBannerToggle"></div>
+				<div class="title left truncating-text" id="groupBannerLabel">
+					Show Banner
+				</div>
+			</div>
+		</div>
+		<div class="palm-row last">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ToggleButton" id="groupBlinkToggle"></div>
+				<div class="title left truncating-text" id="groupBlinkLabel">
+					Light Bar
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="palm-group">
+	<div class="palm-group-title" id="bgGroupTitle">
+		Background
+	</div>
+	<div class="palm-list">
+		<div class="palm-row single" x-mojo-touch-feedback="delayed">
+			<div class="palm-row-wrapper">
+				<div x-mojo-element="ListSelector" id="bgTimeoutSelector"></div>
+			</div>
+		</div>
+	</div>
+</div>

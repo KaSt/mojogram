@@ -1,0 +1,444 @@
+/***
+ *
+ * Message chat styles
+ *
+ */
+
+.chat-entry {
+	background: none;
+}
+
+.chat-entry .palm-row-wrapper {
+	position: relative; /* Set positioning context for avatar */
+	padding: 2px 2px;
+}
+
+.chat-entry.their-chat .chat-balloon {
+	border-width: 5px;
+	-webkit-border-image: url(../images/chat-balloon-left.png) 5 5 5 5 stretch stretch;
+}
+
+.chat-entry.my-chat .chat-balloon {
+	border-width: 5px;
+	-webkit-border-image: url(../images/chat-balloon-right.png) 5 5 5 5 stretch stretch;
+}
+
+.chat-entry.notification .chat-balloon {
+	border-width: 5px;	
+	border-style: solid;
+	background-color: #FFFACD;
+	border-color: #FFFACD;
+	border-radius: 20px;
+}
+
+
+.chat-entry.chatRow .chat-balloon-wrapper {
+	margin: 0 10px 0 0;
+}
+
+.chat-entry .title.truncating-text {
+	padding: 0;
+	max-width: 170px;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: normal;
+	color: red;
+}
+
+.chat-entry .message-container {
+	width: auto;
+}
+
+.their-chat .message-container {
+	width: auto;
+}
+
+.notification .message-container {
+	width: auto;
+}
+
+.my-chat .message-container {
+	width: auto;
+}
+
+.chat-entry .chat-balloon {
+	min-height: 10px;
+}
+
+.palm-row.chat-entry {
+	min-height: 10px;
+}
+
+.chat-entry .chat-balloon .chat-balloon-wrapper {
+	margin: -10px -10px -14px -10px;
+}
+
+.chat-entry.chatRow .chat-balloon-wrapper {
+	margin: 0 0 0 0;
+}
+
+.my-chat .chat-balloon-wrapper, .their-chat .chat-balloon-wrapper, .notification .chat-balloon-wrapper {
+	padding: 1px 0;
+	font-size: 16px;
+	word-break: break-all;
+	word-break: break-word;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+}
+
+.notification .chat-balloon-wrapper {
+	padding: 1px 0;
+	font-size: 16px;
+	word-break: break-all;
+	word-break: break-word;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+}
+
+.notification .chat-balloon-wrapper {
+	padding: 0px 0;
+	font-size: 14px;
+}
+
+.chat-entry .message-body {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-pack: center;
+	line-height: 1em;
+}
+
+.notification .message-body .messageText {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	text-align: center;
+	font-style: italic;
+}
+
+.my-chat .message-body .messageText {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: end;
+	-webkit-box-align: center;
+	text-align: right;
+	font-style: normal;
+}
+
+.their-chat .message-body .messageText {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: start;
+	-webkit-box-align: center;	
+	text-align: left;
+	font-style: normal;
+}
+
+
+.info-container {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: start;
+}
+
+.notification .message-body .info-container {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: center;
+}
+
+.my-chat .message-body .info-container {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: end;
+}
+
+.their-chat .message-body .info-container {
+ 	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: start;
+}
+
+.text-info {
+	color: gray;
+	font-size: small;
+	font-style: oblique;
+}
+
+.status-icon {
+	width: 25px;
+	height: 16px;
+}
+
+.status-icon.none {
+	display: none;	
+}
+
+
+.status-icon.received-target {
+	background: url(../images/status-received-target.png) center center no-repeat;
+}
+
+.status-icon.received-server {
+	background: url(../images/status-received-server.png) center center no-repeat;
+}
+
+.status-icon.sending {
+	background: url(../images/status-sending.png) center center no-repeat;
+}
+
+.status-icon.media-downloading {
+	background: url(../images/status-downloading.png) center center no-repeat;
+}
+
+.status-icon.media-downloaded {
+	background: url(../images/status-downloaded.png) center center no-repeat;
+}
+
+.status-icon.media-uploading {
+	background: url(../images/status-uploading.png) center center no-repeat;
+}
+
+.status-icon.server-bounce {
+	background: url(../images/status-error.png) center center no-repeat;
+}
+
+
+
+
+/***************************
+ *
+ */
+.filter-field-container-height {
+	height: 96px;
+}
+
+.list-unreadfalse {
+	display: none;
+}
+
+.list-unreadtrue {
+	position: relative;
+	display: inline;
+	text-align: center;
+	height: 20px;
+	width: 30px;
+	line-height: 50px;
+	top: 2px;
+	padding: 1px 1px 2px;
+	border-width: 10px 10px;
+	-webkit-border-image: url(../images/dashboard-unread.png) 0 10 0 10 stretch stretch;
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.menu-icon {
+	width: 40px;
+	height: 40px;
+	margin-top: 10px;
+}
+
+.chat-list-icon {
+	width: 32px;
+	height: 32px;
+	margin-top: 2px;
+}
+
+.chat-list-icon.person-icon {
+	background-image: url(../images/person-icon.png);
+}
+
+.chat-list-icon.group-icon {
+	background-image: url(../images/group-icon.png);
+}
+
+.menu-icon.Chats-icon {
+	background-image: url(../images/chat-icon.png);
+}
+
+
+.menu-icon.Contacts-icon {
+	background-image: url(../images/contact-icon.png);
+}
+
+.menu-icon.Preferences-icon {
+	background-image: url(../images/preferences-icon.png);
+}
+
+
+.mojowhatsup-icon {
+	background-image: url(../images/mojowhatsup48.png);
+}
+
+.list-unread-container {
+	text-align: right;
+}
+
+.list-unread-container .icon {
+	width: auto;
+	height: auto;
+}
+
+.scene-footer-spacer {
+	padding-bottom: 65px;
+}
+
+.scene-footer {
+	position: fixed;
+	font-size: 12pt;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	border-width: 35px 0px 0px 0px;
+	-webkit-palm-mouse-target: ignore;
+}
+.scene-footer-wrapper {
+	margin-top: -10px;
+}
+
+.stuck .sendButton {
+	width: 48px;
+	padding: 0;
+	margin: 0px;
+	height: 48px;
+	position: absolute;
+	bottom: 6px;
+	right: 6px;
+}
+
+.palm-menu-icon.emoticon {
+	background-image: url(../images/emoticon.png);
+}
+
+.stuck .emoticonButton {
+	width: 48px;
+	padding: 0;
+	margin: 0px;
+	height: 48px;
+	position: absolute;
+	bottom: 6px;
+	right: 6px;
+}
+
+#emoticon-Button.touchpad {
+	width: 100px !important;
+}
+
+.messageTextWidget {
+	overflow: hidden;
+	max-height: 220px;
+	font-size: 18px;
+}
+
+.grid-layout .palm-list .palm-row {
+	clear: none;
+	float: left;
+	height: 53px;
+	width: 53px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+}
+
+.grid-layout .palm-list .palm-row.selected {
+	width: 53px;
+	height: 53px;
+	background: none;
+	margin-right: 0px;
+}
+
+.people-emoji {
+	background-image: url(../images/emoji/emoji-E415.png);
+}
+
+.places-emoji {
+	background-image: url(../images/emoji/emoji-E036.png);
+}
+
+.nature-emoji {
+	background-image: url(../images/emoji/emoji-E04A.png);
+}
+
+.events-emoji {
+	background-image: url(../images/emoji/emoji-E325.png);
+}
+
+.symbols-emoji {
+	background-image: url(../images/emoji/emoji-E210.png);
+}
+
+.preview-image {
+	margin-right: 10px;
+	width: 80px;
+	height: 64px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}	
+
+.preview-image.image-custom {
+	border-style: solid;
+	border-width: 5px;
+	border-radius: 15px;
+	border-color: white;
+}
+
+.preview-image.image-default {
+	width: 60px;
+	height: 50px;
+	background-image: url(../images/preview-image.png);
+}
+
+.preview-image.audio-default {
+	width: 60px;
+	height: 50px;	
+	background-image: url(../images/preview-audio.png);
+}
+
+.preview-image.video-default {
+	width: 60px;
+	height: 50px;	
+	background-image: url(../images/preview-video.png);
+}
+
+.preview-image.location-default {
+	width: 60px;
+	height: 50px;	
+	background-image: url(../images/preview-location.png);
+}
+
+.preview-image.contact-default {
+	width: 60px;
+	height: 50px;	
+	background-image: url(../images/preview-contact.png);
+}
+
+.subject-wrapper {
+   	display: -webkit-box;
+   -webkit-box-orient:horizontal;
+}
+
+.subject-wrapper .textfield-subject {
+  	-webkit-box-flex: 1;
+  	width:auto;
+}
+
+.palm-button.emojibutton-subject {
+	width: 40px;
+	height: 40px;
+}
+
+.icon.emojibutton-icon
+{
+	margin-left: -10px;
+	margin-top: -5px;
+	background: url(../images/emoticon.png) center center no-repeat;	
+}
+
+.palm-header .palm-header-wrapper {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: center;    
+}
+ 
+

@@ -1,0 +1,74 @@
+<div class="palm-hasheader">
+	<div class="palm-header" id="headerTitle">
+		Group
+	</div>
+</div>
+
+<div class="palm-header-spacer"></div>
+
+<div class="palm-group">
+	<div class="palm-group-title" id="subjectTitle">
+		Subject
+	</div>	
+	<div class="palm-list">
+		<div class='palm-row single'>
+			<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+				<div class="title subject-wrapper">
+					<div x-mojo-element="TextField" id="textFieldSubject" class="textfield-subject"></div>
+					<div class="palm-button secondary emojibutton-subject" id="emojiButton">
+						<div class="palm-button-wrapper">
+							<div class="icon emojibutton-icon"></div>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="palm-group" id="infoGroup">
+	<div class="palm-group-title" id="groupInfoTitle">
+		Group info
+	</div>	
+	<div class="palm-list">
+		<div class="palm-row first">
+			<div class="palm-row-wrapper">
+				<div class="label" id="ownerLabel">
+					Owner
+				</div>
+				<div class="title truncating-text" style="font-size: 16px" id="ownerValue"></div>
+			</div>
+		</div>
+		<div class="palm-row last">
+			<div class="palm-row-wrapper textfield-group">
+				<div class="label" id="creationLabel">
+					Creation date
+				</div>
+				<div class="title" style="font-size: 16px" id="creationValue"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="palm-group" id="listGroup">
+	<div class="palm-group-title" id="groupParticipantsTitle">
+		Group participants
+	</div>
+	<div class="palm-list">
+		<div class="palm-row first">
+			<div class="palm-row-wrapper">
+				<div class="title truncating-text" id="ownerListValue"></div>
+			</div>
+		</div>		
+		<div x-mojo-element="List" id="participantsList"></div>
+	</div>
+</div>
+
+<div class="palm-inline-error" style="display:none" id="error_message">
+	<div class="error-message" id="errorMessageText"></div>
+</div>
+
+<div x-mojo-element="Button" id="sendChangesButton"></div>
+<div x-mojo-element="Button" id="removeGroupButton"></div>
+
+
