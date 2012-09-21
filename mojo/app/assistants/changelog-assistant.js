@@ -1,15 +1,10 @@
 function ChangelogAssistant() {
 	this.changelog = [
-        {
-            version:"v1.0.1",
-            changes: [
-                "Max phone length corrected in account configuracion."
-            ]
-        },	
 		{
 			version:"v1.0.0",
 			changes: [
-				"Public release!"
+				"Public release!",
+				"Max phone length corrected in account configuracion."
 			]
 		}
 	];
