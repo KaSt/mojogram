@@ -75,7 +75,6 @@ AccountAssistant.prototype.setup = function() {
 		autofocus : true,
 		autoReplace : false,
 		modifierState : Mojo.Widget.NumLock,
-		maxLength : 9,
 		charsAllow : this.onlyNum.bind(this)
 	}, this.model = {
 		value : pn
