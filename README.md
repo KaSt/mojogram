@@ -1,5 +1,5 @@
-Wazapp
-======
+MojoWhatsup
+===========
 
 MojoWhatsup is an IM application for Webos that allows you to chat with your Whatsapp friends
 
