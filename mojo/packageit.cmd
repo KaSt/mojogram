@@ -1,4 +1,2 @@
-set STAGING_DIR=../whatsappwebos-sdk
-
-
+set STAGING_DIR=../mojo
 palm-package %STAGING_DIR%
