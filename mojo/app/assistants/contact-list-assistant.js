@@ -15,21 +15,13 @@ ContactListAssistant.prototype.setup = function() {
         items : []
     };
     if (_mainAssistant != null && _appAssistant.isTouchPad()) {
-        var menuModel = {
-            visible : true,
-            items : [{
+        this.menuModel.items = [{
                 icon : "back",
                 command : "goBack"
             }, {
                 icon : "search",
                 command : "search"
-            }]
-        };
-
-        this.controller.setupWidget(Mojo.Menu.commandMenu, this.attributes = {
-            spacerHeight : 0,
-            menuClass : 'no-fade'
-        }, menuModel);
+            }];
     }
 
     this.menuModel.items.push({});
