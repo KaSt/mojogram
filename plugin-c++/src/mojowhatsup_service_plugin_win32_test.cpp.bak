@@ -1,0 +1,84 @@
+//============================================================================
+// Name        : whatsappc++.cpp
+// Author      : Antonio
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <string.h>
+#include "utilities.h"
+#include "WALogin.h"
+#include "WAConnection.h"
+#include "MySocketConnection.h"
+#include "BinTreeNodeReader.h"
+#include "BinTreeNodeWriter.h"
+#include "ApplicationData.h"
+#include "BGApp.h"
+#include "TestBGApp.h"
+
+#define PACKAGEID "com.palm.mojowhatsup"
+
+using namespace std;
+
+int main(int argc, char** argv) {
+	cout << "Empezó la cosa" << endl;
+
+	Utilities::configureLogging(PACKAGEID);
+
+	// Initialize SDL library
+	if(SDL_Init(SDL_INIT_VIDEO) == -1) {
+		_LOGDATA("No se puede inicializar SDL");
+		exit(1);
+	}
+
+
+	// register the JS callbacks
+
+
+	try {
+		MySocketConnection::initNetwork();
+//
+//		MySocketConnection* socket = new MySocketConnection("bin-nokia.whatsapp.net",443);
+//		BinTreeNodeReader* reader = new BinTreeNodeReader(socket, WAConnection::dictionary, WAConnection::DICTIONARY_LEN);
+//		BinTreeNodeWriter* writer = new BinTreeNodeWriter(socket, WAConnection::dictionary, WAConnection::DICTIONARY_LEN);
+//
+//		WALogin* login = new WALogin(reader, writer);
+//
+//		WAConnection* con = new WAConnection(login, "s.whatsapp.net", "S40-1.2-443", "34620136534", "Antonio Morales", "e56062aaa91aa815abdb175575c8e0ca");
+//		con->setReceiptAckCapable(true);
+//		login->setConnection(con);
+//
+//		login->login();
+//
+//		con->read();
+//		con->read();
+//		con->read();
+//		con->read();
+//
+//		delete socket;
+//		delete con;
+
+		ApplicationData::setData("34620136534", "Antonio", "35582304009938003"); //"35582304009938003");
+		TestBGApp* app = new TestBGApp();
+		BGApp::setInstance(app);
+		app->_isNetworkConnected = true;
+//		app->initialize();
+//
+		int status;
+//		SDL_Delay(15000);
+//		app->finalize();
+		//_LOGDATA(app->testLogin("34620136534","35582304009938003","Antonio" )?"SI":"NO");
+		// SDL_Delay(15000);
+		app->initialize();
+		SDL_WaitThread(app->_xmppthread, &status);
+	} catch (WAException& ex) {
+		_LOGDATA("WAException: %s", ex.what());
+	} catch (exception& ex) {
+		_LOGDATA("Otra excepcion: %s" , ex.what());
+	}
+
+	MySocketConnection::quitNetwork();
+	SDL_Quit();
+}

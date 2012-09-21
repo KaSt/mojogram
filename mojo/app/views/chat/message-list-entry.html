@@ -1,0 +1,20 @@
+<div class='palm-row chat-entry chatRow #{msgTypeFormatted}' x-mojo-tap-highlight="momentary">
+	<div class="palm-row-wrapper">
+		<div class="chat-balloon message message-container">
+			<div class="chat-balloon-wrapper">
+				<div class="message-body">
+					<div class="title truncating-text" style="display: #{nameVisibleFormatted}; color:#{contactColorFormatted}">
+						#{contactNameFormatted}:
+					</div>
+					<div class="messageText" id="messageData">
+						#{-imagePreviewFormatted}#{-dataFormatted}
+					</div>
+					<div class="info-container">
+						<div class="status-icon #{statusIconFormatted}"></div>
+						<div class="text-info">#{timeFormatted}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
