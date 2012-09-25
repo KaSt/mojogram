@@ -1,0 +1,41 @@
+{
+	"noWindow": true,
+	"id": "com.palm.mojowhatsup",
+	"version": "1.0.0",
+	"vendor": "Antonio Morales",
+	"type": "web",
+	"main": "../../index.html",
+	"title": "MojoWhatsup",
+	"icon": "../../images/mojowhatsup64.png",
+	"splashicon": "../../images/mojowhatsup256.png",
+	"miniicon": "./mojowhatsup32.png",
+	"smallicon": "./mojowhatsup32.png",
+	"splashBackground" : "../../images/chat-balloon-right.png",
+	"plug-ins": true,
+	"uiRevision": 2,
+	"copyright": "&copy; Copyright 2012, Antonio Morales",
+	"keywords" : ["Chat","Whatsapp","Mojo","Messenger"],
+	"support" : {
+		"email": {
+			"address": "amoralico@gmail.com",
+			"subject": "MojoWhatsupp Support Request"
+		},
+		"resources": [
+			{
+				"type": "scene",
+				"label": "Änderungen",
+				"sceneName": "changelog"
+			},
+			{
+				"type": "web",
+				"label": "Forum",
+				"url": "http://forums.webosnation.com/webos-apps/318833-mojowhatsup-whatsapp-client-webos.html"
+			},
+			{
+				"type": "web",
+				"label": "Spenden",
+				"url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=N3SZKECYCN6HN&lc=ES&item_name=Antonio%20Morales&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+			}
+		]
+	}
+}
