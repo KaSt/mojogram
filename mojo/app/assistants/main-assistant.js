@@ -48,30 +48,36 @@ MainAssistant.prototype.setup = function() {
 
     // Start pluginBG.
     _mojowhatsupPlugin.safePluginCall(function() {
-         delete _mediaUploads;
-         delete _mediaDownloads;
-         _mediaUploads = new HashTable();
-         _mediaDownloads = new HashTable();
-        
-        _myJid = _appData.cookieData.userId + "@s.whatsapp.net";    	
+        delete _mediaUploads;
+        delete _mediaDownloads;
+        _mediaUploads = new HashTable();
+        _mediaDownloads = new HashTable();
+
+        _myJid = _appData.cookieData.userId + "@s.whatsapp.net";
         _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
     });
-    
+
     _mojowhatsupPlugin.whenRunnerExecuting( function() {
         PalmServices.subscribeNetworkStatus(this.controller);
     }.bind(this));
 
     this.controller.setupWidget(Mojo.Menu.appMenu, this.attributesAppMenu = {
-        omitDefaultItems: true
+        omitDefaultItems : true
     }, this.appMenuModel = {
-        visible: true,
-        items : [
-            Mojo.Menu.editItem,
-            {label: $L("Preferences"), command: Mojo.Menu.prefsCmd},
-            {label: $L("Account settings"), command: "accountSettings"},
-            {label: $L("Help"), command: Mojo.Menu.helpCmd},
-            {label: $L("Exit"), command: "exit"}
-        ]
+        visible : true,
+        items : [Mojo.Menu.editItem, {
+            label : $L("Preferences"),
+            command : Mojo.Menu.prefsCmd
+        }, {
+            label : $L("Account settings"),
+            command : "accountSettings"
+        }, {
+            label : $L("Help"),
+            command : Mojo.Menu.helpCmd
+        }, {
+            label : $L("Exit"),
+            command : "exit"
+        }]
     });
 
     this.controller.get("headerTitle").update($L("Main Menu"));
@@ -89,15 +95,32 @@ MainAssistant.prototype.setup = function() {
     Mojo.Event.listen(this.mainListElement, Mojo.Event.listTap, this.listTapHandler);
 
     if (!_contactsImported) {
-        _appDB.importContacts(this.controller, function() {
-            _contactsImported = true;
-        });
+        _appDB.importContacts();
     }
+
+    this.activateHandler = this.activateWindow.bind(this);
+    Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageActivate, this.activateHandler);
+    this.deactivateHandler = this.deactivateWindow.bind(this);
+    Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageDeactivate, this.deactivateHandler);
 
     this.loadContacts();
     this.updateChats();
     this.waitForCompletion();
 };
+
+
+MainAssistant.prototype.activateWindow = function(event) {
+   _mojowhatsupPlugin.safePluginCall(function() {
+        _plugin.sendActive(1);
+   });
+}
+
+
+MainAssistant.prototype.deactivateWindow = function(event) {
+   _mojowhatsupPlugin.safePluginCall(function() {
+        _plugin.sendActive(0);
+   });
+}
 
 MainAssistant.prototype.restart = function() {
     _mojowhatsupPlugin.safePluginCall(function() {
@@ -112,8 +135,8 @@ MainAssistant.prototype.loadContacts = function(callback) {
             this.mainListModel.items[1].contacts = contacts;
             this.controller.modelChanged(this.mainListModel);
             this.contactsImported = true;
-			if (callback)
-				callback(contacts);            
+            if (callback)
+                callback(contacts);
         }.bind(this));
     } else {
         setTimeout(this.loadContacts.bind(this), 10, callback);
@@ -124,7 +147,7 @@ MainAssistant.prototype.waitForCompletion = function() {
     if (_mojowhatsupPlugin.isRunnerExecuting && this.chatsLoaded && this.contactsImported) {
         this.controller.get("spinnerId").mojo.stop();
         this.controller.get("Scrim").hide();
-        _contactJidNames.setItem(_myJid, $L("You"));     
+        _contactJidNames.setItem(_myJid, $L("You"));
     } else {
         setTimeout(this.waitForCompletion.bind(this), 30);
     }
@@ -159,31 +182,31 @@ MainAssistant.prototype.cleanup = function(event) {
         _plugin.exitPlugin();
     });
     if (!_exitApp) {
-    _appAssistant.handleLaunch({
-        action : "dashboard"
-    });
+        _appAssistant.handleLaunch({
+            action : "dashboard"
+        });
     }
 };
 
 MainAssistant.prototype.handleCommand = function(event) {
-    if(event.type == Mojo.Event.commandEnable && (event.command == Mojo.Menu.helpCmd || event.command == Mojo.Menu.prefsCmd)) {
-      event.stopPropagation();
-    }    
+    if (event.type == Mojo.Event.commandEnable && (event.command == Mojo.Menu.helpCmd || event.command == Mojo.Menu.prefsCmd)) {
+        event.stopPropagation();
+    }
     if (event.type == Mojo.Event.command) {
         switch(event.command) {
             case Mojo.Menu.prefsCmd:
                 this.controller.stageController.pushScene("prefs");
-            break;
+                break;
             case "accountSettings":
                 this.controller.stageController.pushScene("account");
-            break;
+                break;
             case Mojo.Menu.helpCmd:
                 this.controller.stageController.pushAppSupportInfoScene();
                 break;
             case "exit":
-                 _exitApp = true;
-                 Mojo.Controller.getAppController().closeStage(_mainStage);
-            break;
+                _exitApp = true;
+                Mojo.Controller.getAppController().closeStage(_mainStage);
+                break;
         }
     }
 }

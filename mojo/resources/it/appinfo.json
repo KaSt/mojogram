@@ -23,17 +23,17 @@
 		"resources": [
 			{
 				"type": "scene",
-				"label": "Listado de cambios",
+				"label": "Lista dei cambiamenti",
 				"sceneName": "changelog"
 			},
 			{
 				"type": "web",
-				"label": "Foro de discusión",
+				"label": "Forum di discussione",
 				"url": "http://forums.webosnation.com/webos-apps/318833-mojowhatsup-whatsapp-client-webos.html"
 			},
 			{
 				"type": "web",
-				"label": "Donación",
+				"label": "Donazione",
 				"url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=N3SZKECYCN6HN&lc=ES&item_name=Antonio%20Morales&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
 			}
 		]

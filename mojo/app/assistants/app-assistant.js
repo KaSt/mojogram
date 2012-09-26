@@ -44,10 +44,6 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 		if (!launchParams || launchParams.action == "openChat") {
 			Mojo.Log.info("controller is: " + _mainStageController);
 
-			if (_dashboardStageController) {
-				this.controller.closeStage(_notificationStage);
-			}
-
 			if (_mainStageController) {
 				// Application already running (scenario 2)
 				Mojo.Log.info("Relaunch!");
@@ -71,7 +67,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 					name : _mainStage,
 					lightweight : true
 				};
-
+	
 				var onSuccess = function(controller) {
 					_mainStageController = controller;
 					_dashboardStageController = null;
@@ -89,6 +85,10 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 						}
 					}.bind(this));
 				};
+				
+				if (_dashboardStageController) {
+					this.controller.closeStage(_notificationStage);
+				}
 
 				this.controller.createStageWithCallback(stageArgs, onSuccess.bind(this));
 			}

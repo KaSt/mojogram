@@ -136,14 +136,23 @@ PreferencesCookie.prototype.get = function(reload) {
                 groupToneName : "",
                 groupBanner : true,
                 groupBlink : true,
-                backgroundTimeout : "00:15:00"
+                backgroundTimeout : "00:15:00",
+                chatTextSize : 16
             };
 
             this.put(this.cookieData);
         }
+	    this.setDefaultNewValues();
+        
         return this.cookieData;
     } catch (e) {
         Mojo.Log.logException(e, 'prefscookie#get');
     }
 };
+
+PreferencesCookie.prototype.setDefaultNewValues = function(reload) {
+	if (!("chatTextSize" in this.cookieData)) 
+		this.cookieData.chatTextSize = 16;
+	this.put(this.cookieData);				
+}
 

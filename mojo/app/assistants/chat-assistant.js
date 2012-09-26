@@ -117,8 +117,11 @@ ChatAssistant.prototype.setup = function() {
             }.bind(this),
             data : function(value, model) {
                 if ("data" in model)
-                    return model.formatTextMessage(true, true, 18);
-            }.bind(this)
+                    return model.formatTextMessage(true, true, Number(_appPrefs.cookieData.chatTextSize) + 2);
+            },
+            textSize : function(value, model) {
+            	return String(_appPrefs.cookieData.chatTextSize);
+            }
         }
     }, this.messageListModel);
 
@@ -192,7 +195,28 @@ ChatAssistant.prototype.setup = function() {
     Mojo.Event.listen(this.messageListWidget, Mojo.Event.listDelete, this.listDeleteHandler);
     Mojo.Event.listen(this.messageListWidget, Mojo.Event.listTap, this.listTapHandler);
     Mojo.Event.listen(this.messageTextWidget, Mojo.Event.propertyChange, this.textChangedHandler);
-    // Mojo.Event.listen(this.controller.document, Mojo.Event.keyup, this.keyPressHandler, true);
+    
+    this.ctrlKeyPressed = false;
+}
+
+ChatAssistant.prototype.messageTextKeydown = function(event) {
+	if (event && event.originalEvent.keyCode ===129) {
+		this.ctrlKeyPressed = true;
+	}
+}
+
+ChatAssistant.prototype.messageTextKeyup = function(event) {
+	if (event) {
+		if (event.originalEvent.keyCode ===129) {
+			this.ctrlKeyPressed = false;
+		} else if (Mojo.Char.isEnterKey(event.originalEvent.keyCode ) && this.ctrlKeyPressed) {
+        	this.handleCommand({
+            	type : Mojo.Event.command,
+            	command : "send"
+        	});
+			Event.stop(event);
+		}
+	}	
 }
 
 ChatAssistant.prototype.textChangedHandler = function(event) {
@@ -597,6 +621,11 @@ ChatAssistant.prototype.uploadFileMedia = function(file, msg) {
 }
 
 ChatAssistant.prototype.activate = function(event) {
+    this.keyDownHandler = this.messageTextKeydown.bindAsEventListener(this);
+    this.keyUpHandler = this.messageTextKeyup.bindAsEventListener(this);
+ 	Mojo.Event.listen(this.controller.document, Mojo.Event.keydown, this.keyDownHandler, true);
+ 	Mojo.Event.listen(this.controller.document, Mojo.Event.keyup,this.keyUpHandler, true);
+	
     if (event && "selectedEmoji" in event) {
         if (event.selectedEmoji != null) {
             var text = this.messageTextWidget.mojo.getValue();
@@ -625,9 +654,16 @@ ChatAssistant.prototype.activate = function(event) {
     this.messageTextWidget.mojo.focus();
 }
 
+ChatAssistant.prototype.refreshList = function(event) {
+	this.controller.modelChanged(this.messageListModel);	
+	this.controller.getSceneScroller().mojo.revealBottom();	
+}
+
 ChatAssistant.prototype.deactivate = function(event) {
     /* remove any event handlers you added in activate and do any other cleanup that should happen before
      this scene is popped or another scene is pushed on top */
+    Mojo.Event.stopListening(this.controller.document, Mojo.Event.keyup, this.keyUpHandler, true);
+    Mojo.Event.stopListening(this.controller.document, Mojo.Event.keydown, this.keyDownHandler, true);
 }
 
 ChatAssistant.prototype.cleanup = function(event) {
@@ -636,7 +672,7 @@ ChatAssistant.prototype.cleanup = function(event) {
     Mojo.Event.stopListening(this.messageListWidget, Mojo.Event.listDelete, this.listDeleteHandler);
     Mojo.Event.stopListening(this.messageListWidget, Mojo.Event.listTap, this.listTapHandler);
     Mojo.Event.stopListening(this.messageTextWidget, Mojo.Event.propertyChange, this.textChangedHandler);
-    // Mojo.Event.stopListening(this.controller.document, Mojo.Event.keyup, this.keyPressHandler, true);
+    
     delete this.namesHash;
     this.namesHash = null;
 }
