@@ -1,6 +1,20 @@
 function ChangelogAssistant() {
 	this.changelog = [
 		{
+			version:"v1.1.0",
+			changes: [
+				"German, italian, netherlands translations (thanks to Sonic-NKT, virox, cainvommars, DMeister, wMark90)",
+				"Problem importing all contacts fixed (thanks to capepe)",
+				"Pre3 1.5 folder with MojoWhatsup scaled icon (thanks to virox)",
+				"Orange/Ctrl + Enter sends message",
+				"Removed nojail statement",
+				"Fixed problem with screen orientation when returning from image viewer",
+				"Message font size included in preferences",
+				"Fixed some others minor bugs"
+				
+			]
+		},
+		{
 			version:"v1.0.0",
 			changes: [
 				"Public release!",

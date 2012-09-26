@@ -5,16 +5,20 @@ function AppDatabase() {
 	if (!this.appDb)
 		Mojo.log.error("Failed to open the database on disk.  This is probably because the version was bad or there is not enough space left in this domain's quota");
 	this.createTables();
+	this.contactResults = 0;
+	this.contactRequestSize = 100;
+	this.contacts = [];
+	this.contactRequest = false;
 }
 
 AppDatabase.prototype.createTables = function() {
 	var sql1 = "CREATE TABLE IF NOT EXISTS 'contacts' (name TEXT, mobilePhone TEXT, jid TEXT PRIMARY KEY, favourite BOOLEAN DEFAULT 0);";
 	var sql2 = "CREATE TABLE IF NOT EXISTS 'chats' (jid TEXT PRIMARY KEY, chatname TEXT, isgroup BOOLEAN DEFAULT 0, unread INTEGER, lmremotejid TEXT DEFAULT NULL, lmfromme BOOLEAN DEFAULT NULL, lmkeyid TEXT DEFAULT NULL);";
 	var sql3 = "CREATE TABLE IF NOT EXISTS 'messages' (remotejid TEXT, fromme BOOLEAN, keyid TEXT, data TEXT, status INTEGER, mediawatype INTEGER, timestamp DATETIME, remoteresource TEXT, notifyname TEXT, wantsreceipt BOOLEAN, mediaurl TEXT, medianame TEXT, mediasize INTEGER, mediaseconds INTEGER, longitude DOUBLE, latitude DOUBLE, downloadfile TEXT, PRIMARY KEY (remotejid,fromme,keyid));";
-	var sql4 = "CREATE TABLE IF NOT EXISTS 'groups' (gjid TEXT PRIMARY KEY, subject TEXT, owner TEXT, subjectowner TEXT, subjectt DATETIME, creationt DATETIME, participants TEXT);";	
+	var sql4 = "CREATE TABLE IF NOT EXISTS 'groups' (gjid TEXT PRIMARY KEY, subject TEXT, owner TEXT, subjectowner TEXT, subjectt DATETIME, creationt DATETIME, participants TEXT);";
 	var sql5 = "CREATE INDEX IF NOT EXISTS 'contact_name' ON 'contacts' (name ASC)";
 	var sql6 = "CREATE INDEX IF NOT EXISTS 'messages_list_desc' ON 'messages' (remotejid, timestamp DESC)";
-	var sql7 = "CREATE INDEX IF NOT EXISTS 'messages_list_status_asc' ON 'messages' (status ASC, timestamp ASC)";		
+	var sql7 = "CREATE INDEX IF NOT EXISTS 'messages_list_status_asc' ON 'messages' (status ASC, timestamp ASC)";
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql2, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
@@ -26,52 +30,82 @@ AppDatabase.prototype.createTables = function() {
 	}.bind(this));
 }
 
-AppDatabase.prototype.importContacts = function(sceneController, callback) {
-	sceneController.serviceRequest("palm://com.palm.db/", {
+AppDatabase.prototype.importContacts = function() {
+	this.contactResults = 0;
+	this.contacts = [];
+	if (this.contactRequest)
+		this.contactRequest.cancel();
+
+	this.contactRequest = new Mojo.Service.Request("palm://com.palm.db/", {
 		method : "find",
 		parameters : {
 			"query" : {
-				"from" : "com.palm.contact:1"
-			}
+				"from" : "com.palm.person:1",
+				"limit" : this.contactRequestSize
+			},
+			"count" : true
 		},
-		onSuccess : function(e1) {
-			Mojo.Log.info("find success!, results=" + JSON.stringify(e1.results.length));
-			var contacts = [];
-			for (var i = 0; i < e1.results.length; i++) {
-				var id = e1.results[i]._id;
-				if ('name' in e1.results[i]) {
-					var name = (e1.results[i].name.givenName ? e1.results[i].name.givenName : "") + (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "");
-					name = name.replace(/^\s+/, "").replace(/\s+$/, "");
-					// trim string
-					var mobilePhone = null;
-					if ('phoneNumbers' in e1.results[i]) {
-						for (var j = 0; j < e1.results[i].phoneNumbers.length; j++) {
-							if (e1.results[i].phoneNumbers[j].type == "type_mobile") {
-								mobilePhone = this.normalizeMobile(e1.results[i].phoneNumbers[j].value);
-								if (mobilePhone != null) {
-									var contact = {
-										"name" : name,
-										"mobilePhone" : mobilePhone,
-										"jid" : mobilePhone + "@s.whatsapp.net"
-									};
-									contacts.push(contact);
-								}
+		onSuccess : this.impersonate.bind(this),
+		onFailure : this.errorHandlerTrue.bind(this)
+	});
+}
+
+AppDatabase.prototype.impersonate = function(e1) {
+	if (e1.results) {
+		Mojo.Log.info("find success!, results= %s, count = %d, next  = %s", JSON.stringify(e1.results.length), e1.count, e1.next);
+		for (var i = 0; i < e1.results.length; i++) {
+			var id = e1.results[i]._id;
+			if ('name' in e1.results[i]) {
+				var name = (e1.results[i].name.givenName ? e1.results[i].name.givenName : "") + (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "");
+				name = name.replace(/^\s+/, "").replace(/\s+$/, "");
+				// trim string
+				var mobilePhone = null;
+				if ('phoneNumbers' in e1.results[i]) {
+					for (var j = 0; j < e1.results[i].phoneNumbers.length; j++) {
+						if (e1.results[i].phoneNumbers[j].type == "type_mobile") {
+							mobilePhone = this.normalizeMobile(e1.results[i].phoneNumbers[j].value);
+							if (mobilePhone != null) {
+								var contact = {
+									"name" : name,
+									"mobilePhone" : mobilePhone,
+									"jid" : mobilePhone + "@s.whatsapp.net"
+								};
+								this.contacts.push(contact);
 							}
 						}
 					}
-					if (!mobilePhone)
-						continue;
 				}
+				if (!mobilePhone)
+					continue;
 			}
-			Mojo.Log.info("Contacts! = " + JSON.stringify(contacts.length));
+			this.contactResults++;
+		}
+		Mojo.Log.info("Contacts! = " + JSON.stringify(this.contacts.length));
 
-			this.updateContacts(contacts);
-
-			callback();
-		}.bind(this),
-		onFailure : this.errorHandlerTrue.bind(this)
-	});
-
+		var total = this.contactResults + e1.count - e1.results.length;
+		if (this.contactResults < total) {
+			if (this.contactRequest) this.contactRequest.cancel();			
+			this.contactRequest = new Mojo.Service.Request("palm://com.palm.db/", {
+				method : "find",
+				parameters : {
+					"query" : {
+						"from" : "com.palm.person:1",
+						"limit" : this.contactRequestSize,
+						"page" : e1.next
+					},
+					"count" : true
+				},
+				onSuccess : this.impersonate.bind(this),
+				onFailure : this.errorHandlerTrue.bind(this)
+			});
+		} else {
+			if (this.contactRequest) this.contactRequest.cancel();
+			this.contactRequest = false;
+			this.contactResults = 0;
+			this.updateContacts(this.contacts);
+			_contactsImported = true;
+		}
+	}
 }
 
 AppDatabase.prototype.normalizeMobile = function(phoneNumber) {
@@ -82,15 +116,15 @@ AppDatabase.prototype.normalizeMobile = function(phoneNumber) {
 	} else {
 		phoneNumber = phoneNumber.replace(/^0+/g, "");
 		putPrefix = true;
-	}	
+	}
 
 	if (phoneNumber.length == 0)
 		return null;
-	
+
 	if (putPrefix)
-		phoneNumber = _appData.cookieData.cc + phoneNumber; 
-	
-	return phoneNumber; 
+		phoneNumber = _appData.cookieData.cc + phoneNumber;
+
+	return phoneNumber;
 }
 
 AppDatabase.prototype.updateContacts = function(contacts) {
@@ -100,11 +134,11 @@ AppDatabase.prototype.updateContacts = function(contacts) {
 		t.executeSql("DELETE FROM 'contacts'", [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		for (var i = 0; i < contacts.length; i++) {
 			var contact = contacts[i];
-			t.executeSql(sql, [contact.name, contact.mobilePhone, contact.jid], this.nullDataHandler.bind(this),
-				this.errorHandlerFalse.bind(this));
+			t.executeSql(sql, [contact.name, contact.mobilePhone, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 			t.executeSql(sql2, [contact.name, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 			_contactJidNames.setItem(contact.jid, contact.name);
 		}
+		this.contacts = [];
 	}.bind(this));
 }
 
@@ -156,27 +190,29 @@ AppDatabase.prototype.getAllContacts = function(callback) {
 AppDatabase.prototype.saveMessage = function(message, callback) {
 	var sql = "INSERT INTO messages (remotejid, fromme, keyid, status, mediawatype, data, timestamp, remoteresource, notifyname, wantsreceipt, mediaurl, medianame, mediasize, mediaseconds, longitude, latitude, downloadfile) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?)";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [message.remote_jid, (message.from_me ? 1 : 0), message.keyId, message.status, message.media_wa_type, message.data, message.timestamp, 
-							message.remote_resource, message.notifyname, (message.wants_receipt ? 1 : 0),
-							message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.downloadedFile], function(t, r) {
+		t.executeSql(sql, [message.remote_jid, (message.from_me ? 1 : 0), message.keyId, message.status, message.media_wa_type, message.data, message.timestamp, message.remote_resource, message.notifyname, (message.wants_receipt ? 1 : 0), message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.downloadedFile], function(t, r) {
 			callback(message);
 		}, this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
 AppDatabase.prototype.updateMediaMessage = function(message, callback) {
-    var sql = "UPDATE messages SET status = ?, data = ?, downloadfile = ?, mediaurl = ?, medianame = ?, mediasize = ?, mediaseconds = ?, longitude = ?, latitude = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
-    this.appDb.transaction( function(t) {
-        t.executeSql(sql, [message.status, message.data, message.downloadedFile, message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], 
-        function(t,r) { if (callback) callback(); }, this.errorHandlerTrue.bind(this));
-    }.bind(this));
+	var sql = "UPDATE messages SET status = ?, data = ?, downloadfile = ?, mediaurl = ?, medianame = ?, mediasize = ?, mediaseconds = ?, longitude = ?, latitude = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [message.status, message.data, message.downloadedFile, message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
+			if (callback)
+				callback();
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
 }
 
 AppDatabase.prototype.updateMessageStatus = function(message, callback) {
 	var sql = "UPDATE messages SET status = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [message.status, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], 
-		function(t,r) { if (callback) callback(); }, this.errorHandlerTrue.bind(this));
+		t.executeSql(sql, [message.status, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
+			if (callback)
+				callback();
+		}, this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
@@ -221,16 +257,14 @@ AppDatabase.prototype.getFirstMessages = function(chat, numrows, callback) {
 	}.bind(this));
 }
 
-
 AppDatabase.prototype.deleteMessage = function(msg, callback) {
 	var sql = "DELETE FROM 'messages' WHERE remotejid = ? AND fromme = ? AND keyid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [msg.remote_jid, (msg.from_me? 1: 0), msg.keyId], function(t, r) {
-				callback();
+		t.executeSql(sql, [msg.remote_jid, (msg.from_me ? 1 : 0), msg.keyId], function(t, r) {
+			callback();
 		}.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
-
 
 AppDatabase.prototype.getUnsentMessages = function(callback) {
 	var sql = "SELECT * FROM messages WHERE status = 0 ORDER BY timestamp ASC";
@@ -258,7 +292,7 @@ AppDatabase.messageFromRowItem = function(rowitem) {
 	msg.data = rowitem.data;
 	msg.remote_resource = rowitem.remoteresource;
 	msg.notifyname = rowitem.notifyname;
-	msg.wants_receipt = (rowitem.wantsreceipt == 1? true : false);
+	msg.wants_receipt = (rowitem.wantsreceipt == 1 ? true : false);
 	msg.media_url = rowitem.mediaurl;
 	msg.media_name = rowitem.medianame;
 	msg.media_size = rowitem.mediasize;
@@ -304,8 +338,8 @@ AppDatabase.prototype.getNameForJid = function(jid, callback) {
 		this.findGroup(jid, function(group) {
 			if (group != null)
 				callback(group.subject);
-			else 
-				callback(null);	
+			else
+				callback(null);
 		});
 	} else {
 		this.findContact(jid, function(contact) {
@@ -456,7 +490,7 @@ AppDatabase.prototype.createOrUpdateGroup = function(group, callback) {
 			group.creation_t = groupFound.creation_t;
 			this.updateGroup(group, function(group) {
 				// Mojo.Log.info("Grupo actualizado = " + JSON.stringify(group));
-				callback(group);				
+				callback(group);
 			});
 		}
 	}.bind(this));

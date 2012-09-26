@@ -1,0 +1,132 @@
+	"Login":
+	"Account settings": 
+	"Country code" : 
+	"Phone number" : 
+	"Push name" : 
+	"Password" : 
+	"Connect" : 
+	"Please insert a country code" : 
+	"Please insert a phone number" : 
+	"Please insert a password" : 
+	"Please insert a SMS code": 
+	"Please insert push name": 
+	"Network connection not availabe yet" : 
+	"Login failed" : 
+	"Request failed": 
+	"CC" : 
+	"Mobile Phone" : 
+	"Get SMS code": 
+	"Register": 
+	"Request Result": 
+	"SMS code": 
+	"Code number": 
+	"status": 
+	"result": 
+	
+	"Chats" : 
+	"Contacts" : 
+	"Main Menu" : 
+	"Account Settings": 
+	"Exit": 
+	
+	"Without messages" : 
+	
+	"Close Image" : 
+	"Share" : 
+	"Email" : 
+	"MMS" : 
+	"Set As Wallpaper" : 
+	"Information" : 
+	"Wallpaper set successfully." : 
+	"OK" : 
+	
+	"Close" : 
+	
+	"Show previous messages" : 
+	"Write your message here..." : 
+	"Open" : 
+	"Download" : 
+	"Stop download" : 
+	"Stop upload" : 
+	"Copy message text" : 
+	"(typing)" : 
+	"(online)" : 
+	"No more messages" : 
+	"Upload and send" : 
+	"Uploading" : 
+	"Send" : 
+	"Send image" : 
+	"Send video" : 
+	"Send audio" : 
+	"Send location": 
+	"Send contact": 
+	
+	"Downloading" : 
+	"systema" : 
+	"audio" : 
+	"vcard" : 
+	"image" : 
+	"location" : 
+	"video" : 
+	
+	"Plugin error" : 
+	"Plugin does not respond!. Please restart application!" : 
+	"Close application" : 
+	
+	"Preferences": 
+	"Persons notifications": 
+	"Groups notifications": 
+	"Background": 
+	"Sound": 
+	"Vibrate": 
+	"minutes": 
+	"hour": 
+	"hours": 
+	"Get messages": 
+	"As items arrive": 
+	"Show banner": 
+	"Light bar": 
+	"System sound" : 
+	"Custom sound" : 
+	"Tone": 
+	"Silence": 
+	
+	"Location": 
+	"Longitude": 
+	"Latitude": 
+	"Get location": 
+	"Can not obtain the current location.\nCheck that you have localization services activated.": 
+	"Select a contact": 
+	
+	"Leave group": 
+	"Confirm": 
+	"Yes": 
+	"No": 
+	"Are you sure you want to remove/leave this group?": 
+	"Create new group": 
+	"#{id} has joined the group": 
+	"#{id} has left the group": 
+	"Group properties" : 
+	"Subject": 
+	"Info": 
+	"Me": 
+	"You": 
+	"Owner": 
+	"Creation date": 
+	"Participants": 
+	"Send changes": 
+	"End group": 
+	"New group": 
+	"Insert a subject": 
+	"Are you sure you want to remove/end this group?" : 
+	"Add contact": 
+	"of": 
+	"#{id} has changed the group subject by '#{subject}'": 
+	"#{left} remaining": 
+	"You can not create more groups\n. You have reached the maximum number of owning groups": 
+	
+	"Help": 
+	"Donate": 
+	"Discussion Forums": 
+	"Change Log": 
+	"Back": 

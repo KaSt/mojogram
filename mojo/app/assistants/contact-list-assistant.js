@@ -103,9 +103,7 @@ ContactListAssistant.prototype.handleCommand = function(event) {
 
 ContactListAssistant.prototype.reloadContacts = function() {
     _contactsImported = false;
-    _appDB.importContacts(this.controller, function() {
-        _contactsImported = true;
-    });
+    _appDB.importContacts();
 
     if (_mainAssistant != null) {
         _mainAssistant.loadContacts( function(contacts) {
