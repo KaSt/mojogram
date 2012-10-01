@@ -1,0 +1,20 @@
+*.ipk
+*.swp
+*.eg
+.svn/
+*.swp
+*.swo
+*.swn
+*.eg
+*~
+*.o
+*.log
+*.a
+*.status
+.svn
+ehthumbs.db
+Thumbs.db
+TODO.txt
+Release ARM Pre-Veer/
+Debug Emulator/
+Debug ARM Pre-Veer

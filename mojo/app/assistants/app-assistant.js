@@ -10,6 +10,7 @@ var _mainAssistant = null;
 var _openChatAssistant = null;
 var _chatsAssistant = null;
 var _appAssistant = null;
+var _contactsAssistant = null;
 var _mainStageController = null;
 var _dashboardAssistant = null;
 var _dashboardStageController = null;
@@ -19,6 +20,7 @@ var _lastNotification = 0;
 var _contactsImported = false;
 var _exitApp = false;
 var _myJid = null;
+var _statusRequest = null;
 
 function AppAssistant() {
 	Mojo.Log.error("******** INTO AppAssistant CONSTRUCTOR");
@@ -44,10 +46,6 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 		if (!launchParams || launchParams.action == "openChat") {
 			Mojo.Log.info("controller is: " + _mainStageController);
 
-			if (_dashboardStageController) {
-				this.controller.closeStage(_notificationStage);
-			}
-
 			if (_mainStageController) {
 				// Application already running (scenario 2)
 				Mojo.Log.info("Relaunch!");
@@ -71,7 +69,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 					name : _mainStage,
 					lightweight : true
 				};
-
+	
 				var onSuccess = function(controller) {
 					_mainStageController = controller;
 					_dashboardStageController = null;
@@ -89,6 +87,10 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 						}
 					}.bind(this));
 				};
+				
+				if (_dashboardStageController) {
+					this.controller.closeStage(_notificationStage);
+				}
 
 				this.controller.createStageWithCallback(stageArgs, onSuccess.bind(this));
 			}
@@ -302,6 +304,18 @@ AppAssistant.prototype.isTouchPad = function() {
 	}
 
 	if (Mojo.Environment.DeviceInfo.screenHeight == 1024) {
+		return true;
+	}
+
+	return false;
+}
+
+AppAssistant.prototype.isPre3 = function() {
+	if (Mojo.Environment.DeviceInfo.screenHeight == 800) {
+		return true;
+	}
+
+	if (Mojo.Environment.DeviceInfo.screenWidth == 800) {
 		return true;
 	}
 

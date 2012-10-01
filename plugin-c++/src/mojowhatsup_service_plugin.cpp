@@ -131,8 +131,6 @@ int main(int argc, char** argv) {
 	signal(SIGHUP, sighandler);
 	signal(SIGKILL, sighandler);
 
-	system("echo pardon > /etc/nojail");
-
 	Utilities::configureLogging(PACKAGEID);
 	ApplicationData::SELECT_TIMEOUT = atoi(argv[1]);
 	ChatState::SEND_PING = (atoi(argv[2]) == 0? false: true);

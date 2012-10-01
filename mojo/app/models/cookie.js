@@ -60,7 +60,8 @@ AppDataCookie.prototype.get = function(reload) {
                 max_groups : 30,
                 max_participants : 31,
                 max_subject : 25,
-                registered : false
+                registered : false,
+                lastStatusRequest : 0
             };
 
             this.put(this.cookieData);
@@ -69,11 +70,19 @@ AppDataCookie.prototype.get = function(reload) {
             this.setDefaultServerProperties();
             this.put(this.cookieData);
         }
+        this.setDefaultNewValues();
         return this.cookieData;
     } catch (e) {
         Mojo.Log.logException(e, 'appdatacookie#get');
     }
 };
+
+AppDataCookie.prototype.setDefaultNewValues = function() {
+    if (!("lastStatusRequest" in this.cookieData)) 
+        this.cookieData.lastStatusRequest = 0;
+    this.put(this.cookieData);              
+}
+
 
 AppDataCookie.prototype.setDefaultServerProperties = function() {
     this.cookieData.max_groups = 30;
@@ -136,14 +145,23 @@ PreferencesCookie.prototype.get = function(reload) {
                 groupToneName : "",
                 groupBanner : true,
                 groupBlink : true,
-                backgroundTimeout : "00:15:00"
+                backgroundTimeout : "00:15:00",
+                chatTextSize : 16
             };
 
             this.put(this.cookieData);
         }
+	    this.setDefaultNewValues();
+        
         return this.cookieData;
     } catch (e) {
         Mojo.Log.logException(e, 'prefscookie#get');
     }
 };
+
+PreferencesCookie.prototype.setDefaultNewValues = function() {
+	if (!("chatTextSize" in this.cookieData)) 
+		this.cookieData.chatTextSize = 16;
+	this.put(this.cookieData);				
+}
 

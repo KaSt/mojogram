@@ -34,9 +34,11 @@ PalmServices.subscribeDisplayManager = function() {
                 case 'displayActive':
                     _displayOn = true;
                     break;
+
                 case 'displayOff':
+                    if (_plugin != null)
+                        _plugin.sendActive(0);
                 case 'displayDeactivate':
-                default:
                     _displayOn = false;
                     break;
             }
@@ -61,7 +63,10 @@ PalmServices.subscribeNetworkStatus = function(sceneController) {
                     _mojowhatsupPlugin.safePluginCall(function() {
                         _plugin.networkStatusChanged(1);
                         if (_dashboardAssistant != null) {
-                            setTimeout(function() {_plugin.sendActive(0);}, 10000);
+                            setTimeout(function() {
+                                _plugin.sendActive(0);
+                            }, 10000);
+                            _dashboardAssistant.setBGTimeout();
                         }
                     });
                 }
@@ -72,8 +77,11 @@ PalmServices.subscribeNetworkStatus = function(sceneController) {
                     _mojowhatsupPlugin.safePluginCall(function() {
                         _plugin.networkStatusChanged(0);
                     });
+
+                    if (_dashboardAssistant != null) {
+                        _dashboardAssistant.clearBGTimeout();
+                    }
                 }
-                // Mojo.Controller.errorDialog("Internet connection not available!");
             }
         }.bind(this),
         onFailure : function(response) {

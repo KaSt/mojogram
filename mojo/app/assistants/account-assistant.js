@@ -144,7 +144,7 @@ AccountAssistant.prototype.handleCommand = function(event) {
 			this.controller.stageController.popScene();
 			break;
             case Mojo.Menu.helpCmd:
-                this.controller.stageController.pushAppSupportInfoScene();
+                this.controller.stageController.pushScene("help");
                 break;
             case "exit":
                 _exitApp = true;

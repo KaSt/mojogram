@@ -1,0 +1,12 @@
+- German translation (thanks to Sonic-NKT and virox)
+- Picture viewer (does not work in pre 3 an Hp veer).
+- Some people say that some contacts are not imported. Possible solution: importo from people database and not from contact database.
+- 1.5 folder for Pre3 pictures.
+- Send not active when screen turns off or when minimized.
+- It seems that only google contact profiles are added to contact list.
+- turning off vibrate mode doesn't work.
+- Plugin compiled also for Pixi. Upload a version and reply the user
+- Contact status.
+- Send message with enter or orange + enter (I prefer sencod)
+- Do not reconnect when no connection available.
+- Remove nojailer instruction.

@@ -29,6 +29,7 @@ PrefsAssistant.prototype.setup = function() {
 	this.controller.get("groupBlinkLabel").update($L("Light bar"));
 	this.controller.get("personToneLabel").update($L("Tone"));
 	this.controller.get("groupToneLabel").update($L("Tone"));
+	this.controller.get("chatsGroupTitle").update($L("Messages text font"));
 
 	this.soundChoices = [{
 		label : $L("System sound"),
@@ -167,7 +168,28 @@ PrefsAssistant.prototype.setup = function() {
 		currentTimeout : _appPrefs.cookieData.backgroundTimeout
 	});
 	this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
+	
+	this.controller.setupWidget('chatTextSize', {
+		label : $L('Size'),
+		choices : [{label: 14, value: 14}, {label: 16, value: 16}, {label: 18, value: 18}, {label: 20, value: 20}, {label: 22, value: 22}, {label: 24, value: 24}],
+		modelProperty : 'currentSize'
+	}, {
+		currentSize : _appPrefs.cookieData.chatTextSize
+	});
+	this.controller.listen('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler.bindAsEventListener(this));
+	
 }
+
+PrefsAssistant.prototype.chatTextSizeHandler = function(event) {
+	_appPrefs.put("chatTextSize", Number(event.value));	
+}
+
+PrefsAssistant.prototype.deactivate = function(event) {
+	if (_openChatAssistant != null) {
+		_openChatAssistant.refreshList();
+	}
+}
+
 
 PrefsAssistant.prototype.personTonePathTapHandler = function(event) {
 	Mojo.FilePicker.pickFile({
@@ -270,5 +292,5 @@ PrefsAssistant.prototype.cleanup = function() {
 	this.controller.stopListening('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler);
 	this.controller.stopListening('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler);
 	this.controller.stopListening('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler);
-	
+	this.controller.stopListening('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler);	
 }

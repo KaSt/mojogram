@@ -1,4 +1,8 @@
 [	{ 
+		"source": "app/models/status.js"
+	}, { 
+		"source": "app/models/phonenumber.js"
+	}, { 
 		"source": "app/models/pnglib.js"
 	}, {  
 		"source": "app/models/utilities.js"
@@ -67,5 +71,8 @@
     }, {
     	"scenes": "changelog",
     	"source": "app/assistants/changelog-assistant.js"
+    }, {
+    	"scenes": "help",
+    	"source": "app/assistants/help-assistant.js"
     }
 ]

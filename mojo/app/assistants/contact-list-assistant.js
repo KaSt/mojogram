@@ -3,6 +3,7 @@ function ContactListAssistant(contacts, picker) {
     this.listModel = {
         items : contacts
     };
+    _contactsAssistant = this;
     /* this is the creator function for your scene assistant object. It will be passed all the
      additional parameters (after the scene name) that were passed to pushScene. The reference
      to the scene controller (this.controller) has not be established yet, so any initialization
@@ -16,12 +17,12 @@ ContactListAssistant.prototype.setup = function() {
     };
     if (_mainAssistant != null && _appAssistant.isTouchPad()) {
         this.menuModel.items = [{
-                icon : "back",
-                command : "goBack"
-            }, {
-                icon : "search",
-                command : "search"
-            }];
+            icon : "back",
+            command : "goBack"
+        }, {
+            icon : "search",
+            command : "search"
+        }];
     }
 
     this.menuModel.items.push({});
@@ -54,7 +55,7 @@ ContactListAssistant.prototype.setup = function() {
         }]
     });
 
-    this.controller.get("headerTitle").update($L("Contacts"));
+    this.controller.get("headerTitle").update($L("Contacts") + " (" + this.listModel.items.length + ")");
 
     this.listElement = this.controller.get("contactList");
 
@@ -62,11 +63,21 @@ ContactListAssistant.prototype.setup = function() {
         itemTemplate : "contact-list/list-entry",
         dividerFunction : this.firstLetter,
         delay : 250,
-        filterFunction : this.filterList.bind(this)
+        filterFunction : this.filterList.bind(this),
+        formatters : {
+            status : function(value, model) {
+                if (value)
+                    return emojify(model.status, 18);
+            }
+        }
 
     }, this.listModel);
 
     /* add event handlers to listen to events from widgets */
+
+    if (((new Date()).getTime() - _appData.cookieData.lastStatusRequest) > 86400000) {
+        this.importAndRequestStatus();
+    }
 
     this.listTapHandler = this.listTapHandler.bindAsEventListener(this);
     Mojo.Event.listen(this.listElement, Mojo.Event.listTap, this.listTapHandler);
@@ -79,7 +90,7 @@ ContactListAssistant.prototype.handleCommand = function(event) {
                 this.controller.stageController.popScene();
                 break;
             case 'refresh':
-                this.reloadContacts();
+                this.importAndRequestStatus();
                 break;
             case "search":
                 this.listElement.mojo.open();
@@ -91,7 +102,7 @@ ContactListAssistant.prototype.handleCommand = function(event) {
                 this.controller.stageController.pushScene("account");
                 break;
             case Mojo.Menu.helpCmd:
-                this.controller.stageController.pushAppSupportInfoScene();
+                this.controller.stageController.pushScene("help");
                 break;
             case "exit":
                 _exitApp = true;
@@ -101,16 +112,25 @@ ContactListAssistant.prototype.handleCommand = function(event) {
     }
 }
 
-ContactListAssistant.prototype.reloadContacts = function() {
-    _contactsImported = false;
-    _appDB.importContacts(this.controller, function() {
-        _contactsImported = true;
-    });
+ContactListAssistant.prototype.importAndRequestStatus = function() {
+    this.importAndLoadContacts();
+    if (_mainAssistant != null) {
+        _mainAssistant.requestStatus();
+    }
+}
 
+ContactListAssistant.prototype.importAndLoadContacts = function() {
+    _contactsImported = false;
+    _appDB.importContacts();
+    this.loadContacts();
+}
+
+ContactListAssistant.prototype.loadContacts = function() {
     if (_mainAssistant != null) {
         _mainAssistant.loadContacts( function(contacts) {
             Mojo.Log.info("contactos %d", contacts.length);
             this.listModel.items = contacts;
+            this.controller.get("headerTitle").update($L("Contacts") + " (" + this.listModel.items.length + ")");
             this.controller.modelChanged(this.listModel);
         }.bind(this));
     }
@@ -122,7 +142,7 @@ ContactListAssistant.prototype.listTapHandler = function(event) {
     } else {
         _appDB.findOrCreateChat(event.item.jid, function(chat) {
             Mojo.Log.info("chat found: " + JSON.stringify(chat));
-            this.controller.stageController.swapScene("chats-list", []);
+            // this.controller.stageController.swapScene("chats-list", []);
             this.controller.stageController.pushScene("chat", chat);
             setTimeout(_appAssistant.notifyUpdateChats.bind(_appAssistant), 500);
         }.bind(this));
@@ -192,4 +212,5 @@ ContactListAssistant.prototype.firstLetter = function(data) {
 
 ContactListAssistant.prototype.cleanup = function(event) {
     Mojo.Event.stopListening(this.listElement, Mojo.Event.listTap, this.listTapHandler);
+    _contactsAssistant = null;
 };

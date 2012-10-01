@@ -590,7 +590,7 @@ void WAConnection::sendComposing(const std::string& to) throw(WAException) {
 
 void WAConnection::sendActive() throw(WAException) {
 	std::map<string, string>* attribs = new std::map<string, string>();
-	(*attribs)["type"] = "active";
+	(*attribs)["type"] = "available";
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs);
 
 	this->out->write(presenceNode);
@@ -600,7 +600,7 @@ void WAConnection::sendActive() throw(WAException) {
 
 void WAConnection::sendInactive() throw(WAException) {
 	std::map<string, string>* attribs = new std::map<string, string>();
-	(*attribs)["type"] = "inactive";
+	(*attribs)["type"] = "unavailable";
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs);
 
 	this->out->write(presenceNode);

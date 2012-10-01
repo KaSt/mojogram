@@ -177,8 +177,13 @@ Media.getThumbImage = function(document, msg, callback) {
 		img.onload = function() {
 			var canvas = document.createElement("canvas");
 
-			canvas.width = img.width;
-			canvas.height = img.height;
+			if (_appAssistant.isPre3()) {
+				canvas.width = Math.round(img.width * 1.5);
+				canvas.height = Math.round(img.height * 1.5);
+			} else {
+				canvas.width = img.width;
+				canvas.height = img.height;
+			}
 
 			var ctx = canvas.getContext('2d');
 			ctx.drawImage(img, 0, 0, img.width, img.height);
@@ -188,9 +193,10 @@ Media.getThumbImage = function(document, msg, callback) {
 
 			Mojo.Log.info("Canvas size %d %d, lenght %d ", canvas.width, canvas.height, data.length);
 
-			var p = new PNGlib(img.width, img.height, 256);
-			var sourceWidth = img.width;
-			var sourceHeight = img.height;
+			var p = new PNGlib(canvas.width, canvas.height, 256);
+			var background = p.color(0, 0, 0, 0);
+			var sourceWidth = canvas.width;
+			var sourceHeight = canvas.height;
 
 			var cont = 1;
 			for (var y = 0; y < sourceHeight; y++) {

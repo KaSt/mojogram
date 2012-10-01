@@ -32,15 +32,11 @@
 }
 
 
-.chat-entry.chatRow .chat-balloon-wrapper {
-	margin: 0 10px 0 0;
-}
-
 .chat-entry .title.truncating-text {
 	padding: 0;
 	max-width: 170px;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 100%;
 	font-weight: normal;
 	color: red;
 }
@@ -67,6 +63,7 @@
 
 .palm-row.chat-entry {
 	min-height: 10px;
+	font-size: 16px;		
 }
 
 .chat-entry .chat-balloon .chat-balloon-wrapper {
@@ -77,18 +74,8 @@
 	margin: 0 0 0 0;
 }
 
-.my-chat .chat-balloon-wrapper, .their-chat .chat-balloon-wrapper, .notification .chat-balloon-wrapper {
+.my-chat .chat-balloon-wrapper, .their-chat .chat-balloon-wrapper {
 	padding: 1px 0;
-	font-size: 16px;
-	word-break: break-all;
-	word-break: break-word;
-	-webkit-hyphens: auto;
-	hyphens: auto;
-}
-
-.notification .chat-balloon-wrapper {
-	padding: 1px 0;
-	font-size: 16px;
 	word-break: break-all;
 	word-break: break-word;
 	-webkit-hyphens: auto;
@@ -97,7 +84,11 @@
 
 .notification .chat-balloon-wrapper {
 	padding: 0px 0;
-	font-size: 14px;
+	font-size: 80%;
+	word-break: break-all;
+	word-break: break-word;
+	-webkit-hyphens: auto;
+	hyphens: auto;
 }
 
 .chat-entry .message-body {
@@ -161,7 +152,7 @@
 
 .text-info {
 	color: gray;
-	font-size: small;
+	font-size: 80%;
 	font-style: oblique;
 }
 
@@ -271,6 +262,30 @@
 	background-image: url(../images/mojowhatsup48.png);
 }
 
+.icon.mojowhatsup-icon {
+	background-image: url(../images/mojowhatsup48.png);
+}
+
+.help-icon {
+	margin-top: 5px;
+}
+
+.help-icon.scene {
+	background-image: url(../images/mojowhatsup32.png);
+}
+
+.help-icon.web {
+	background-image: url(../images/web.png);
+}
+
+.help-icon.email {
+	background-image: url(../images/email.png);
+}
+
+.mojowhatsup-icon-nomessages {
+	background-image: url(../images/mojowhatsupgray48.png);
+}
+
 .list-unread-container {
 	text-align: right;
 }
@@ -348,23 +363,23 @@
 }
 
 .people-emoji {
-	background-image: url(../images/emoji/emoji-E415.png);
+	background: url(../images/emoji/emoji-E415.png) center center no-repeat;
 }
 
 .places-emoji {
-	background-image: url(../images/emoji/emoji-E036.png);
+	background: url(../images/emoji/emoji-E036.png) center center no-repeat;
 }
 
 .nature-emoji {
-	background-image: url(../images/emoji/emoji-E04A.png);
+	background: url(../images/emoji/emoji-E04A.png) center center no-repeat;
 }
 
 .events-emoji {
-	background-image: url(../images/emoji/emoji-E325.png);
+	background: url(../images/emoji/emoji-E325.png) center center no-repeat;
 }
 
 .symbols-emoji {
-	background-image: url(../images/emoji/emoji-E210.png);
+	background: url(../images/emoji/emoji-E210.png) center center no-repeat;
 }
 
 .preview-image {
@@ -442,3 +457,8 @@
 }
  
 
+.preview.contact-status {
+	padding-top: 0px;
+	margin-top: 0px;
+	font-size: 80%;
+}
