@@ -159,6 +159,7 @@ PreferencesCookie.prototype.get = function(reload) {
     }
 };
 
+
 PreferencesCookie.prototype.setDefaultNewValues = function() {
 	if (!("chatTextSize" in this.cookieData)) 
 		this.cookieData.chatTextSize = 16;

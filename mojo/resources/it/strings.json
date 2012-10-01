@@ -131,7 +131,10 @@
 	"Discussion Forums":                                                                              "Forum di discussione",
 	"Change Log":                                                                                     "Lista dei cambiamenti",
 	"Back":                                                                                           "Indietro",
+<<<<<<< HEAD
 	
 	"Messages text font": "Font dei messaggi",
 	"Size": "Grandezza"
+=======
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 }

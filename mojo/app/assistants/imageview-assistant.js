@@ -20,7 +20,6 @@ ImageviewAssistant.prototype.setup = function() {
     if (this.fullScreen) {
         this.controller.get("imgTitle").hide();
     }
-
     var menuAttr = {
         omitDefaultItems : true
     };
@@ -160,6 +159,7 @@ ImageviewAssistant.prototype.getSize = function(orientation) {
             this.h = Mojo.Environment.DeviceInfo.maximumCardHeight;
         }
         this.w = Mojo.Environment.DeviceInfo.screenWidth;
+
         if (_appAssistant.isPre3()) {
 			this.w = Math.floor(this.w / 1.5);        	
 			this.h = Math.floor(this.h / 1.5);

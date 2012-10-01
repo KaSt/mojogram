@@ -467,7 +467,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<<<<<<< HEAD
 				<configuration artifactExtension="" artifactName="../../mojo-pixi/mojowhatsup_service_plugin" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016" name="Emulator Pixi" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release" postbuildStep="">
+=======
+				<configuration artifactExtension="" artifactName="../../mojo/mojowhatsup_service_plugin" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016" name="Emulator Pixi" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release" postbuildStep="">
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.base.1748762195" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.base.345033039" name="Debug Platform" osList="linux,hpux,aix,qnx" superClass="cdt.managedbuild.target.gnu.platform.base"/>
@@ -496,9 +500,22 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1987773291" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool command="i686-pc-linux-gnu-g++" id="cdt.managedbuild.tool.gnu.cpp.linker.base.2059840682" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
+<<<<<<< HEAD
 								<option id="gnu.cpp.link.option.libs.2108488793" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs"/>
 								<option id="gnu.cpp.link.option.paths.1737588526" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP Webos\PDK\emulator\lib&quot;"/>
+=======
+								<option id="gnu.cpp.link.option.libs.2108488793" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="pdl"/>
+									<listOptionValue builtIn="false" value="curl"/>
+									<listOptionValue builtIn="false" value="crypt"/>
+									<listOptionValue builtIn="false" value="crypto"/>
+									<listOptionValue builtIn="false" value="SDL_net"/>
+									<listOptionValue builtIn="false" value="SDL"/>
+								</option>
+								<option id="gnu.cpp.link.option.paths.1737588526" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\Palm\PDK\emulator&quot;"/>
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 								</option>
 								<option id="gnu.cpp.link.option.strip.345103744" name="Omit all symbol information (-s)" superClass="gnu.cpp.link.option.strip" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.flags.725831703" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-Wl,--allow-shlib-undefined" valueType="string"/>

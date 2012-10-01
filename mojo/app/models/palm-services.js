@@ -31,7 +31,7 @@ PalmServices.subscribeDisplayManager = function() {
                     (e.state == "on" ? _displayOn = true : _displayOn = false);
                     break;
                 case 'displayOn':
-                case 'displayActive':
+                // case 'displayActive':
                     _displayOn = true;
                     break;
 

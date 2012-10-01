@@ -103,12 +103,16 @@ MainAssistant.prototype.setup = function() {
     this.deactivateHandler = this.deactivateWindow.bind(this);
     Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageDeactivate, this.deactivateHandler);
 
+<<<<<<< HEAD
     this.requestStatus();
+=======
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
     this.loadContacts();
     this.updateChats();
     this.waitForCompletion();
 };
 
+<<<<<<< HEAD
 MainAssistant.prototype.activateWindow = function(event) {
     _mojowhatsupPlugin.safePluginCall(function() {
         _plugin.sendActive(1);
@@ -119,6 +123,20 @@ MainAssistant.prototype.deactivateWindow = function(event) {
     _mojowhatsupPlugin.safePluginCall(function() {
         _plugin.sendActive(0);
     });
+=======
+
+MainAssistant.prototype.activateWindow = function(event) {
+   _mojowhatsupPlugin.safePluginCall(function() {
+        _plugin.sendActive(1);
+   });
+}
+
+
+MainAssistant.prototype.deactivateWindow = function(event) {
+   _mojowhatsupPlugin.safePluginCall(function() {
+        _plugin.sendActive(0);
+   });
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 }
 
 MainAssistant.prototype.restart = function() {
@@ -145,6 +163,11 @@ MainAssistant.prototype.loadContacts = function(callback) {
             if (callback)
                 callback(contacts);
             this.contactsImported = true;
+<<<<<<< HEAD
+=======
+            if (callback)
+                callback(contacts);
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
         }.bind(this));
     } else {
         setTimeout(this.loadContacts.bind(this), 10, callback);
@@ -155,6 +178,10 @@ MainAssistant.prototype.waitForCompletion = function() {
     if (_mojowhatsupPlugin.isRunnerExecuting && this.chatsLoaded && this.contactsImported) {
         this.controller.get("spinnerId").mojo.stop();
         this.controller.get("Scrim").hide();
+<<<<<<< HEAD
+=======
+        _contactJidNames.setItem(_myJid, $L("You"));
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
     } else {
         setTimeout(this.waitForCompletion.bind(this), 30);
     }

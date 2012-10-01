@@ -1,7 +1,11 @@
 {
 	"noWindow": true,
 	"id": "com.palm.mojowhatsup",
+<<<<<<< HEAD
 	"version": "1.2.0",
+=======
+	"version": "1.1.0",
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 	"vendor": "Antonio Morales",
 	"type": "web",
 	"main": "index.html",

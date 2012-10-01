@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #Mon Oct 01 19:11:50 CEST 2012
 eclipse.preferences.version=1
 encoding//resources/es/strings.json=UTF-8
@@ -11,4 +12,11 @@ encoding//resources/zh_hk/strings.json=UTF-8
 encoding//resources/zh_hk/views/dashboard/nomessages-template.html=UTF-8
 encoding//resources/zh_tw/strings.json=UTF-8
 encoding//resources/zh_tw/views/dashboard/nomessages-template.html=UTF-8
+=======
+#Wed Sep 26 23:11:24 CEST 2012
+eclipse.preferences.version=1
+encoding//resources/es/strings.json=UTF-8
+encoding//resources/it/views/dashboard/nomessages-template.html=UTF-8
+encoding//resources/nl/views/dashboard/nomessages-template.html=UTF-8
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 encoding/appinfo.json=UTF-8

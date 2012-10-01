@@ -130,9 +130,13 @@
 	"Donate":                                                                                       "Doneren",
 	"Discussion Forums":                                                                            "Fora",
 	"Change Log":                                                                                   "Wijzigingslog",
+<<<<<<< HEAD
 	"Back":                                                                                         "Terug",
 	
 	"Messages text font": "Lettertype van berichten",
 	"Size": "Formaat"
+=======
+	"Back":                                                                                         "Terug"
+>>>>>>> 7c37d95ad3e2ce641171399c432c9c9903c674ff
 }
                                                                                                
