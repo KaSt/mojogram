@@ -136,7 +136,27 @@
 	"Size": "Größe",
 	
 	"Send e-mail": "Sende E-Mail",
-	"Help & Support": "Hilfe & Support"
+	"Help & Support": "Hilfe & Support",
+
+	"Reduce image before sending": "Bild verkleinern, bevor es gesendet wird",
+	"No reduce": "Keine Verkleinerung",
+	"Phone type": "Telefon-Typ",
+	"All phone types": "Alle Telefon-Typen",
+	"Only mobile": "Nur Handy",
+	"Mobile and work": "Handy und Büro",
+	
+	"Language": "Sprache",
+	"English": "Englisch",
+	"Spanish": "Spanisch",
+	"French": "Französisch",
+	"Italian": "Italienisch",
+	"Dutch": "Holländisch",
+	"German": "Deutsch",
+	"Chinese (Simplified)": "Chinesisch (vereinfacht)",
+	"Chinese (Traditional)": "Chinesisch (traditionell)",
+	"Chinese (Hong Kong)": "Chinesisch (Hong Kong)",
+	"Notification": "Hinweis",
+	"It is necessary to restart the application so that this change can take effect": "Es ist notwendig die Anwendung zu schließen, damit die Änderungen übernommen werden können"
 
 }
 	

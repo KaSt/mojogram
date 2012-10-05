@@ -1,6 +1,13 @@
 function ChangelogAssistant() {
 	this.changelog = [
 		{
+			version: "v1.3.1",
+			changes: [
+				"Fixed contact load problem",
+				"Updated german and italian translations"
+			]				
+		},
+		{
 			version: "v1.3.0",
 			changes: [
 				"Fixed registration problem (fail-old-version)",
