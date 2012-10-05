@@ -12,6 +12,7 @@
 #include "FMessage.h"
 #include "fastevents.h"
 #include "Account.h"
+#include "JpegImageResizer.h"
 
 SDL_mutex* WebosBGApp::staticMutex = SDL_CreateMutex();
 std::map<std::string, MediaUploader*> WebosBGApp::uploads;
@@ -30,6 +31,9 @@ int WebosBGApp::waUploadHandler(void* d) {
 	MediaUploader* mediaUploader = (MediaUploader*) d;
 	try {
 		std::string response = mediaUploader->waUploadFile();
+
+		if (mediaUploader->isTempFile)
+			mediaUploader->removeFile();
 
 		const char *params[1];
 		params[0] = response.c_str();
@@ -325,15 +329,17 @@ PDL_bool WebosBGApp::sendUploadRequest(PDL_JSParameters *params) {
 	std::string msgId(PDL_GetJSParamString(params, 0));
 	std::string filePath(PDL_GetJSParamString(params, 1));
 	std::string contentType(PDL_GetJSParamString(params, 2));
+	int isTemp = PDL_GetJSParamInt(params, 3);
 
 	SDL_Event event;
 	SDL_UserEvent userEvent;
 	userEvent.type = SDL_USEREVENT;
 	userEvent.code = USER_EVENT_SENDUPLOADREQUEST;
-	std::string* data = new std::string[3];
+	std::string* data = new std::string[4];
 	data[0] = msgId;
 	data[1] = filePath;
 	data[2] = contentType;
+	data[3] = (isTemp == 1? "true": "false");
 	userEvent.data1 = data;
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
@@ -555,6 +561,18 @@ PDL_bool WebosBGApp::nextMessageKeyId(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
+PDL_bool WebosBGApp::resizeImage(PDL_JSParameters *params) {
+	std::string source(PDL_GetJSParamString(params, 0));
+	std::string target(PDL_GetJSParamString(params, 1));
+	int resolution = PDL_GetJSParamInt(params, 2);
+
+	JpegImageResizer imgResizer;
+	int r = imgResizer.resizeImage(source, target, resolution);
+	PDL_JSReply(params, (r == 0?"true":"false"));
+
+	return PDL_TRUE;
+}
+
 PDL_bool WebosBGApp::closeConnection(PDL_JSParameters *params) {
 	_LOGDATA("Called closeConnection");
 	SDL_Event event;
@@ -601,6 +619,7 @@ int WebosBGApp::registerJSCallBacks() {
 	ret += PDL_RegisterJSHandler("sendRemoveParticipants",
 			sendRemoveParticipants);
 	ret += PDL_RegisterJSHandler("sendSetNewSubject", sendSetNewSubject);
+	ret += PDL_RegisterJSHandler("resizeImage", resizeImage);
 	return ret;
 }
 
@@ -962,7 +981,7 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 	case USER_EVENT_SENDUPLOADREQUEST: {
 		std::string* data = (std::string*) Event.user.data1;
 		MediaUploader* mediaUploader = new MediaUploader(data[0], data[1],
-				data[2]);
+				data[2], ((data[3].compare("true") == 0)? true: false));
 
 		if ((mediaUploader->thread = SDL_CreateThread(
 				WebosBGApp::waUploadHandler, mediaUploader)) == NULL) {

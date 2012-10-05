@@ -30,6 +30,47 @@ PrefsAssistant.prototype.setup = function() {
 	this.controller.get("personToneLabel").update($L("Tone"));
 	this.controller.get("groupToneLabel").update($L("Tone"));
 	this.controller.get("chatsGroupTitle").update($L("Messages text font"));
+	this.controller.get("resizeImage").update($L("Reduce image before sending"));
+	this.controller.get("phoneTypesTitle").update($L("Contacts"));
+	this.controller.get("langTitle").update($L("Language"));
+
+	this.languageChoices = [{
+		label : $L("English"),
+		value : "en_gb"
+	}, {
+		label : $L("Spanish"),
+		value : "es_es"
+	}, {
+		label : $L("German"),
+		value : "de_de"
+	}, {
+		label : $L("Italian"),
+		value : "it_it"
+	}, {
+		label : $L("French"),
+		value : "fr_fr"
+	}, {	
+		label : $L("Dutch"),
+		value : "nl_nl"
+	}, {
+		label : $L("Chinese (Simplified)"),
+		value : "zh_cn"
+	}, {
+		label : $L("Chinese (Traditional)"),
+		value : "zh_tw"
+	}, {
+		label : $L("Chinese (Hong Kong)"),
+		value : "zh_hk"
+	}];
+
+	this.controller.setupWidget('language', {
+		label : $L('Language'),
+		choices : this.languageChoices,
+		modelProperty : "locale"
+	}, {
+		locale : (_appPrefs.cookieData.language)
+	});
+	this.controller.listen('language', Mojo.Event.propertyChanged, this.languageHandler.bindAsEventListener(this));
 
 	this.soundChoices = [{
 		label : $L("System sound"),
@@ -168,20 +209,119 @@ PrefsAssistant.prototype.setup = function() {
 		currentTimeout : _appPrefs.cookieData.backgroundTimeout
 	});
 	this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
-	
+
 	this.controller.setupWidget('chatTextSize', {
 		label : $L('Size'),
-		choices : [{label: 14, value: 14}, {label: 16, value: 16}, {label: 18, value: 18}, {label: 20, value: 20}, {label: 22, value: 22}, {label: 24, value: 24}],
+		choices : [{
+			label : 14,
+			value : 14
+		}, {
+			label : 16,
+			value : 16
+		}, {
+			label : 18,
+			value : 18
+		}, {
+			label : 20,
+			value : 20
+		}, {
+			label : 22,
+			value : 22
+		}, {
+			label : 24,
+			value : 24
+		}],
 		modelProperty : 'currentSize'
 	}, {
 		currentSize : _appPrefs.cookieData.chatTextSize
 	});
 	this.controller.listen('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler.bindAsEventListener(this));
-	
+
+	this.controller.setupWidget('imageSize', {
+		label : $L('Size'),
+		choices : [{
+			label : $L("No reduce"),
+			value : 0
+		}, {
+			label : "240 x 320",
+			value : 320
+		}, {
+			label : "480 x 640",
+			value : 640
+		}, {
+			label : "600 x 800",
+			value : 800
+		}, {
+			label : "768 x 1024",
+			value : 1024
+		}, {
+			label : "1024 x 1280",
+			value : 1280
+		}],
+		modelProperty : 'currentSize'
+	}, {
+		currentSize : _appPrefs.cookieData.imageResolution
+	});
+	this.controller.listen('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler.bindAsEventListener(this));
+
+	this.controller.setupWidget('phoneType', {
+		label : $L('Phone type'),
+		choices : [{
+			label : $L("All phone types"),
+			value : "all"
+		}, {
+			label : $L("Only mobile"),
+			value : "mobile"
+		}, {
+			label : $L("Mobile and work"),
+			value : "mobilework"
+		}],
+		modelProperty : 'currentSize'
+	}, {
+		currentSize : _appPrefs.cookieData.phoneTypes
+	});
+	this.controller.listen('phoneType', Mojo.Event.propertyChanged, this.phoneTypeHandler.bindAsEventListener(this));
+}
+
+PrefsAssistant.prototype.languageHandler = function(event) {
+	_appPrefs.put("language", event.value);
+    try{
+		Mojo.Locale.set(_appPrefs.cookieData.language);
+    }catch(e){
+        Mojo.Log.error("Error "+Object.toJSON(e));
+    }	
+	_appAssistant.controller.getActiveStageController().activeScene().showAlertDialog({
+		title : $L("Notification"),
+		message : $L("It is necessary to restart the application so that this change can take effect"),
+		choices : [{
+			label : $L('Close application'),
+			value : "close",
+			type : 'affirmative'
+		}],
+		preventCancel : true,
+		onChoose : function(value) {
+			_exitApp = true;
+			if (value == 'close') {
+				if (_dashboardStageController)
+					_appAssistant.controller.closeStage(_notificationStage);
+				if (_mainStageController)
+					_appAssistant.controller.closeStage(_mainStage);
+			}
+		}
+	});
+
+}
+
+PrefsAssistant.prototype.phoneTypeHandler = function(event) {
+	_appPrefs.put("phoneTypes", String(event.value));
+}
+
+PrefsAssistant.prototype.imageSizeHandler = function(event) {
+	_appPrefs.put("imageResolution", Number(event.value));
 }
 
 PrefsAssistant.prototype.chatTextSizeHandler = function(event) {
-	_appPrefs.put("chatTextSize", Number(event.value));	
+	_appPrefs.put("chatTextSize", Number(event.value));
 }
 
 PrefsAssistant.prototype.deactivate = function(event) {
@@ -189,7 +329,6 @@ PrefsAssistant.prototype.deactivate = function(event) {
 		_openChatAssistant.refreshList();
 	}
 }
-
 
 PrefsAssistant.prototype.personTonePathTapHandler = function(event) {
 	Mojo.FilePicker.pickFile({
@@ -280,6 +419,7 @@ PrefsAssistant.prototype.groupBlinkHandler = function(event) {
 }
 
 PrefsAssistant.prototype.cleanup = function() {
+	this.controller.stopListening('language', Mojo.Event.propertyChanged, this.languageHandler);
 	this.controller.stopListening('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler);
 	this.controller.stopListening('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler);
 	this.controller.stopListening('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler);
@@ -292,5 +432,7 @@ PrefsAssistant.prototype.cleanup = function() {
 	this.controller.stopListening('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler);
 	this.controller.stopListening('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler);
 	this.controller.stopListening('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler);
-	this.controller.stopListening('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler);	
+	this.controller.stopListening('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler);
+	this.controller.stopListening('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler);
+	this.controller.stopListening('phoneType', Mojo.Event.propertyChanged, this.phoneTypeHandler);
 }

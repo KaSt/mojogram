@@ -19,9 +19,18 @@ MediaUploader.prototype.requestUpload = function(file) {
 	this.uploading = true;
 	this.msg.status = Message.STATUS_MEDIA_UPLOADING;
 	_appDB.updateMessageStatus(this.msg);
-
+	
 	_mojowhatsupPlugin.safePluginCall( function() {
-		_plugin.sendUploadRequest(this.msg.keyString(), file, Media.getMimeType(this.msg, Media.getExt(file)));
+		var isFileTemp = 0;		
+		if (this.msg.media_wa_type == Message.WA_TYPE_IMAGE && _appPrefs.cookieData.imageResolution != 0) {
+			var tempFile = Media.MOJOWHATSUP_MEDIA_DIR + "temp" + Media.getFileName(file);
+			var result = _plugin.resizeImage(file, tempFile, _appPrefs.cookieData.imageResolution);
+			if (result == "true") {
+				file = tempFile;
+				isFileTemp = 1;
+			}
+		}					
+		_plugin.sendUploadRequest(this.msg.keyString(), file, Media.getMimeType(this.msg, Media.getExt(file)), isFileTemp);
 	}.bind(this));
 
 	//

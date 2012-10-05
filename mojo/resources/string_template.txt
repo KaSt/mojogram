@@ -130,3 +130,9 @@
 	"Discussion Forums": 
 	"Change Log": 
 	"Back": 
+
+	"Messages text font":
+	"Size":
+	
+	"Send e-mail":
+	"Help & Support":

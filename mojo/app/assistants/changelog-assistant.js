@@ -1,6 +1,17 @@
 function ChangelogAssistant() {
 	this.changelog = [
 		{
+			version: "v1.3.0",
+			changes: [
+				"Fixed registration problem (fail-old-version)",
+				"Added reduce image before sending in preferences",
+				"Added contacts phone types to import in preferences",
+				"Fixed Chinese translation",
+				"Added French translation",
+				"Added change language in preferences"
+			]
+		},
+		{
 			version: "v1.2.0",
 			changes: [
 				"Chinese translation (thanks to tonyw)",

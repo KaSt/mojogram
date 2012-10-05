@@ -71,14 +71,7 @@ Media.openMedia = function(msg, stageController) {
 			var serviceRequest = new Mojo.Service.Request("palm://com.palm.applicationManager", {
 				method : "open",
 				parameters : {
-					id : "com.palm.app.maps",
-					params : {
-						location : {
-							lat : msg.latitude,
-							lng : msg.longitude,
-							acc : 30
-						}
-					}
+					target: "maploc:" + msg.latitude + "," + msg.longitude
 				}
 			});
 			break;

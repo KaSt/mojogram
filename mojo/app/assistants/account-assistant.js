@@ -178,6 +178,13 @@ AccountAssistant.prototype.checkForm = function(action) {
 	var smsCode = this.controller.get('textFieldCode').mojo.getValue();
 	var pushName = this.controller.get('textFieldPushN').mojo.getValue();
 
+	cc = cc.replace(/^0+/g,"");
+	phone = phone.replace(/^0+/g, "");
+	
+	this.controller.get('textFieldCC').mojo.setValue(cc);
+	this.controller.get('textFieldPN').mojo.setValue(phone);
+
+
 	if (action == "code" || action == "register" || action == "login") {
 		if (cc == "") {
 			Mojo.Controller.errorDialog($L("Please insert a country code"), window);

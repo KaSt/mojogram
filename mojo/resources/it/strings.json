@@ -131,6 +131,10 @@
 	"Discussion Forums":                                                                              "Forum di discussione",
 	"Change Log":                                                                                     "Lista dei cambiamenti",
 	"Back":                                                                                           "Indietro",
+
 	"Messages text font": "Font dei messaggi",
-	"Size": "Grandezza"
+	"Size": "Grandezza",
+
+	"Send e-mail": "Invia un email",
+	"Help & Support": "Aiuto & Supporto"
 }

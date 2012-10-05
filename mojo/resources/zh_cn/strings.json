@@ -91,8 +91,6 @@
 	"Custom sound": "自定声音",
 	"Tone": "声音",
 	"Silence": "静音",
-	"Messages text font": "信息字型",
-	"Size": "大小",
 	
 	"Location": "位置",
 	"Longitude": "经度",
@@ -132,5 +130,14 @@
 	"Donate": "捐助",
 	"Discussion Forums": "论坛",
 	"Change Log": "更新日志",
-	"Back": "退回"
+	"Back": "退回",
+	
+	"Messages text font": "信息字型",
+	"Size": "大小",
+	
+	"Send e-mail": "发送电邮",
+	"Help & Support": "帮助及支援",
+	
+	"Reduce image before sending": "发送前缩小图像",
+	"No reduce": "不缩小"
 }

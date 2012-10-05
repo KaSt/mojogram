@@ -30,6 +30,12 @@ function AppAssistant() {
 	_appData.get();
 	_appPrefs.get();
 	_myJid = _appData.cookieData.userId + "@s.whatsapp.net";
+	// Set locale
+    try{
+		Mojo.Locale.set(_appPrefs.cookieData.language);
+    }catch(e){
+        Mojo.Log.error("Error "+Object.toJSON(e));
+    }	
 	
 	PalmServices.subscribeDisplayManager();
 }

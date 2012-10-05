@@ -81,6 +81,7 @@ public:
 	static PDL_bool sendAddParticipants(PDL_JSParameters *params);
 	static PDL_bool sendRemoveParticipants(PDL_JSParameters *params);
 	static PDL_bool sendSetNewSubject(PDL_JSParameters *params);
+	static PDL_bool resizeImage(PDL_JSParameters *params);
 
 	static void processUserEvent(const SDL_Event& event);
 

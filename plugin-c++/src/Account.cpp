@@ -12,7 +12,7 @@
 #include "cJSON.h"
 #include <cstdlib>
 #include <PDL.h>
-
+#include <stdio.h>
 
 
 Account::Account() throw (WAException) {
@@ -128,7 +128,7 @@ std::string Account::waRegisterRequest(const std::string& cc, const std::string&
 	this->addParam("in", in);
 	this->addParam("udid", Utilities::getChatPassword(password));
 	this->addParam("code", code);
-	// this->addParam("token", Account::getToken(in));
+	this->addParam("token", Account::getToken(in));
 
 	// _LOGDATA("Password: %s", Utilities::getChatPassword(password).c_str());
 
@@ -226,16 +226,21 @@ int MediaUploader::ProgressCallBack(void *clientp, double dltotal, double dlnow,
     return 0;
 }
 
-MediaUploader::MediaUploader(const std::string& msgId, const std::string& filePath, const std::string& contentType) {
+MediaUploader::MediaUploader(const std::string& msgId, const std::string& filePath, const std::string& contentType, bool isTemp) {
 	this->msgId = msgId;
 	this->filePath = filePath;
 	this->contentType = contentType;
 	this->lastruntime = 0;
 	this->exit = false;
+	this->isTempFile = isTemp;
 }
 
 MediaUploader::~MediaUploader() {
 
+}
+
+void MediaUploader::removeFile() {
+	remove(this->filePath.c_str());
 }
 
 std::string MediaUploader::waUploadFile() {

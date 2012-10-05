@@ -78,7 +78,22 @@ AppDatabase.prototype.impersonate = function(e1) {
                 // trim string
                 if ('phoneNumbers' in e1.results[i]) {
                     for (var j = 0; j < e1.results[i].phoneNumbers.length; j++) {
-                        if ((e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("mobile") != -1) || (e1.results[i].phoneNumbers[j].label == 3)) {
+                    	var checkPhoneType = false;
+                    	switch (_appPrefs.cookieData.phoneTypes) {
+                    		case "all":
+                    		checkPhoneType = true;
+                    		break;
+                    		case "mobile":
+                    		checkPhoneType = (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("mobile") != -1);
+                    		break;
+                    		case "mobilework":
+                    		checkPhoneType = (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("mobile") != -1) ||
+                    						 (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("work") != -1);
+                    		break;
+                    	}
+                    	
+                        if (checkPhoneType == true) {
+                        	
                             var cc = _appData.cookieData.cc;
                             var number = e1.results[i].phoneNumbers[j].value;
                             number = PhoneNumber.normalizeMobile(number);
@@ -89,6 +104,7 @@ AppDatabase.prototype.impersonate = function(e1) {
                                 number = PhoneNumber.removeCc(cc, number);
                                 number = PhoneNumber.normalizeMobile(number);
                             }
+                            
                             if (cc != "" && number != "") {
                                 var contact = {
                                     "name" : name,
@@ -107,6 +123,7 @@ AppDatabase.prototype.impersonate = function(e1) {
         Mojo.Log.info("Contacts! = " + JSON.stringify(this.contacts.length));
 
         var total = this.contactResults + e1.count - e1.results.length;
+        
         if (this.contactResults < total) {
             if (this.contactRequest)
                 this.contactRequest.cancel();
@@ -142,6 +159,7 @@ AppDatabase.prototype.updateContacts = function(contacts) {
         t.executeSql("DELETE FROM 'contacts' WHERE jid NOT IN (" + AppDatabase.getJidList(contacts) + ")", [], function(t, r) {
             for (var i = 0; i < contacts.length; i++) {
                 var contact = contacts[i];
+                
                 t.executeSql(sql, [contact.name, contact.mobilePhone, contact.jid, contact.cc], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
                 t.executeSql(sql2, [contact.name, contact.cc, contact.mobilePhone, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
                 t.executeSql(sql3, [contact.name, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));

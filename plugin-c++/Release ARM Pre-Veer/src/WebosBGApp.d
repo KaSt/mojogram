@@ -54,7 +54,11 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_Purchase.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_Sensors.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h \
- ../src/ApplicationData.h ../src/cJSON.h ../src/fastevents.h
+ ../src/ApplicationData.h ../src/cJSON.h ../src/fastevents.h \
+ ../src/JpegImageResizer.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jconfig.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jmorecfg.h
 
 ../src/WebosBGApp.h:
 
@@ -189,3 +193,11 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h:
 ../src/cJSON.h:
 
 ../src/fastevents.h:
+
+../src/JpegImageResizer.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jconfig.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jmorecfg.h:

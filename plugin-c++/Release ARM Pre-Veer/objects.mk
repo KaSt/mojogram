@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lpdl -lcurl -lcrypt -lcrypto -lSDL -lSDL_net
+LIBS := -lpdl -ljpeg -lcurl -lcrypt -lcrypto -lSDL -lSDL_net -lSDL_image
 
