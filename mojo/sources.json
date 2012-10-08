@@ -1,4 +1,6 @@
-[	{ 
+[	{
+		"source": "app/models/updater.js"
+	}, { 
 		"source": "app/models/status.js"
 	}, { 
 		"source": "app/models/phonenumber.js"
@@ -74,5 +76,8 @@
     }, {
     	"scenes": "help",
     	"source": "app/assistants/help-assistant.js"
+    }, {
+    	"scenes": "update",
+    	"source": "app/assistants/update-assistant.js"
     }
 ]

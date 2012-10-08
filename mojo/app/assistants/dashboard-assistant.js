@@ -15,19 +15,11 @@ DashboardAssistant.prototype.setup = function() {
 		_mediaUploads = new HashTable();
 		_mediaDownloads = new HashTable();
 
-		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "true");
 	});
 
 	_mojowhatsupPlugin.whenRunnerExecuting( function() {
-		PalmServices.subscribeNetworkStatus(this.controller);
-	}.bind(this));
-
-	_mojowhatsupPlugin.safePluginCall(function() {
-		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
-	});
-
-	_mojowhatsupPlugin.whenRunnerExecuting( function() {
-		PalmServices.subscribeNetworkStatus(this.controller);
+		PalmServices.subscribeNetworkStatus();
 		setTimeout(function() {
 			_plugin.sendActive(0)
 		}, 10000);

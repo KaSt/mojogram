@@ -1,6 +1,16 @@
 function ChangelogAssistant() {
 	this.changelog = [
 		{
+			version: "v1.3.2",
+			changes: [
+				"Shows notification when a new version is available",
+				"German translation corrected",
+				"Added Russian translation",
+				"Sends unavailable message when app is inactive, in background or minimized",
+				"Fixed issue with messages not coming in background mode"
+			]				
+		},
+		{
 			version: "v1.3.1",
 			changes: [
 				"Fixed contact load problem",

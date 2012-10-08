@@ -177,6 +177,8 @@ void XmppRunner::stayConnectedLoop() {
 			conTries++;
 			try {
 				connection->do_login();
+				if (!this->_app->_bgMode)
+					connection->sendAvailableForChat();
 				conTries = 0;
 				chatState->_last_successful_login = time(NULL);
 			} catch (WAException& ex) {
@@ -373,7 +375,7 @@ void XmppRunner::stayConnectedLoop() {
 
 void XmppRunner::updateGroupChats() throw(WAException) {
 	this->_connection->sendGetServerProperties();
-	if (!BGApp::getInstance()->gotGroups()) {
+	if (!BGApp::getInstance()->gotGroups() && !this->_app->_bgMode) {
 		this->_connection->sendGetGroups();
 		this->_connection->sendGetOwningGroups();
 	}
@@ -381,6 +383,7 @@ void XmppRunner::updateGroupChats() throw(WAException) {
 
 int XmppRunner::startXmppThreadCallback(void *data) {
 	((XmppRunner*) data)->stayConnectedLoop();
+	((XmppRunner*) data)->_app->_xmpprunner = NULL;
 	delete ((XmppRunner*) data);
 	_LOGDATA("Exit XmppThreadCallBack");
 	return 0;

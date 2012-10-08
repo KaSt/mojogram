@@ -3,8 +3,10 @@ var ACTIVITY_TIMEOUT = 900000;
 var _activity_count = 0;
 var _displayManagerRequest;
 var _wanManagerRequest;
+var _netManagerRequest;
 var _powerManagerRequest;
-var _timerManagerRequest;
+var _timerManagerRequestSet;
+var _timerManagerRequestClear;
 
 function PalmServices() {
 }
@@ -30,17 +32,19 @@ PalmServices.subscribeDisplayManager = function() {
                 case 'request':
                     (e.state == "on" ? _displayOn = true : _displayOn = false);
                     break;
+                case 'displayActive':
+    	            if (_plugin != null && _dashboardAssistant == null)
+                        _plugin.sendActive(1);
                 case 'displayOn':
-                // case 'displayActive':
                     _displayOn = true;
                     break;
-
-                case 'displayOff':
-                    if (_plugin != null)
-                        _plugin.sendActive(0);
+                case 'displayInactive':
                 case 'displayDeactivate':
+                    if (_plugin != null && _dashboardAssistant == null)
+                        _plugin.sendActive(0);
+                case 'displayOff':                    
                     _displayOn = false;
-                    break;
+                    break;                    
             }
         }.bind(this),
         onFailure : function(e) {
@@ -49,8 +53,8 @@ PalmServices.subscribeDisplayManager = function() {
     });
 }
 
-PalmServices.subscribeNetworkStatus = function(sceneController) {
-    sceneController.serviceRequest('palm://com.palm.connectionmanager', {
+PalmServices.subscribeNetworkStatus = function() {
+    _netManagerRequest = new Mojo.Service.Request('palm://com.palm.connectionmanager', {
         method : 'getstatus',
         parameters : {
             subscribe : true
@@ -63,9 +67,9 @@ PalmServices.subscribeNetworkStatus = function(sceneController) {
                     _mojowhatsupPlugin.safePluginCall(function() {
                         _plugin.networkStatusChanged(1);
                         if (_dashboardAssistant != null) {
-                            setTimeout(function() {
-                                _plugin.sendActive(0);
-                            }, 10000);
+                            // setTimeout(function() {
+                                // _plugin.sendActive(0);
+                            // }, 10000);
                             _dashboardAssistant.setBGTimeout();
                         }
                     });
@@ -124,7 +128,7 @@ PalmServices.clearActivity = function() {
 
 PalmServices.setWakeUpAlarm = function() {
     Mojo.Log.info("Setting wake up alarm!");
-    _timerManagerRequest = new Mojo.Service.Request('palm://com.palm.power/timeout', {
+    _timerManagerRequestSet = new Mojo.Service.Request('palm://com.palm.power/timeout', {
         method : "set",
         parameters : {
             "key" : "mojoWhatsupTimeoutFG",
@@ -137,8 +141,7 @@ PalmServices.setWakeUpAlarm = function() {
 }
 
 PalmServices.setWakeUpAlarmBG = function() {
-    Mojo.Log.info("Setting wake up alarm!");
-    _timerManagerRequest = new Mojo.Service.Request('palm://com.palm.power/timeout', {
+    _timerManagerRequestSet = new Mojo.Service.Request('palm://com.palm.power/timeout', {
         method : "set",
         parameters : {
             "key" : "mojoWhatsupTimeoutBG",
@@ -152,7 +155,7 @@ PalmServices.setWakeUpAlarmBG = function() {
 
 PalmServices.clearWakeUpAlarm = function() {
     Mojo.Log.info("Clearing wake up alarm!");
-    _timerManagerRequest = new Mojo.Service.Request('palm://com.palm.power/timeout', {
+    _timerManagerRequestClear = new Mojo.Service.Request('palm://com.palm.power/timeout', {
         method : "clear",
         parameters : {
             "key" : "mojoWhatsupTimeoutFG"
@@ -162,7 +165,7 @@ PalmServices.clearWakeUpAlarm = function() {
 
 PalmServices.clearWakeUpAlarmBG = function() {
     Mojo.Log.info("Clearing wake up alarm!");
-    _timerManagerRequest = new Mojo.Service.Request('palm://com.palm.power/timeout', {
+    _timerManagerRequestClear = new Mojo.Service.Request('palm://com.palm.power/timeout', {
         method : "clear",
         parameters : {
             "key" : "mojoWhatsupTimeoutBG"

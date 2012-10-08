@@ -218,6 +218,8 @@ PDL_bool WebosBGApp::pluginTestLogin(PDL_JSParameters *params) {
 
 	_instance->finalize();
 
+	_LOGDATA("fin finalize");
+
 	SDL_Event event;
 	SDL_UserEvent userEvent;
 	userEvent.type = SDL_USEREVENT;
@@ -245,15 +247,17 @@ PDL_bool WebosBGApp::pluginStartBG(PDL_JSParameters *params) {
 	std::string userId(PDL_GetJSParamString(params, 0));
 	std::string password(PDL_GetJSParamString(params, 1));
 	std::string pushName(PDL_GetJSParamString(params, 2));
+	std::string bgMode(PDL_GetJSParamString(params, 3));
 
 	SDL_Event event;
 	SDL_UserEvent userEvent;
 	userEvent.type = SDL_USEREVENT;
 	userEvent.code = USER_EVENT_STARTBG;
-	std::string* data = new std::string[3];
+	std::string* data = new std::string[4];
 	data[0] = userId;
 	data[1] = password;
 	data[2] = pushName;
+	data[3] = bgMode;
 	userEvent.data1 = data;
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
@@ -273,7 +277,7 @@ PDL_bool WebosBGApp::sendActive(PDL_JSParameters *params) {
 	userEvent.data1 = (void *) active;
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
-	SDL_PushEvent(&event);
+	FE_PushEvent(&event);
 
 	return PDL_TRUE;
 }
@@ -581,7 +585,7 @@ PDL_bool WebosBGApp::closeConnection(PDL_JSParameters *params) {
 	userEvent.code = USER_EVENT_CLOSECONNECTION;
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
-	SDL_PushEvent(&event);
+	FE_PushEvent(&event);
 
 	return PDL_TRUE;
 }
@@ -924,8 +928,13 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 	case USER_EVENT_STARTBG: {
 		std::string* data = (std::string*) Event.user.data1;
 		ApplicationData::setData(data[0], data[2], data[1]);
+		if (data[3].compare("true") == 0)
+			_instance->_bgMode = true;
+		else
+			_instance->_bgMode = false;
 		_instance->finalize();
 		_instance->initialize();
+
 		const char *params[1] = { "true" };
 		PDL_Err err = PDL_CallJS("runnerExecuting", params, 1);
 		if (err != PDL_NOERROR) {
@@ -1075,8 +1084,8 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				_LOGDATA("sending stateRequest");
 				std::string* to = (std::string*) Event.user.data1;
 				try {
-					fConn->sendPresenceSubscriptionRequest(*to);
 					fConn->sendQueryLastOnline(*to);
+					fConn->sendPresenceSubscriptionRequest(*to);
 				} catch (WAException& ex) {
 					_LOGDATA("error sending contact state request: %s",
 							ex.what());

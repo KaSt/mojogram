@@ -538,7 +538,6 @@ bool WAConnection::read() throw(WAException) {
 
 void WAConnection::do_login() throw(WAException) {
 	this->login->login();
-	sendAvailableForChat();
 }
 
 void WAConnection::sendNop() throw(WAException) {

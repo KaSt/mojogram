@@ -21,9 +21,10 @@ var _contactsImported = false;
 var _exitApp = false;
 var _myJid = null;
 var _statusRequest = null;
+var _lastUpdateSeen = 0;
 
 function AppAssistant() {
-	Mojo.Log.error("******** INTO AppAssistant CONSTRUCTOR");
+	Mojo.Log.info("******** INTO AppAssistant CONSTRUCTOR");
 	_mojowhatsupPlugin = new MojowhatsupPluginModel();
 	_appDB = new AppDatabase();
 	_appAssistant = this;
@@ -41,7 +42,7 @@ function AppAssistant() {
 }
 
 AppAssistant.prototype.cleanup = function() {
-	Mojo.Log.error("******** INTO AppAssistant CLEANUP");
+	Mojo.Log.info("******** INTO AppAssistant CLEANUP");
 }
 
 AppAssistant.prototype.handleLaunch = function(launchParams) {

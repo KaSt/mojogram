@@ -36,6 +36,7 @@ public:
 	ChatState* _chatState;
 	bool _isNetworkConnected;
 	SDL_mutex* _mutex;
+	bool _bgMode;
 
 	static BGApp* getInstance();
 	static void setInstance(BGApp* app);

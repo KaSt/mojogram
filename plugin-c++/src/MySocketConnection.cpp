@@ -90,7 +90,7 @@ void MySocketConnection::flush() {
 
 void MySocketConnection::write(const std::vector<unsigned char>& bytes, int length) {
 	int result = SDLNet_TCP_Send(this->socket, &bytes[0], length);
-	_LOGDATA("Socket data send");
+	// _LOGDATA("Socket data send");
 	if (result < length) {
 		throw WAException(std::string(SDLNet_GetError()), WAException::SOCKET_EX, WAException::SOCKET_EX_SEND);
 	}

@@ -1,4 +1,4 @@
-#Wed Oct 03 09:33:26 CEST 2012
+#Mon Oct 08 11:02:39 CEST 2012
 eclipse.preferences.version=1
 encoding//resources/de/strings.json=UTF-8
 encoding//resources/es/strings.json=UTF-8
@@ -8,6 +8,7 @@ encoding//resources/it/strings.json=UTF-8
 encoding//resources/it/views/dashboard/nomessages-template.html=UTF-8
 encoding//resources/nl/strings.json=UTF-8
 encoding//resources/nl/views/dashboard/nomessages-template.html=UTF-8
+encoding//resources/ru/strings.json=UTF-8
 encoding//resources/zh_cn/strings.json=UTF-8
 encoding//resources/zh_cn/views/dashboard/nomessages-template.html=UTF-8
 encoding//resources/zh_hk/strings.json=UTF-8

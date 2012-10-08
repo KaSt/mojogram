@@ -24,7 +24,7 @@ BGApp::BGApp() {
 	this->_xmpprunner = NULL;
 	this->_chatState = NULL;
 	this->_xmppthread = NULL;
-
+	this->_bgMode = false;
 }
 
 BGApp::~BGApp() {
@@ -47,8 +47,11 @@ void BGApp::finalize() {
 				_LOGDATA("Error sending BGApp::finalize:sendingClose: %s", ex.what());
 			}
 		}
-		this->_xmpprunner->killWithConfirmation();
+		if (this->_xmpprunner != NULL)
+			this->_xmpprunner->killWithConfirmation();
+
 		SDL_KillThread(this->_xmppthread);
+
 		ChatState::finalize();
 
 		if (this->_xmpprunner != NULL)

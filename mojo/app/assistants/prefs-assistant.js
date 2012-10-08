@@ -61,6 +61,9 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		label : $L("Chinese (Hong Kong)"),
 		value : "zh_hk"
+	}, {
+		label : $L("Russian"),
+		value : "ru_ru"
 	}];
 
 	this.controller.setupWidget('language', {

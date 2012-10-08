@@ -156,6 +156,13 @@
 	"Chinese (Traditional)": "Chino (Tradicional)",
 	"Chinese (Hong Kong)": "Chino (Hong Kong)",
 	"Notification": "Aviso",
-	"It is necessary to restart the application so that this change can take effect": "Es necesario reiniciar la aplicación para que este cambio tenga efecto"
+	"It is necessary to restart the application so that this change can take effect": "Es necesario reiniciar la aplicación para que este cambio tenga efecto",
+	
+	"Check for updates": "Comprobar actualizaciones",
+	"#{appName} is up to date": "#{appName} está al día",
+	"New version": "Nueva versión",
+	"Russian": "Ruso",
+	"Changes": "Cambios",
+	"Update available": "Actualización disponible"
 }
 	

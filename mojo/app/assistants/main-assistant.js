@@ -54,11 +54,11 @@ MainAssistant.prototype.setup = function() {
         _mediaDownloads = new HashTable();
 
         _myJid = _appData.cookieData.userId + "@s.whatsapp.net";
-        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "false");
     });
 
     _mojowhatsupPlugin.whenRunnerExecuting( function() {
-        PalmServices.subscribeNetworkStatus(this.controller);
+        PalmServices.subscribeNetworkStatus();
     }.bind(this));
 
     this.controller.setupWidget(Mojo.Menu.appMenu, this.attributesAppMenu = {
@@ -103,7 +103,7 @@ MainAssistant.prototype.setup = function() {
     this.deactivateHandler = this.deactivateWindow.bind(this);
     Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageDeactivate, this.deactivateHandler);
 
-    this.requestStatus();
+    // this.requestStatus();
     this.loadContacts();
     this.updateChats();
     this.waitForCompletion();
@@ -123,7 +123,7 @@ MainAssistant.prototype.deactivateWindow = function(event) {
 
 MainAssistant.prototype.restart = function() {
     _mojowhatsupPlugin.safePluginCall(function() {
-        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "false");
     });
 }
 
@@ -155,6 +155,7 @@ MainAssistant.prototype.waitForCompletion = function() {
     if (_mojowhatsupPlugin.isRunnerExecuting && this.chatsLoaded && this.contactsImported) {
         this.controller.get("spinnerId").mojo.stop();
         this.controller.get("Scrim").hide();
+   		Updater.checkUpdate(this.controller, false, false);
     } else {
         setTimeout(this.waitForCompletion.bind(this), 30);
     }

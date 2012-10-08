@@ -7,6 +7,11 @@ function HelpAssistant() {
 				sceneName: "changelog"
 			},
 			{
+				label: $L("Check for updates"),
+				type: "scene",
+				sceneName: "update"
+			},
+			{
 				label: $L("Discussion Forums"),
 				type: "web",
 				url: "http://forums.webosnation.com/webos-apps/318833-mojowhatsup-whatsapp-client-webos.html", 
@@ -96,7 +101,11 @@ HelpAssistant.prototype.onTap = function(event) {
 			});
 		break;
 		case 'scene':
-			this.controller.stageController.pushScene(resource.sceneName);
+			if (resource.sceneName == "update") {
+				Updater.checkUpdate(this.controller, true, true);
+			} else {
+				this.controller.stageController.pushScene(resource.sceneName);				
+			}
 		break;
 	}
 }
