@@ -103,7 +103,7 @@ MainAssistant.prototype.setup = function() {
     this.deactivateHandler = this.deactivateWindow.bind(this);
     Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageDeactivate, this.deactivateHandler);
 
-    // this.requestStatus();
+    this.requestStatus();
     this.loadContacts();
     this.updateChats();
     this.waitForCompletion();

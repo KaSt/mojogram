@@ -6,6 +6,7 @@
 *.swo
 *.swn
 *.eg
+*.tmp
 *~
 *.o
 *.log
@@ -18,4 +19,5 @@ TODO.txt
 Release ARM Pre-Veer
 Debug Emulator
 Debug ARM Pre-Veer
+mojowhatsup_service_plugin_win32_test.cpp.bak
 	

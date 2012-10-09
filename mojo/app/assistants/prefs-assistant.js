@@ -1,4 +1,82 @@
 function PrefsAssistant() {
+   this.languageChoices = [{
+        label : $L("English"),
+        value : "en_gb"
+    }, {
+        label : $L("Spanish"),
+        value : "es_es"
+    }, {
+        label : $L("German"),
+        value : "de_de"
+    }, {
+        label : $L("Italian"),
+        value : "it_it"
+    }, {
+        label : $L("French"),
+        value : "fr_fr"
+    }, {    
+        label : $L("Dutch"),
+        value : "nl_nl"
+    }, {
+        label : $L("Chinese (Simplified)"),
+        value : "zh_cn"
+    }, {
+        label : $L("Chinese (Traditional)"),
+        value : "zh_tw"
+    }, {
+        label : $L("Chinese (Hong Kong)"),
+        value : "zh_hk"
+    }, {
+        label : $L("Russian"),
+        value : "ru_ru"
+    }];
+    
+    this.soundChoices = [{
+        label : $L("System sound"),
+        value : "system"
+    }, {
+        label : $L("Custom sound"),
+        value : "custom"
+    }, {
+        label : $L("Silence"),
+        value : "silence"
+    }];
+    
+   this.timeouts = [{
+        label : $L('As items arrive'),
+        value : "asArrive"
+    }, {
+        label : '5 ' + $L('minutes'),
+        value : "00:05:00"
+    }, {
+        label : '10 ' + $L('minutes'),
+        value : "00:10:00"
+    }, {
+        label : '15 ' + $L('minutes'),
+        value : "00:15:00"
+    }, {
+        label : '20 ' + $L('minutes'),
+        value : "00:20:00"
+    }, {
+        label : '30 ' + $L('minutes'),
+        value : "00:30:00"
+    }, {
+        label : '45 ' + $L('minutes'),
+        value : "00:45:00"
+    }, {
+        label : '1 ' + $L('hour'),
+        value : "01:00:00"
+    }, {
+        label : '6 ' + $L('hours'),
+        value : "06:00:00"
+    }, {
+        label : '12 ' + $L('hours'),
+        value : "12:00:00"
+    }, {
+        label : '24 ' + $L('hours'),
+        value : "24:00:00"
+    }];
+
 }
 
 PrefsAssistant.prototype.setup = function() {
@@ -17,6 +95,7 @@ PrefsAssistant.prototype.setup = function() {
 		}, menuModel);
 	}
 
+    this.controller.get("langTitle").update($L("Language"));
 	this.controller.get("headerTitle").update($L("Preferences"));
 	this.controller.get("personGroupTitle").update($L("Persons notifications"));
 	this.controller.get("groupGroupTitle").update($L("Groups notifications"));
@@ -32,39 +111,6 @@ PrefsAssistant.prototype.setup = function() {
 	this.controller.get("chatsGroupTitle").update($L("Messages text font"));
 	this.controller.get("resizeImage").update($L("Reduce image before sending"));
 	this.controller.get("phoneTypesTitle").update($L("Contacts"));
-	this.controller.get("langTitle").update($L("Language"));
-
-	this.languageChoices = [{
-		label : $L("English"),
-		value : "en_gb"
-	}, {
-		label : $L("Spanish"),
-		value : "es_es"
-	}, {
-		label : $L("German"),
-		value : "de_de"
-	}, {
-		label : $L("Italian"),
-		value : "it_it"
-	}, {
-		label : $L("French"),
-		value : "fr_fr"
-	}, {	
-		label : $L("Dutch"),
-		value : "nl_nl"
-	}, {
-		label : $L("Chinese (Simplified)"),
-		value : "zh_cn"
-	}, {
-		label : $L("Chinese (Traditional)"),
-		value : "zh_tw"
-	}, {
-		label : $L("Chinese (Hong Kong)"),
-		value : "zh_hk"
-	}, {
-		label : $L("Russian"),
-		value : "ru_ru"
-	}];
 
 	this.controller.setupWidget('language', {
 		label : $L('Language'),
@@ -73,18 +119,6 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		locale : (_appPrefs.cookieData.language)
 	});
-	this.controller.listen('language', Mojo.Event.propertyChanged, this.languageHandler.bindAsEventListener(this));
-
-	this.soundChoices = [{
-		label : $L("System sound"),
-		value : "system"
-	}, {
-		label : $L("Custom sound"),
-		value : "custom"
-	}, {
-		label : $L("Silence"),
-		value : "silence"
-	}];
 
 	this.controller.setupWidget('personSoundSelector', {
 		label : $L('Sound'),
@@ -93,7 +127,6 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentSound : _appPrefs.cookieData.personSound
 	});
-	this.controller.listen('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler.bindAsEventListener(this));
 
 	if (_appPrefs.cookieData.personSound == "custom") {
 		this.controller.get('personTonePathRow').show();
@@ -101,28 +134,24 @@ PrefsAssistant.prototype.setup = function() {
 		this.controller.get('personTonePathRow').hide();
 	}
 	this.controller.get('personTonePath').update(_appPrefs.cookieData.personToneName);
-	this.controller.listen('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('personVibrateToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.personVibrate
 	});
-	this.controller.listen('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('personBannerToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.personBanner
 	});
-	this.controller.listen('personBannerToggle', Mojo.Event.propertyChanged, this.personBannerHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('personBlinkToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.personBlink
 	});
-	this.controller.listen('personBlinkToggle', Mojo.Event.propertyChanged, this.personBlinkHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('groupSoundToggle', {
 		modelProperty : "value"
@@ -138,7 +167,6 @@ PrefsAssistant.prototype.setup = function() {
 		currentSound : _appPrefs.cookieData.groupSound
 	});
 
-	this.controller.listen('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler.bindAsEventListener(this));
 
 	if (_appPrefs.cookieData.groupSound == "custom") {
 		this.controller.get('groupTonePathRow').show();
@@ -146,63 +174,25 @@ PrefsAssistant.prototype.setup = function() {
 		this.controller.get('groupTonePathRow').hide();
 	}
 	this.controller.get('groupTonePath').update(_appPrefs.cookieData.groupToneName);
-	this.controller.listen('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('groupVibrateToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.groupVibrate
 	});
-	this.controller.listen('groupVibrateToggle', Mojo.Event.propertyChanged, this.groupVibrateHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('groupBannerToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.groupBanner
 	});
-	this.controller.listen('groupBannerToggle', Mojo.Event.propertyChanged, this.groupBannerHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('groupBlinkToggle', {
 		modelProperty : "value"
 	}, {
 		value : _appPrefs.cookieData.groupBlink
 	});
-	this.controller.listen('groupBlinkToggle', Mojo.Event.propertyChanged, this.groupBlinkHandler.bindAsEventListener(this));
 
-	this.timeouts = [{
-		label : $L('As items arrive'),
-		value : "asArrive"
-	}, {
-		label : '5 ' + $L('minutes'),
-		value : "00:05:00"
-	}, {
-		label : '10 ' + $L('minutes'),
-		value : "00:10:00"
-	}, {
-		label : '15 ' + $L('minutes'),
-		value : "00:15:00"
-	}, {
-		label : '20 ' + $L('minutes'),
-		value : "00:20:00"
-	}, {
-		label : '30 ' + $L('minutes'),
-		value : "00:30:00"
-	}, {
-		label : '45 ' + $L('minutes'),
-		value : "00:45:00"
-	}, {
-		label : '1 ' + $L('hour'),
-		value : "01:00:00"
-	}, {
-		label : '6 ' + $L('hours'),
-		value : "06:00:00"
-	}, {
-		label : '12 ' + $L('hours'),
-		value : "12:00:00"
-	}, {
-		label : '24 ' + $L('hours'),
-		value : "24:00:00"
-	}];
 
 	this.controller.setupWidget('bgTimeoutSelector', {
 		label : $L('Get messages'),
@@ -211,7 +201,6 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentTimeout : _appPrefs.cookieData.backgroundTimeout
 	});
-	this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('chatTextSize', {
 		label : $L('Size'),
@@ -238,7 +227,6 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentSize : _appPrefs.cookieData.chatTextSize
 	});
-	this.controller.listen('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('imageSize', {
 		label : $L('Size'),
@@ -265,7 +253,6 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentSize : _appPrefs.cookieData.imageResolution
 	});
-	this.controller.listen('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler.bindAsEventListener(this));
 
 	this.controller.setupWidget('phoneType', {
 		label : $L('Phone type'),
@@ -283,6 +270,21 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentSize : _appPrefs.cookieData.phoneTypes
 	});
+
+    this.controller.listen('language', Mojo.Event.propertyChanged, this.languageHandler.bindAsEventListener(this));
+    this.controller.listen('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler.bindAsEventListener(this));
+    this.controller.listen('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler.bindAsEventListener(this));
+    this.controller.listen('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler.bindAsEventListener(this));
+    this.controller.listen('personBannerToggle', Mojo.Event.propertyChanged, this.personBannerHandler.bindAsEventListener(this));
+    this.controller.listen('personBlinkToggle', Mojo.Event.propertyChanged, this.personBlinkHandler.bindAsEventListener(this));
+    this.controller.listen('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler.bindAsEventListener(this));
+    this.controller.listen('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler.bindAsEventListener(this));
+    this.controller.listen('groupVibrateToggle', Mojo.Event.propertyChanged, this.groupVibrateHandler.bindAsEventListener(this));
+    this.controller.listen('groupBannerToggle', Mojo.Event.propertyChanged, this.groupBannerHandler.bindAsEventListener(this));
+    this.controller.listen('groupBlinkToggle', Mojo.Event.propertyChanged, this.groupBlinkHandler.bindAsEventListener(this));
+    this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
+    this.controller.listen('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler.bindAsEventListener(this));
+    this.controller.listen('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler.bindAsEventListener(this));
 	this.controller.listen('phoneType', Mojo.Event.propertyChanged, this.phoneTypeHandler.bindAsEventListener(this));
 }
 
