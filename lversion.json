@@ -1,11 +1,7 @@
 {
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"url": "https://github.com/amoralico/mojowhatsup/downloads",
 	"comments": [
-				"Added notification when a new version is available",
-				"German translation corrected and Russian translation added",
-				"Sends presence unavailable message when app is inactive, in backgraund or minimized",
-				"Fixed issue with messages not coming in background mode"
 	],
-	"message": "Solves some problems receiving messages in background and shows a notification dialog when a new version is available"
+	"message": "Workaround for last login problem"
 }
