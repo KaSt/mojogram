@@ -56,6 +56,10 @@ public:
 	static const int USER_EVENT_SENDREMOVEPARTICIPANTS = 24;
 	static const int USER_EVENT_ONGROUPNEWSUBJECT = 25;
 	static const int USER_EVENT_ONSERVERPROPERTIES = 26;
+	static const int USER_EVENT_SENDSTATUSUPDATE = 27;
+	static const int USER_EVENT_SENDGETPICTUREIDS = 28;
+	static const int USER_EVENT_SENDGETPICTURE = 29;
+	static const int USER_EVENT_SENDSETPICTURE = 30;
 
 	static const int USER_EVENT_QUIT = 100;
 
@@ -82,6 +86,11 @@ public:
 	static PDL_bool sendRemoveParticipants(PDL_JSParameters *params);
 	static PDL_bool sendSetNewSubject(PDL_JSParameters *params);
 	static PDL_bool resizeImage(PDL_JSParameters *params);
+	static PDL_bool sendStatusUpdate(PDL_JSParameters *params);
+	static PDL_bool sendGetPictureIds(PDL_JSParameters *params);
+	static PDL_bool sendGetPicture(PDL_JSParameters *params);
+	static PDL_bool sendSetPicture(PDL_JSParameters *params);
+	static PDL_bool removeFile(PDL_JSParameters *params);
 
 	static void processUserEvent(const SDL_Event& event);
 
@@ -94,10 +103,13 @@ public:
 	// de la interfaz WAListener
 	void onMessageForMe(FMessage* paramFMessage, bool paramBoolean) throw (WAException);
 	void onMessageStatusUpdate(FMessage* paramFMessage);
+	void onSendGetPictureIds(std::map<std::string, std::string>* ids);
+	void onSendGetPicture(const std::string& jid, const std::string& data, const std::string& oldId, const std::string& newId);
 
 	// de la interfaz WAGroupListener
 	void onGroupAddUser(const std::string& paramString1, const std::string& paramString2);
 	void onGroupRemoveUser(const std::string& paramString1, const std::string& paramString2);
+	void onPictureChanged(const std::string& jid, const std::string& author, bool set);
 	void onGroupNewSubject(const std::string& from, const std::string& author, const std::string& newSubject, int paramInt);
 	void onServerProperties(std::map<std::string, std::string>* nameValueMap);
 	void onGroupInfo(const std::string& paramString1, const std::string& paramString2, const std::string& paramString3, const std::string& paramString4, int paramInt1, int paramInt2);

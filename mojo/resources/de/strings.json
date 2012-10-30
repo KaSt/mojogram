@@ -156,7 +156,14 @@
 	"Chinese (Traditional)": "Chinesisch (traditionell)",
 	"Chinese (Hong Kong)": "Chinesisch (Hong Kong)",
 	"Notification": "Hinweis",
-	"It is necessary to restart the application so that this change can take effect": "Es ist notwendig die Anwendung zu schließen, damit die Änderungen übernommen werden können"
+	"It is necessary to restart the application so that this change can take effect": "Es ist notwendig die Anwendung zu schließen, damit die Änderungen übernommen werden können",
+	
+	"Check for updates": "Auf Updates prüfen",
+	"#{appName} is up to date": "#{appName} ist auf dem neusten Stand",
+	"New version": "Neue Version",
+	"Russian": "Russisch",
+	"Update available": "Update verfügbar"
+
 
 }
 	

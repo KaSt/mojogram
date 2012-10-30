@@ -102,7 +102,7 @@ std::string Account::waCodeRequest(const std::string& cc, const std::string& in,
 	curl_easy_setopt(this->urlManager, CURLOPT_URL, ACCOUNT_URL_CODEREQUEST);
 	curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
-	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT);
+	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT_REGISTRATION);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEDATA, (void *)&chunk);
 
@@ -144,7 +144,7 @@ std::string Account::waRegisterRequest(const std::string& cc, const std::string&
 	curl_easy_setopt(this->urlManager, CURLOPT_URL, ACCOUNT_URL_REGISTERREQUEST);
 	curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
-	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT);
+	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT_REGISTRATION);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEDATA, (void *)&chunk);
 

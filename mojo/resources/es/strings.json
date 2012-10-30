@@ -163,6 +163,32 @@
 	"New version": "Nueva versión",
 	"Russian": "Ruso",
 	"Changes": "Cambios",
-	"Update available": "Actualización disponible"
+	"Update available": "Actualización disponible",
+	
+	"My status": "Mi estado",
+	"Select your status": "Selecciona tu estado",
+	"Your current status": "Tu estado actual",
+	"Empty status. Please enter your status.": "Estado vacío. Por favor introduce tu estado.",
+	"Status cannot be changed. Try again.": "El estado no puede cambiarse. Inténtalo de nuevo.",
+	"Empty subject. Please insert a subject for the group": "Tema vacío. Por favor introduce un tema para el grupo",
+	"Available": "Disponible",
+	"Busy": "Ocupado",
+	"At school": "En el colegio",
+	"At the movies": "En el cine",
+	"At work": "En el trabajo",
+	"Battery about to die": "Batería baja",
+	"In a meeting": "En una reunión",
+	"At the gym": "En el gimnasio",
+	"Sleeping": "Durmiendo",
+	"Custom": "Estado personalizado",
+	
+	"#{id} updated the group picture": "#{id} actualizó la imagen del grupo",
+	"#{id} deleted the group picture": "#{id} eliminó la imagen del grupo",
+	"Change": "Cambiar",
+	"View": "Ver",
+	"Delete": "Eliminar",
+	"Profile picture": "Imagen de perfil",
+	"View profile picture": "Ver foto del perfil",	
+	"This contact does not have a profile picture": "Este contacto no tiene una imagen de perfil"
 }
 	

@@ -2,9 +2,10 @@
 	<div class='palm-row-wrapper'>
 		<div class="menu-icon #{icon}-icon icon left"></div>
 		<div class="icon right empty"></div>
-		<div class="list-unread-container icon right">
+		<div class="list-unread-container#{unread} icon right">
 			<div class="list-unread#{unread}">#{nunread}</div>
 		</div>
-		<div class="title">#{size} #{name}</div>
+		<div class="title" style="padding: 5px 0px 0px 5px">#{size} #{name}</div>
+		<div class="preview contact-status">#{-statusFormatted}</div>
 	</div>
 </div>

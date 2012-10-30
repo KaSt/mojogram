@@ -79,5 +79,8 @@
     }, {
     	"scenes": "update",
     	"source": "app/assistants/update-assistant.js"
+    }, {
+    	"scenes": "mystatus",
+    	"source": "app/assistants/mystatus-assistant.js"
     }
 ]

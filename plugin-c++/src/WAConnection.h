@@ -39,6 +39,9 @@ public:
 	virtual void onDirty(const std::map<string,string>& paramHashtable)=0;
 	virtual void onDirtyResponse(int paramHashtable)=0;
 	virtual void onRelayRequest(const std::string& paramString1, int paramInt, const std::string& paramString2)=0;
+	virtual void onSendGetPictureIds(std::map<string,string>* ids)=0;
+	virtual void onSendGetPicture(const std::string& jid, const std::string& data, const std::string& oldId, const std::string& newId)=0;
+	virtual void onPictureChanged(const std::string& from, const std::string& author, bool set)=0;
 };
 
 class WAGroupListener {
@@ -229,6 +232,82 @@ class WAConnection {
 		}
 	};
 
+	class IqResultGetPhotoHandler: public IqResultHandler {
+	private:
+		std::string jid;
+		std::string oldId;
+		std::string newId;
+	public:
+		IqResultGetPhotoHandler(WAConnection* con, const std::string& jid, const std::string& oldId, const std::string& newId):IqResultHandler(con) {
+			this->jid = jid;
+			this->oldId = oldId;
+			this->newId = newId;
+		}
+		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
+			std::string* attributeValue = node->getAttributeValue("type");
+
+			if ((attributeValue != NULL) && (attributeValue->compare("result") == 0) && (this->con->event_handler != NULL)) {
+				std::vector<ProtocolTreeNode*>* children = node->getAllChildren("picture");
+				for (int i = 0; i < children->size(); i++) {
+					ProtocolTreeNode* current = (*children)[i];
+					std::string* id = current->getAttributeValue("id");
+					if ((id != NULL) && (current->data != NULL) && (current->data->length() > 0)) {
+						this->con->event_handler->onSendGetPicture(this->jid, *current->data, this->oldId, this->newId);
+						break;
+					}
+				}
+				delete children;
+			}
+		}
+		void error(ProtocolTreeNode* node) throw (WAException) {
+			if (this->con->event_handler != NULL)
+				this->con->event_handler->onSendGetPicture("error", "", "", "");
+		}
+	};
+
+	class IqResultSetPhotoHandler: public IqResultHandler {
+	private:
+		std::string jid;
+	public:
+		IqResultSetPhotoHandler(WAConnection* con, const std::string& jid):IqResultHandler(con) {this->jid = jid;}
+		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
+			_LOGDATA("node notification %s: ", node->toString().c_str());
+			if (this->con->event_handler != NULL) {
+				std::string* photoId = NULL;
+				ProtocolTreeNode* child = node->getChild("picture");
+				if (child != NULL) {
+					this->con->event_handler->onPictureChanged(this->jid, "", true);
+				} else {
+					this->con->event_handler->onPictureChanged(this->jid, "", false);
+				}
+			}
+		}
+	};
+
+
+	class IqResultGetPictureIdsHandler: public IqResultHandler {
+	public:
+		IqResultGetPictureIdsHandler(WAConnection* con):IqResultHandler(con) {}
+		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
+			// _LOGDATA("onGetPhotoIds %s", node->toString().c_str());
+			ProtocolTreeNode* groupNode = node->getChild("list");
+			std::vector<ProtocolTreeNode*>* children = groupNode->getAllChildren("user");
+			std::map<std::string, std::string> ids;
+			for (int i = 0; i < children->size(); i++) {
+				std::string* jid = (*children)[i]->getAttributeValue("jid");
+				std::string* id = (*children)[i]->getAttributeValue("id");
+				if (jid != NULL) {
+					ids[*jid] = (id == NULL? "": *id);
+				}
+			}
+			delete children;
+
+			if (this->con->event_handler != NULL) {
+				this->con->event_handler->onSendGetPictureIds(&ids);
+			}
+		}
+	};
+
 	class IqResultClearDirtyHandler: public IqResultHandler {
 	public:
 		IqResultClearDirtyHandler(WAConnection* con):IqResultHandler(con) {}
@@ -324,6 +403,11 @@ class WAConnection {
 	void sendAddParticipants(const std::string& gjid, const std::vector<std::string>& participants) throw (WAException);
 	void sendRemoveParticipants(const std::string& gjid, const std::vector<std::string>& participants) throw (WAException);
 	void sendSetNewSubject(const std::string& gjid, const std::string& subject) throw (WAException);
+	void sendStatusUpdate(std::string& status) throw (WAException);
+	void sendGetPicture(const std::string& jid, const std::string& type, const std::string& oldId, const std::string& newId) throw (WAException);
+	void sendGetPictureIds(const std::vector<std::string>& jids) throw (WAException);
+	void sendSetPicture(const std::string& jid, std::string* data) throw (WAException);
+	void sendNotificationReceived(const std::string& from, const std::string& id) throw(WAException);
 };
 
 

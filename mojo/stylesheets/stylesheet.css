@@ -156,6 +156,10 @@
 	font-style: oblique;
 }
 
+.message-preview {
+	font-size: 16px;
+}
+
 .status-icon {
 	width: 25px;
 	height: 16px;
@@ -227,20 +231,63 @@
 .menu-icon {
 	width: 40px;
 	height: 40px;
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
-.chat-list-icon {
-	width: 32px;
-	height: 32px;
-	margin-top: 2px;
+.chat-list-icon.icon {
+	width: 58px;
+	height: 58px;
+	margin-top: 3px;
+	margin-right: 3px;
+	border-radius: 12px;
+	background: center center no-repeat;
 }
 
-.chat-list-icon.person-icon {
+.chat-list-icon.picture {
+	width: 60px;
+	height: 60px;
+	background-size: contain;	
+}
+
+.group-image, .profile-image {
+	background: center center no-repeat;
+	width: 78px;
+	height: 78px;
+	border-radius: 12px;
+}
+
+.group-image.picture, .profile-image.picture {
+	width: 80px;
+	height: 80px;
+	background-size: contain;
+}
+
+.contact-list-icon.icon {
+	background: center center no-repeat;
+	width: 58px;
+	height: 58px;
+	border-radius: 12px;
+	margin-right: 3px;
+	margin-top: 3px;	
+}
+
+.contact-list-icon.picture {
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+}
+
+.chat-list-icon.person-icon, .profile-image.person-icon, .contact-list-icon.person-icon {
+	border-width: 2px;
+	border-style: solid;
+	border-color: white;
 	background-image: url(../images/person-icon.png);
 }
 
-.chat-list-icon.group-icon {
+.chat-list-icon.group-icon, .group-image.group-icon {
+	border-width: 2px;
+	border-style: solid;
+	border-color: white;
 	background-image: url(../images/group-icon.png);
 }
 
@@ -248,6 +295,9 @@
 	background-image: url(../images/chat-icon.png);
 }
 
+.menu-icon.Status-icon {
+	background-image: url(../images/mystatus-icon.png);
+}
 
 .menu-icon.Contacts-icon {
 	background-image: url(../images/contact-icon.png);
@@ -286,11 +336,15 @@
 	background-image: url(../images/mojowhatsupgray48.png);
 }
 
-.list-unread-container {
+.list-unread-containertrue {
 	text-align: right;
 }
 
-.list-unread-container .icon {
+.list-unread-containerfalse {
+	display: none;
+}
+
+.list-unread-containertrue .icon {
 	width: auto;
 	height: auto;
 }
@@ -363,23 +417,23 @@
 }
 
 .people-emoji {
-	background: url(../images/emoji/emoji-E415.png) center center no-repeat;
+	background: url(../images/emoji/E415.png) center center no-repeat;
 }
 
 .places-emoji {
-	background: url(../images/emoji/emoji-E036.png) center center no-repeat;
+	background: url(../images/emoji/E036.png) center center no-repeat;
 }
 
 .nature-emoji {
-	background: url(../images/emoji/emoji-E04A.png) center center no-repeat;
+	background: url(../images/emoji/E04A.png) center center no-repeat;
 }
 
 .events-emoji {
-	background: url(../images/emoji/emoji-E325.png) center center no-repeat;
+	background: url(../images/emoji/E325.png) center center no-repeat;
 }
 
 .symbols-emoji {
-	background: url(../images/emoji/emoji-E210.png) center center no-repeat;
+	background: url(../images/emoji/E210.png) center center no-repeat;
 }
 
 .preview-image {
@@ -393,8 +447,7 @@
 
 .preview-image.image-custom {
 	border-style: solid;
-	border-width: 5px;
-	border-radius: 15px;
+	border-width: 2px;
 	border-color: white;
 }
 
@@ -455,10 +508,16 @@
 	-webkit-box-orient: horizontal;
 	-webkit-box-pack: center;    
 }
- 
 
 .preview.contact-status {
 	padding-top: 0px;
 	margin-top: 0px;
 	font-size: 80%;
 }
+
+.time-info.label {
+	float: none;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+

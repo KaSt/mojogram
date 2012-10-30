@@ -260,7 +260,7 @@ const char* WAConnection::dictionary[] = {
 		"",
 		"",
 		"",
-	    "XXX"
+		"XXX"
 };
 
 WAConnection::WAConnection(WALogin* login, const std::string& domain,
@@ -909,8 +909,55 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 				this->event_handler->onMessageForMe(fmessage, duplicate);
 
 			delete fmessage;
+		} else if (typeAttribute->compare("notification") == 0) {
+			bool flag = false;
+			std::vector<ProtocolTreeNode*> myVector(0);
+			std::vector<ProtocolTreeNode*>* children = messageNode->children == NULL? &myVector: messageNode->getAllChildren();
+			for (int i = 0; i < children->size(); i++) {
+				ProtocolTreeNode* child = (*children)[i];
+				if (ProtocolTreeNode::tagEquals(child, "notification")) {
+					std::string* type = child->getAttributeValue("type");
+					if ((type != NULL) && (type->compare("picture") == 0) && (this->event_handler != NULL)) {
+						std::vector<ProtocolTreeNode*> myVector2(0);
+						std::vector<ProtocolTreeNode*>* children2 = child->children == NULL? &myVector2: child->getAllChildren();
+						for (int j = 0; j < children2->size(); j++) {
+							ProtocolTreeNode* child2 = (*children2)[j];
+							if (ProtocolTreeNode::tagEquals(child2, "set")) {
+								std::string* id = child2->getAttributeValue("id");
+								std::string* author = child2->getAttributeValue("author");
+								if (id != NULL) {
+									this->event_handler->onPictureChanged(*from, *author, true);
+								}
+							} else if (ProtocolTreeNode::tagEquals(child2, "delete")) {
+								std::string* author = child2->getAttributeValue("author");
+								this->event_handler->onPictureChanged(*from, *author, false);
+							}
+						}
+					}
+				} else if (ProtocolTreeNode::tagEquals(child, "request")) {
+					flag = true;
+				}
+			}
+			if (flag) {
+				this->sendNotificationReceived(*from, *id);
+			}
 		}
 	}
+}
+
+void WAConnection::sendNotificationReceived(const std::string& from, const std::string& id) throw(WAException) {
+	std::map<string, string>* attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "urn:xmpp:receipts";
+	ProtocolTreeNode* child = new ProtocolTreeNode("received", attribs1);
+
+	std::map<string, string>* attribs2 = new std::map<string, string>();
+	(*attribs2)["id"] = id;
+	(*attribs2)["type"] = "notification";
+	(*attribs2)["to"] = "jid";
+	ProtocolTreeNode* node = new ProtocolTreeNode("message", attribs2, child);
+
+	this->out->write(node);
+	delete node;
 }
 
 void WAConnection::sendClose() throw(WAException) {
@@ -1224,3 +1271,77 @@ std::string WAConnection::removeResourceFromJid(const std::string& jid) {
 	return jid.substr(0, slashidx + 1);
 }
 
+void WAConnection::sendStatusUpdate(std::string& status) throw (WAException) {
+	std::string id = this->makeId(Utilities::intToStr(time(NULL)));
+	FMessage* message = new FMessage(new Key("s.us", true, id));
+	ProtocolTreeNode* body = new ProtocolTreeNode("body", NULL, new std::string(status), NULL);
+	ProtocolTreeNode* messageNode = getMessageNode(message, body);
+	this->out->write(messageNode);
+	delete messageNode;
+	delete message;
+}
+
+
+
+void WAConnection::sendSetPicture(const std::string& jid, std::string* data) throw (WAException) {
+	std::string id = this->makeId("set_photo_");
+	this->pending_server_requests[id] = new IqResultSetPhotoHandler(this, jid);
+
+	std::map<string, string>* attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "w:profile:picture";
+	// (*attribs1)["type"] = "image";
+	ProtocolTreeNode* listNode = new ProtocolTreeNode("picture", attribs1, data, NULL);
+
+	std::map<string, string>* attribs2 = new std::map<string, string>();
+	(*attribs2)["id"] = id;
+	(*attribs2)["type"] = "set";
+	(*attribs2)["to"] = jid;
+
+	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, listNode);
+	this->out->write(iqNode);
+	delete iqNode;
+}
+
+void WAConnection::sendGetPicture(const std::string& jid, const std::string& type, const std::string& oldId, const std::string& newId) throw (WAException) {
+	std::string id = makeId("get_picture_");
+	this->pending_server_requests[id] = new IqResultGetPhotoHandler(this, jid, oldId, newId);
+
+	std::map<string, string>* attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "w:profile:picture";
+	(*attribs1)["type"] = type;
+	ProtocolTreeNode* listNode = new ProtocolTreeNode("picture", attribs1);
+
+	std::map<string, string>* attribs2 = new std::map<string, string>();
+	(*attribs2)["id"] = id;
+	(*attribs2)["to"] = jid;
+	(*attribs2)["type"] = "get";
+	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, listNode);
+
+	this->out->write(iqNode);
+	delete iqNode;
+}
+
+void WAConnection::sendGetPictureIds(const std::vector<std::string>& jids) throw (WAException) {
+	std::string id = makeId("get_picture_ids_");
+	this->pending_server_requests[id] = new IqResultGetPictureIdsHandler(this);
+
+	std::vector<ProtocolTreeNode*>* children = new std::vector<ProtocolTreeNode*>();
+	for (int i = 0; i < jids.size(); i++) {
+		std::map<string, string>* attribs = new std::map<string, string>();
+		(*attribs)["jid"] = jids[i];
+		ProtocolTreeNode* child = new ProtocolTreeNode("user", attribs);
+		children->push_back(child);
+	}
+
+	std::map<string, string>* attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "w:profile:picture";
+	ProtocolTreeNode* queryNode = new ProtocolTreeNode("list", attribs1, NULL, children);
+
+	std::map<string, string>* attribs2 = new std::map<string, string>();
+	(*attribs2)["id"] = id;
+	(*attribs2)["type"] = "get";
+	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, queryNode);
+
+	this->out->write(iqNode);
+	delete iqNode;
+}

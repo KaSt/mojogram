@@ -11,6 +11,7 @@
 #include <time.h>
 #include <fstream>
 
+
 namespace Utilities{
 
 const int MD5_DIGEST_SIZE = MD5_DIGEST_LENGTH;
@@ -241,4 +242,63 @@ bool saveStringToFile(const string& data, const string& filePath) {
 	return true;
 }
 
+bool saveBytesToFile(const string& data, const string& filePath) {
+	std::fstream out(filePath.c_str(), ios::out | ios::binary);
+	if (out.fail()) return false;
+	out.write(data.c_str(), data.length());
+	if (out.fail()) return false;
+	out.close();
+	if (out.fail()) return false;
+	return true;
+}
+
+vector<unsigned char>* loadFileToBytes(const string& path) {
+	vector<unsigned char>* bytes;
+	std::ifstream in(path.c_str(), ios::in | ios::binary | ios::ate);
+	long size = in.tellg();
+
+	if (in.fail()) return NULL;
+	in.seekg(0, ios::beg);
+	char *buffer = new char[size];
+	in.read(buffer, size);
+	bytes = new vector<unsigned char>(buffer, buffer + size);
+	delete [] buffer;
+	in.close();
+	if (in.fail()) return NULL;
+
+	return  bytes;
+}
+
+bool fileExists(const std::string& path) {
+	std::ifstream in(path.c_str());
+	return in;
+}
+
+
+string removeWaDomainFromJid(const string& jid) {
+	string result = jid;
+
+	int index = jid.find("@s.whatsapp.net");
+	if (index != string::npos) {
+		result.replace(index, 15, "");
+		return result;
+	}
+
+	index = jid.find("@g.us");
+	if (index != string::npos) {
+		result.replace(index, 5, "");
+		return result;
+	}
+
+	return jid;
+}
+
+extern string getNameFromPath(const std::string& path) {
+	int i = path.rfind('/');
+	if (i == string::npos)
+		i = 0;
+	else
+		i = i + 1;
+	return path.substr(i);
+}
 }

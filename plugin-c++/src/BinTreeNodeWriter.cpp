@@ -8,6 +8,7 @@
 #include "BinTreeNodeWriter.h"
 #include "WAException.h"
 #include <cstring>
+#include "utilities.h"
 
 BinTreeNodeWriter::BinTreeNodeWriter(MySocketConnection* connection,
 		const char** dictionary, const int dictionarysize) {
@@ -33,8 +34,11 @@ void BinTreeNodeWriter::streamStart(std::string domain, std::string resource) {
 		// this->realOut->write(0);
 		// this->realOut->write(4);
 
-		this->realOut->write(1);
-		this->realOut->write(1);
+		 this->realOut->write(1);
+		 this->realOut->write(1);
+
+		// this->realOut->write(1);
+		// this->realOut->write(2);
 
 		std::map<string, string> attributes;
 		attributes["to"] = domain;
@@ -174,6 +178,7 @@ void BinTreeNodeWriter::flushBuffer(bool flushNetwork) {
 	// this->out->print();
 	this->realOut->write(*this->out->getBuffer(), size);
 	this->out->reset();
+
 	if (flushNetwork)
 		this->realOut->flush();
 
@@ -201,12 +206,13 @@ void BinTreeNodeWriter::write(ProtocolTreeNode* node, bool needsFlush) {
 	try {
 		if (node == NULL)
 			this->out->write(0);
-		else
+		else {
 			writeInternal(node);
+		}
 		flushBuffer(needsFlush);
 	} catch (exception& ex) {
 		SDL_mutexV(this->mutex);
-		throw ex;
+		throw WAException(ex.what());
 	}
 	SDL_mutexV(this->mutex);
 }
