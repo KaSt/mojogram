@@ -46,7 +46,8 @@ Media.openMedia = function(msg, stageController) {
 
 		case Message.WA_TYPE_VIDEO:
 		case Message.WA_TYPE_AUDIO:
-			var serviceRequest = new Mojo.Service.Request('palm://com.palm.applicationManager', {
+			Mojo.Log.error("open file media %s", (msg.from_me ? "" : Media.MOJOWHATSUP_MEDIA_DIR) + msg.downloadedFile);
+			stageController.activeScene().serviceRequest('palm://com.palm.applicationManager', {
 				method : 'open',
 				parameters : {
     				target : 'file://' + (msg.from_me ? "" : Media.MOJOWHATSUP_MEDIA_DIR) + msg.downloadedFile
@@ -57,7 +58,7 @@ Media.openMedia = function(msg, stageController) {
 			});
 			break;
 		case Message.WA_TYPE_CONTACT:
-			var serviceRequest = new Mojo.Service.Request('palm://com.palm.applicationManager', {
+			stageController.activeScene().serviceRequest('palm://com.palm.applicationManager', {
 				method : 'open',
 				parameters : {
 					target : 'file://' + msg.media_url
@@ -68,7 +69,7 @@ Media.openMedia = function(msg, stageController) {
 			});
 			break;
 		case Message.WA_TYPE_LOCATION:
-			var serviceRequest = new Mojo.Service.Request("palm://com.palm.applicationManager", {
+			stageController.activeScene().serviceRequest("palm://com.palm.applicationManager", {
 				method : "open",
 				parameters : {
 					target: "maploc:" + msg.latitude + "," + msg.longitude

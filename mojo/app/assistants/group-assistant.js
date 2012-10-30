@@ -1,4 +1,5 @@
 function GroupAssistant(group, chat, mode) {
+    _groupAssistant = this;
 	this.mode = mode;
 	this.group = group;
 	this.chat = chat;
@@ -37,10 +38,22 @@ GroupAssistant.prototype.setup = function() {
 			break;
 	}
 	
+	
 	this.controller.get('headerTitle').update($L(headerTitle));
 	this.controller.get('groupInfoTitle').update($L("Info"));
 	this.controller.get('ownerLabel').update($L("Owner"));
 	this.controller.get('creationLabel').update($L("Creation date"));
+	
+    this.controller.setupWidget("spinnerId", this.attributesSpinner = {
+        spinnerSize : "small"
+    }, this.modelSpinner = {
+        spinning : false
+    });
+		
+	this.controller.get('spinnerId').hide();
+	this.setPicture();	
+		
+	this.controller.listen("groupImage", Mojo.Event.tap, this.groupImageHandler.bindAsEventListener(this));
 	
 	if (this.group != null) {
 		var owner = Message.removeDomainFromJid(this.group.owner);
@@ -83,7 +96,6 @@ GroupAssistant.prototype.setup = function() {
 		disabled : false
 	});
 	this.controller.listen('sendChangesButton', Mojo.Event.tap, this.sendChangesHandler.bindAsEventListener(this));
-	
 	
 	// if (this.mode == 'info') {
 		// this.controller.get("sendChangesButton").hide();
@@ -139,21 +151,113 @@ GroupAssistant.prototype.setup = function() {
 	this.controller.setupWidget("participantsList", 
 		this.participantsListAttributes, 
 		this.participantsListModel);
+
 	if (this.mode == 'edit') {
 		this.controller.listen('participantsList', Mojo.Event.listAdd, this.addListHandler.bindAsEventListener(this));
 		this.controller.listen('participantsList', Mojo.Event.listDelete, this.deleteListHandler.bindAsEventListener(this));
 	}
-		
+	
 	if (this.mode == 'new') {
 		this.controller.get('listGroup').hide();
 		this.controller.get('infoGroup').hide();
 	}
-	
+}
+
+GroupAssistant.prototype.setPicture = function() {
+	var imgSize = '80:80';
+	if (_appAssistant.isPre3())
+		imgSize = '120:120';
+			
+	if ((this.mode != "new") && this.chat.picturepath) {
+       	this.controller.get('groupImage').update('<div class="group-image picture" style="background-image:url(/var/luna/data/extractfs' + encodeURIComponent(this.chat.picturepath) + ':0:0:' + imgSize + ':3)"></div>');
+    } else if (this.mode != "new") {
+       	this.controller.get('groupImage').update('<div class="group-image group-icon"></div>');
+    } else {
+       	this.controller.get('groupImage').update('<div style="display: none"></div>');
+    }
+}
+
+GroupAssistant.prototype.updatePicture = function(path) {
+    if (path != "error") {
+    	this.chat.picturepath = path;
+    	this.setPicture();
+    }
+    
+	this.modelSpinner.spinning = false;
+    this.controller.modelChanged(this.modelSpinner);
+   	this.controller.get("spinnerId").hide();
 }
 
 GroupAssistant.prototype.subjectChangedHandler = function(event) {
     var text = this.controller.get('textFieldSubject').mojo.getValue();    
     this.setSubjectTitle(text);
+}
+
+GroupAssistant.prototype.groupImageHandler = function(event) {
+    Event.stop(event);
+    var items = [];
+    items.push({
+                label: $L("Change"),
+                command: "change"
+        });
+        
+    if (this.chat.picturepath) {
+        items.push({
+                label: $L("View"),
+                command: "view"
+            });
+        items.push({
+                label: $L("Delete"),
+                command: "delete"
+            });
+    }
+        
+	this.controller.popupSubmenu({
+        onChoose : this.popupImageHandler,
+        placeNear : this.controller.get("groupImage"),
+        items : items
+    });
+}
+
+GroupAssistant.prototype.popupImageHandler = function (command) {
+    switch (command) {
+        case 'change':
+             var params = {
+                kind : "image",
+                actionName : $L("Send"),
+                extensions : ["jpg"],
+				crop: { width: 320, height: 320 },                
+                onSelect : function(file) {
+   					this.modelSpinner.spinning = true;
+   					this.controller.modelChanged(this.modelSpinner);
+   					this.controller.get("spinnerId").show();
+   					Mojo.Log.info("Crop info: %j", file.cropInfo);
+                    _mojowhatsupPlugin.safePluginCall(function() {
+                    	var cropInfo = {
+                    		size: 480,
+                    		scale: file.cropInfo.window.scale * 1.5,
+                    		x: Math.floor(file.cropInfo.window.suggestedXTop * file.cropInfo.window.scale * 1.5),
+                    		y: Math.floor(file.cropInfo.window.suggestedYTop * file.cropInfo.window.scale * 1.5)
+                    	};
+                        _plugin.sendSetPicture(this.chat.jid, file.fullPath, JSON.stringify(cropInfo));   
+                    }.bind(this));
+                }.bind(this)
+            };
+            Mojo.FilePicker.pickFile(params, this.controller.stageController);
+            break;
+        case 'view':
+            this.controller.stageController.pushScene("imageview", {path: this.chat.picturepath});
+            break;
+        case 'delete':
+   			this.modelSpinner.spinning = true;
+   			this.controller.modelChanged(this.modelSpinner);
+   			this.controller.get("spinnerId").show();
+        
+            _mojowhatsupPlugin.safePluginCall(function() {
+ 	           _plugin.sendSetPicture(this.chat.jid, "", "");   
+            }.bind(this));
+        	break;	
+    }
 }
 
 GroupAssistant.prototype.setParticipantsTitle = function() {
@@ -214,7 +318,7 @@ GroupAssistant.prototype.activate = function(param) {
 	} else if (param && "selectedEmoji" in param) {
 		if (param.selectedEmoji != null) {
 			var text = this.controller.get('textFieldSubject').mojo.getValue();
-			this.controller.get('textFieldSubject').mojo.setValue(text + convertUnicodeCodePointsToString(['0xE' + param.selectedEmoji]));
+			this.controller.get('textFieldSubject').mojo.setValue(text + convertUnicodeCodePointsToString(['0x' + param.selectedEmoji]));
 		}
         this.controller.get('textFieldSubject').mojo.focus();		
 	} 
@@ -295,6 +399,7 @@ GroupAssistant.prototype.handleCommand = function(event) {
 }
 
 GroupAssistant.prototype.cleanup = function() {
+    _groupAssistant = null;
 	this.controller.stopListening('sendChangesButton', Mojo.Event.tap, this.sendChangesHandler);
 	this.controller.stopListening('removeGroupButton', Mojo.Event.tap, this.removeGroupHandler);
 	this.controller.stopListening('emojiButton', Mojo.Event.tap, this.emojiButtonHandler);
@@ -303,4 +408,5 @@ GroupAssistant.prototype.cleanup = function() {
 		this.controller.stopListening('participantsList', Mojo.Event.listAdd, this.addListHandler);
 		this.controller.stopListening('participantsList', Mojo.Event.listDelete, this.deleteListHandler);		
 	}
+	this.controller.stopListening("groupImage", Mojo.Event.tap, this.groupImageHandler);
 }

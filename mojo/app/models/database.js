@@ -31,6 +31,8 @@ AppDatabase.prototype.createTables = function() {
 	var sql8 = "ALTER TABLE 'contacts' ADD COLUMN status TEXT";
 	var sql9 = "ALTER TABLE 'contacts' ADD COLUMN cc INTEGER";
 	var sql10 = "CREATE INDEX IF NOT EXISTS 'contact_cc' ON 'contacts' (cc ASC)";
+	var sql11 = "ALTER TABLE 'chats' ADD COLUMN pictureid TEXT";	
+	var sql12 = "ALTER TABLE 'chats' ADD COLUMN picturepath TEXT";
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql2, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
@@ -42,6 +44,8 @@ AppDatabase.prototype.createTables = function() {
 		t.executeSql(sql8, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 		t.executeSql(sql9, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 		t.executeSql(sql10, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql11, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));		
+		t.executeSql(sql12, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 	}.bind(this));
 }
 
@@ -213,7 +217,8 @@ AppDatabase.prototype.findContact = function(jid, callback) {
 }
 
 AppDatabase.prototype.getAllContacts = function(callback) {
-	var sql = "SELECT * FROM 'contacts' ORDER BY name ASC;";
+	var sql = "SELECT c.*, ch.picturepath FROM contacts c LEFT OUTER JOIN chats ch ON (c.jid = ch.jid) ORDER BY name ASC;";
+	// var sql = "SELECT * FROM 'contacts' ORDER BY name ASC;";
 	var contacts = [];
 	this.appDb.readTransaction( function(t) {
 		t.executeSql(sql, [], function(t, r) {
@@ -224,7 +229,8 @@ AppDatabase.prototype.getAllContacts = function(callback) {
 					"jid" : r.rows.item(i).jid,
 					"favourite" : (r.rows.item(i).favourite == 1 ? true : false),
 					"cc" : (r.rows.item(i).cc),
-					"status" : (r.rows.item(i).status)
+					"status" : (r.rows.item(i).status),
+					"picturepath" : (r.rows.item(i).picturepath)
 				};
 				contacts.push(contact);
 			}
@@ -424,6 +430,12 @@ AppDatabase.prototype.deleteChat = function(chat, callback) {
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [chat.jid], function(t, r) {
 			t.executeSql(sql2, [chat.jid], function(t, r) {
+				try {
+					if (chat.picturepath)
+						_plugin.removeFile(chat.picturepath);
+				} catch (e) {
+					Mojo.Log.error("database:deleteChat:error deleting chat picture: %j", e);
+				}
 				callback();
 			}, this.errorHandlerTrue.bind(this));
 		}.bind(this), this.errorHandlerTrue.bind(this));
@@ -452,11 +464,30 @@ AppDatabase.prototype.findChat = function(jid, callback) {
 			var chat = null;
 			if (result.rows.length > 0) {
 				row = result.rows.item(0);
-				chat = new Chat(row.chatname, row.jid, (row.isgroup == 0 ? false : true), row.unread, AppDatabase.messageFromRowItem(row));
+				chat = new Chat(
+							row.chatname, 
+							row.jid, 
+							(row.isgroup == 0 ? false : true), 
+							row.unread, 
+							AppDatabase.messageFromRowItem(row),
+							row.pictureid,
+							row.picturepath);
 			}
 			callback(chat);
 		}, this.errorHandlerTrue.bind(this));
 	}.bind(this));
+}
+
+AppDatabase.prototype.updateChatPicture = function(jid, pictureid, picturePath, callback) {
+	var sql = "UPDATE chats SET pictureid = ?, picturepath = ? WHERE jid = ?";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [pictureid, picturePath, jid], 
+		function(t, r) {
+			if (callback)
+				callback();
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
+	
 }
 
 AppDatabase.prototype.updateChat = function(chat, callback) {
@@ -478,7 +509,14 @@ AppDatabase.prototype.getAllChatsWithMessages = function(callback) {
 		t.executeSql(sql, [], function(t, r) {
 			for (var i = 0; i < r.rows.length; i++) {
 				var row = r.rows.item(i);
-				var chat = new Chat(row.chatname, row.jid, (row.isgroup == 0 ? false : true), row.unread, AppDatabase.messageFromRowItem(row));
+				var chat = new Chat(
+					row.chatname, 
+					row.jid, 
+					(row.isgroup == 0 ? false : true), 
+					row.unread, 
+					AppDatabase.messageFromRowItem(row),
+					row.pictureid,
+					row.picturepath);
 				// chat.lastMessage.remote_jid = row.lmremotejid;
 				// chat.lastMessage.from_me= (row.lmfromme == 1?true:false);
 				// chat.lastMessage.keyId = row.lmkeyid;

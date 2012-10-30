@@ -1,7 +1,7 @@
 var _mainStage = 'mainStage';
 var _notificationStage = 'nofiticationStage';
-var _appData = new AppDataCookie();
-var _appPrefs = new PreferencesCookie();
+var _appData;
+var _appPrefs;
 var _plugin = null;
 var _mojowhatsupPlugin = null;
 var _appDB = null;
@@ -14,6 +14,8 @@ var _contactsAssistant = null;
 var _mainStageController = null;
 var _dashboardAssistant = null;
 var _dashboardStageController = null;
+var _groupAssistant = null;
+var _prefsAssistant = null;
 var _chatTextClipboard = new HashTable();
 var _contactJidNames = new HashTable();
 var _lastNotification = 0;
@@ -28,9 +30,12 @@ function AppAssistant() {
 	_mojowhatsupPlugin = new MojowhatsupPluginModel();
 	_appDB = new AppDatabase();
 	_appAssistant = this;
+	_appData = new AppDataCookie();
+	_appPrefs = new PreferencesCookie();
+	
 	_appData.get();
 	_appPrefs.get();
-	_myJid = _appData.cookieData.userId + "@s.whatsapp.net";
+	_myJid = _appData.get().userId + "@s.whatsapp.net";
 	// Set locale
     try{
 		Mojo.Locale.set(_appPrefs.cookieData.language);
@@ -233,6 +238,7 @@ AppAssistant.prototype.alertNewMessage = function(chat, msg) {
 	};
 
 	// if ((new Date().getTime() - _lastNotification) > 2000) {
+		
 	if ((chat.isGroup && _appPrefs.cookieData.groupSound != "silence") || (!chat.isGroup && _appPrefs.cookieData.personSound != "silence")) {
 		if ((chat.isGroup && _appPrefs.cookieData.groupSound == "system") || (!chat.isGroup && _appPrefs.cookieData.personSound == "system")) {
 			this.controller.playSoundNotification("notifications");

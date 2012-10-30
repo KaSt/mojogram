@@ -49,6 +49,11 @@ ChatAssistant.prototype.setup = function() {
             label : $L("Group properties"),
             command : "groupProperties"
         });
+    } else {
+        this.appMenuItems.splice(6, 0, {
+            label : $L("View profile picture"),
+            command : "viewPicture"
+        });
     }
 
     this.controller.setupWidget(Mojo.Menu.appMenu, {
@@ -184,6 +189,13 @@ ChatAssistant.prototype.setup = function() {
             }.bind(this));
         }.bind(this));
     }
+    
+	try {
+		_plugin.sendGetPictureIds(JSON.stringify([this.chat.jid]));
+	} catch (e) {
+		Mojo.Log.error("error chat-assistant: setup: %j", e);
+	}
+
 
     this.keyPressHandler = this.keyPressHandler.bindAsEventListener(this);
     this.textChangedHandler = this.textChangedHandler.bindAsEventListener(this);
@@ -552,6 +564,20 @@ ChatAssistant.prototype.handleCommand = function(event) {
                 _exitApp = true;
                 Mojo.Controller.getAppController().closeStage(_mainStage);
                 break;
+            case "viewPicture":
+            	if (this.chat.picturepath) {
+            		this.controller.stageController.pushScene("imageview", {path: this.chat.picturepath});
+            	} else {
+					this.controller.showAlertDialog({
+						onChooose: function(value) {},
+						title: $L("Notification"),
+						message: $L("This contact does not have a profile picture"),
+						choices: [
+							{label: $L("Back"), value:"back", type:"affirmative"}
+						]
+					});	
+            	}
+            	break;
         }
     }
 }
@@ -629,7 +655,7 @@ ChatAssistant.prototype.activate = function(event) {
     if (event && "selectedEmoji" in event) {
         if (event.selectedEmoji != null) {
             var text = this.messageTextWidget.mojo.getValue();
-            this.messageTextWidget.mojo.setValue(text + convertUnicodeCodePointsToString(['0xE' + event.selectedEmoji]));
+            this.messageTextWidget.mojo.setValue(text + convertUnicodeCodePointsToString(['0x' + event.selectedEmoji]));
         }
     } else if (event && "longitude" in event) {
         var msg = new Message(this.chat.jid, "");

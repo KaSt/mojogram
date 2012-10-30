@@ -25,6 +25,12 @@ function MainAssistant() {
             contacts : [],
             unread : false
         }, {
+            name : $L("My status"),
+            icon : "Status",
+            size : "",
+            unread : false,
+            status: _appData.cookieData.statusMessage
+        },  {
             name : $L("Preferences"),
             icon : "Preferences",
             size : "",
@@ -86,7 +92,13 @@ MainAssistant.prototype.setup = function() {
 
     this.controller.setupWidget("mainList", {
         itemTemplate : "main/menu-entry",
-
+        formatters: {
+			status: function(value, model) {
+				if (model.status)
+				 	return emojify(model.status, 18);
+				return "";
+			}        	
+        }
     }, this.mainListModel);
 
     /* add event handlers to listen to events from widgets */
@@ -156,6 +168,9 @@ MainAssistant.prototype.waitForCompletion = function() {
         this.controller.get("spinnerId").mojo.stop();
         this.controller.get("Scrim").hide();
    		Updater.checkUpdate(this.controller, false, false);
+    	setTimeout(function() {
+    		this.requestChatPictures()
+    	}.bind(this), 10000);   		
     } else {
         setTimeout(this.waitForCompletion.bind(this), 30);
     }
@@ -164,15 +179,17 @@ MainAssistant.prototype.waitForCompletion = function() {
 MainAssistant.prototype.listTapHandler = function(event) {
     if (event.index === 1) {
         this.controller.stageController.pushScene("contact-list", event.item.contacts);
-    } else if (event.index === 0)
+    } else if (event.index === 0) {
         this.controller.stageController.pushScene("chats-list", event.item.chats);
-    else if (event.index === 2)
+    } else if (event.index === 2) {
+    	this.controller.stageController.pushScene("mystatus");
+    } else if (event.index === 3)
         this.controller.stageController.pushScene("prefs");
 }
 
 MainAssistant.prototype.activate = function(event) {
-    /* put in event handlers here that should only be in effect when this scene is active. For
-     example, key handlers that are observing the document */
+    if (event == "updateStatus")
+        this.updateMyStatus();
 };
 
 MainAssistant.prototype.deactivate = function(event) {
@@ -219,11 +236,32 @@ MainAssistant.prototype.handleCommand = function(event) {
     }
 }
 
+MainAssistant.prototype.updateMyStatus = function() {
+	this.mainListModel.items[2].status = _appData.cookieData.statusMessage;
+	this.controller.modelChanged(this.mainListModel);
+}
+
+MainAssistant.prototype.requestChatPictures = function() {
+    _appDB.getAllChatsWithMessages( function(chats) {
+        var jidList = [_myJid];
+        for (var i = 0; i < chats.length; i++) {
+            jidList.push(chats[i].jid);
+        }
+		try {
+			_plugin.sendGetPictureIds(JSON.stringify(jidList));
+		} catch (e) {
+			Mojo.Log.error("error updateChats: %j", e);
+		}
+	}.bind(this));
+}
+
 MainAssistant.prototype.updateChats = function() {
     _appDB.getAllChatsWithMessages( function(chats) {
         this.nunread = 0;
-        for (var i = 0; i < chats.length; i++)
+        var jidList = [];
+        for (var i = 0; i < chats.length; i++) {
             this.nunread += chats[i].unread;
+        }
 
         this.mainListModel.items[0].size = chats.length;
         this.mainListModel.items[0].chats = chats;

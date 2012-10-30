@@ -23,10 +23,10 @@ MediaUploader.prototype.requestUpload = function(file) {
 	_mojowhatsupPlugin.safePluginCall( function() {
 		var isFileTemp = 0;		
 		if (this.msg.media_wa_type == Message.WA_TYPE_IMAGE && _appPrefs.cookieData.imageResolution != 0) {
-			var tempFile = Media.MOJOWHATSUP_MEDIA_DIR + "temp" + Media.getFileName(file);
+			var tempFile = "temp" + Media.getFileName(file);
 			var result = _plugin.resizeImage(file, tempFile, _appPrefs.cookieData.imageResolution);
-			if (result == "true") {
-				file = tempFile;
+			if (result != "false") {
+				file = result;
 				isFileTemp = 1;
 			}
 		}					
