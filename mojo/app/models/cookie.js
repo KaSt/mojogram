@@ -1,10 +1,3 @@
-function PreferencesCookie() {
-    this.cookieName = "prefs";
-    this.cookie = false;
-    this.cookieData = false;
-    this.load();
-};
-
 function AppDataCookie() {
     this.cookieName = "appdata";
     this.cookie = false;
@@ -61,13 +54,13 @@ AppDataCookie.prototype.get = function(reload) {
                 max_participants : 31,
                 max_subject : 25,
                 registered : false,
-                lastStatusRequest : 0
+                lastStatusRequest : 0,
+				maxStatus: 130,
+                statusMessage: "",
+               	mypicture: "",
+               	mypictureid: ""
             };
 
-            this.put(this.cookieData);
-        }
-        if (!("max_groups" in this.cookieData)) {
-            this.setDefaultServerProperties();
             this.put(this.cookieData);
         }
         this.setDefaultNewValues();
@@ -78,8 +71,19 @@ AppDataCookie.prototype.get = function(reload) {
 };
 
 AppDataCookie.prototype.setDefaultNewValues = function() {
+    if (!("max_groups" in this.cookieData)) {
+    	this.setDefaultServerProperties();
+    }
     if (!("lastStatusRequest" in this.cookieData)) 
         this.cookieData.lastStatusRequest = 0;
+    if (!("statusMessage" in this.cookieData)) 
+        this.cookieData.statusMessage = "";
+    if (!("maxStatus" in this.cookieData)) 
+        this.cookieData.maxStatus = 130;
+	if(!("mypicture" in this.cookieData))
+		this.cookieData.mypicture = "";
+	if(!("mypictureid" in this.cookieData))
+		this.cookieData.mypictureid = "";		
     this.put(this.cookieData);              
 }
 
@@ -102,6 +106,13 @@ AppDataCookie.prototype.setServerProperties = function(properties) {
 /**
  * Preferences cookie
  */
+
+function PreferencesCookie() {
+    this.cookieName = "prefs";
+    this.cookie = false;
+    this.cookieData = false;
+    this.load();
+};
 
 PreferencesCookie.prototype.load = function() {
     try {

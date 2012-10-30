@@ -230,7 +230,7 @@ AccountAssistant.prototype.checkForm = function(action) {
 		password : password,
 		userId : cc + phone,
 		smsCode : smsCode,
-		registered : _appData.cookieData.registered
+		registered : _appData.get().registered
 	};
 
 	return data;

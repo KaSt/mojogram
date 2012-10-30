@@ -45,6 +45,8 @@ Updater.isNewVersion = function(current, last) {
 	for (var i = 0; i < numbersLast.length; i++) {
 		if (parseInt(numbersLast[i]) > parseInt(numbersCurrent[i]))
 			return true;
+		else if (parseInt(numbersLast[i]) < parseInt(numbersCurrent[i]))
+			return false;
 	}
 
 	return false;

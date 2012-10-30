@@ -11,6 +11,13 @@ var _timerManagerRequestClear;
 function PalmServices() {
 }
 
+            // this.controller.serviceRequest("luna://com.palm.systemmanager", {
+                // method : "takeScreenShot",
+                // parameters : {
+                    // file: "/media/internal/screenshot.png"
+                // }
+            // });
+
 PalmServices.enableWanData = function(dataDisabled) {
     _wanManagerRequest = new Mojo.Service.Request('palm://com.palm.wan', {
         method : 'set',
@@ -145,7 +152,7 @@ PalmServices.setWakeUpAlarmBG = function() {
         method : "set",
         parameters : {
             "key" : "mojoWhatsupTimeoutBG",
-            "in" : _appPrefs.cookieData.backgroundTimeout,
+            "in" : _appPrefs.get().backgroundTimeout,
             "wakeup" : true,
             "uri" : "palm://com.palm.applicationManager/open",
             "params" : "{'id':'com.palm.mojowhatsup','params':{'action': 'timeout', 'type': 'background'}}"

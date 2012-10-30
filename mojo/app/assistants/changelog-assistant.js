@@ -1,6 +1,21 @@
 function ChangelogAssistant() {
 	this.changelog = [
 		{
+			version: "v1.4.0",
+			changes: [
+				"Added change status feature",
+				"Added complete picture support: profile picture, group pictures and contact pictures",
+				"Added new emoji collection",
+				"Fixed some minor bugs"
+			]				
+		},
+		{
+			version: "v1.3.3",
+			changes: [
+				"Workaround for last login problem",
+			]				
+		},
+		{
 			version: "v1.3.2",
 			changes: [
 				"Shows notification when a new version is available",

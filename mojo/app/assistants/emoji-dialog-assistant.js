@@ -2,7 +2,7 @@ var _emojiSelectedGroup = 'people';
 
 function EmojiDialogAssistant(sceneAssistant, callBackFunc) {
     this.callBackFunc = callBackFunc;
-    this.maxRenderEmoji = 150;
+    this.maxRenderEmoji = 240;
     this.emojiListModel = {
         items : []
     };
@@ -63,19 +63,19 @@ EmojiDialogAssistant.prototype.handleCommand = function(event) {
                 });
                 break;
             case 'people':
-                this.loadEmoji(0, 109)
+                this.loadEmoji(0, 189)
                 break;
             case 'nature':
-                this.loadEmoji(109, 162)
+                this.loadEmoji(189, 305)
                 break;
             case 'events':
-                this.loadEmoji(162, 297)
+                this.loadEmoji(305, 535)
                 break;
             case 'places':
-                this.loadEmoji(297, 367)
+				this.loadEmoji(535, 637)            
                 break;
             case 'symbols':
-                this.loadEmoji(367, 466)
+                this.loadEmoji(637, 846)
                 break;
         }
         
@@ -88,7 +88,7 @@ EmojiDialogAssistant.prototype.loadEmoji = function(start, end) {
     var list = [];
     for (var i = start; i < end; i++) {
         list.push({
-            emojiPath : "images/emoji/emoji-E" + emoji_code[i] + ".png",
+            emojiPath : "images/emoji/" + emoji_code[i] + ".png",
             emojiCode : emoji_code[i]
         });
     }

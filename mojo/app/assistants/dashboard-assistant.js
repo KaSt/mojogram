@@ -33,7 +33,7 @@ DashboardAssistant.prototype.setup = function() {
 };
 
 DashboardAssistant.prototype.setBGTimeout = function() {
-	if (_appPrefs.cookieData.backgroundTimeout == "asArrive") {
+	if (_appPrefs.get().backgroundTimeout == "asArrive") {
 		PalmServices.setWakeUpAlarm();
 		PalmServices.setActivity();
 	} else {
@@ -42,7 +42,7 @@ DashboardAssistant.prototype.setBGTimeout = function() {
 }
 
 DashboardAssistant.prototype.clearBGTimeout = function() {
-	if (_appPrefs.cookieData.backgroundTimeout == "asArrive") {
+	if (_appPrefs.get().backgroundTimeout == "asArrive") {
 		PalmServices.clearWakeUpAlarm();
 		PalmServices.clearActivity();
 	} else {
@@ -109,7 +109,7 @@ DashboardAssistant.prototype.updateDashboardText = function(chat, msg) {
 				template : "dashboard/nomessages-template"
 			});
 		} else {
-			var title = this.lastChat.chatName;
+			var title = emojify(this.lastChat.chatName);
 			var jidName = _appAssistant.getNameForJid(this.lastChat, this.lastChat.lastMessage);
 			var message = this.lastChat.lastMessage.formatTextMessage(false, true, null);
 			var subtitle = (jidName == null || !this.lastChat.isGroup ? message : jidName + ": " + message);
