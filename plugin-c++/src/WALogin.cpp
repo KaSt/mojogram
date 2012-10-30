@@ -176,6 +176,7 @@ void WALogin::readSuccess() {
 	ProtocolTreeNode* node = this->inn->nextTree();
 
 	if (ProtocolTreeNode::tagEquals(node, "failure")) {
+		_LOGDATA("login failure %s", node->toString().c_str());
 		throw WAException("Login failure",WAException::LOGIN_FAILURE_EX, WAException::LOGIN_FAILURE_EX_TYPE_PASSWORD);
 	}
 

@@ -139,5 +139,30 @@
 	"Help & Support": "帮助及支援",
 	
 	"Reduce image before sending": "发送前缩小图像",
-	"No reduce": "不缩小"
+	"No reduce": "不缩小",
+	"Phone type": "电话类型",
+	"All phone types": "电话类型",
+	"Only mobile": "只限手机",
+	"Mobile and work": "手机及公司",
+	
+	"Language": "语言",
+	"English": "英文",
+	"Spanish": "西班牙文",
+	"French": "法文",
+	"Italian": "意大利文",
+	"Dutch": "荷兰文",
+	"German": "德文",
+	"Chinese (Simplified)": "中文（中国）",
+	"Chinese (Traditional)": "中文（台湾）",
+	"Chinese (Hong Kong)": "中文（香港）",
+	"Notification": "通知",
+	"It is necessary to restart the application so that this change can take effect": "需要重新启动程序以套用更新",
+	
+	"Check for updates": "检查更新",
+	"#{appName} is up to date": "#{appName} 目前是最新版本",
+	"New version": "新版本",
+	"Russian": "俄文",
+	"Changes": "更新",
+	"Update available": "有可用更新",
+	"Profile picture": "个人头像"
 }
