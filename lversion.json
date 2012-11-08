@@ -1,11 +1,10 @@
 {
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"url": "https://github.com/amoralico/mojowhatsup/downloads",
 	"comments": [
-		"Added change status feature",
-		"Added complete picture support: profile picture, groups pictures and contacts pictures",
-		"Added new emoji collection",
-		"Fixed some minor bugs"
+		"Implemented Whatsapp encrypted protocol 1.2",
+		"Login problem fixed",
+		"Updated Chinese, Italian and Netherlands translations"
 	],
-	"message": "This version adds contact/group pictures and contact status features"
+	"message": "This version implements the long awaited 1.2 Whatsapp protocol. Therefore the last login problem is fixed and now messages are encrypted."
 }
