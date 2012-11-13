@@ -1,15 +1,16 @@
 {
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"url": "https://github.com/amoralico/mojowhatsup/downloads",
 	"comments": [
-		"New voice method to request the registration code",
-		"Fixed picture preview problem",
-		"Fixed plugin error when sending a picture",
-		"Plugin recompiled in order to support Pixi processor",
-		"Fixed the visualization problem of some emojis",
-		"Fixed the timestamp problem of offline messages",
-		"Enabled log ERROR level in the plugin for debugging puposes",
-		"Some other minor changes"
+		"Fixed plugin error problem when receiving picture notification",
+		"New voice method to request the registration code (v1.4.2)",
+		"Fixed picture preview problem (v1.4.2)",
+		"Fixed plugin error when sending a picture (v1.4.2)",
+		"Plugin recompiled in order to support Pixi processor (v1.4.2)",
+		"Fixed the visualization problem of some emojis (v1.4.2)",
+		"Fixed the timestamp problem of offline messages (v1.4.2)",
+		"Enabled log ERROR level in the plugin for debugging puposes (v1.4.2)",
+		"Some other minor changes (v1.4.2)"
 	],
-	"message": "This version fixes some previous bugs."
+	"message": "This version fixes the plugin error problem existing since version 1.4.1"
 }
