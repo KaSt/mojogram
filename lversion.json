@@ -1,10 +1,15 @@
 {
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"url": "https://github.com/amoralico/mojowhatsup/downloads",
 	"comments": [
-		"Implemented Whatsapp encrypted protocol 1.2",
-		"Login problem fixed",
-		"Updated Chinese, Italian and Netherlands translations"
+		"New voice method to request the registration code",
+		"Fixed picture preview problem",
+		"Fixed plugin error when sending a picture",
+		"Plugin recompiled in order to support Pixi processor",
+		"Fixed the visualization problem of some emojis",
+		"Fixed the timestamp problem of offline messages",
+		"Enabled log ERROR level in the plugin for debugging puposes",
+		"Some other minor changes"
 	],
-	"message": "This version implements the long awaited 1.2 Whatsapp protocol. Therefore the last login problem is fixed and now messages are encrypted."
+	"message": "This version fixes some previous bugs."
 }
