@@ -1,16 +1,14 @@
 {
-	"version": "1.4.3",
-	"url": "https://github.com/amoralico/mojowhatsup/downloads",
+	"version": "1.5.0",
+	"url": "https://www.dropbox.com/sh/u5b52atosllzaxc/BeMntTn87F/mojowhatsup",
 	"comments": [
-		"Fixed plugin error problem when receiving picture notification",
-		"New voice method to request the registration code (v1.4.2)",
-		"Fixed picture preview problem (v1.4.2)",
-		"Fixed plugin error when sending a picture (v1.4.2)",
-		"Plugin recompiled in order to support Pixi processor (v1.4.2)",
-		"Fixed the visualization problem of some emojis (v1.4.2)",
-		"Fixed the timestamp problem of offline messages (v1.4.2)",
-		"Enabled log ERROR level in the plugin for debugging puposes (v1.4.2)",
-		"Some other minor changes (v1.4.2)"
+                "New registration method (v2)",
+                "Integration with  Sony Ericsson MBW-150",
+                "Send message using forward gesture on gesture area",
+                "Added remove account option in Account Configuration",
+                "Added purchase subscription option in Account Configuration",
+                "Added forward to group/forward to contact options in message popup menu",
+                "Upon firing a notification sound, wait 2 seconds until playing the next"
 	],
-	"message": "This version fixes the plugin error problem existing since version 1.4.1"
+	"message": "This version implements a new method for account registration"
 }
