@@ -1,14 +1,11 @@
 {
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-                "New registration method (v2)",
-                "Integration with  Sony Ericsson MBW-150",
-                "Send message using forward gesture on gesture area",
-                "Added remove account option in Account Configuration",
-                "Added purchase subscription option in Account Configuration",
-                "Added forward to group/forward to contact options in message popup menu",
-                "Upon firing a notification sound, wait 2 seconds until playing the next"
+                "Fixed fail-old-version problem",
+                "New inproved chat header",
+                "Updated italian and chinese translations",
+                "NOTE: due to a Whatsapp change, contacts status are not updated"
 	],
-	"message": "This version implements a new method for account registration"
+	"message": "Fixes fail-old-version problem during registration"
 }
