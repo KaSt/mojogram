@@ -46,7 +46,8 @@ Media.openMedia = function(msg, stageController) {
 
 		case Message.WA_TYPE_VIDEO:
 		case Message.WA_TYPE_AUDIO:
-			var serviceRequest = new Mojo.Service.Request('palm://com.palm.applicationManager', {
+			Mojo.Log.error("open file media %s", (msg.from_me ? "" : Media.MOJOWHATSUP_MEDIA_DIR) + msg.downloadedFile);
+			stageController.activeScene().serviceRequest('palm://com.palm.applicationManager', {
 				method : 'open',
 				parameters : {
     				target : 'file://' + (msg.from_me ? "" : Media.MOJOWHATSUP_MEDIA_DIR) + msg.downloadedFile
@@ -57,7 +58,8 @@ Media.openMedia = function(msg, stageController) {
 			});
 			break;
 		case Message.WA_TYPE_CONTACT:
-			var serviceRequest = new Mojo.Service.Request('palm://com.palm.applicationManager', {
+			Mojo.Log.info("Media url %s", msg.media_url);
+			stageController.activeScene().serviceRequest('palm://com.palm.applicationManager', {
 				method : 'open',
 				parameters : {
 					target : 'file://' + msg.media_url
@@ -68,17 +70,10 @@ Media.openMedia = function(msg, stageController) {
 			});
 			break;
 		case Message.WA_TYPE_LOCATION:
-			var serviceRequest = new Mojo.Service.Request("palm://com.palm.applicationManager", {
+			stageController.activeScene().serviceRequest("palm://com.palm.applicationManager", {
 				method : "open",
 				parameters : {
-					id : "com.palm.app.maps",
-					params : {
-						location : {
-							lat : msg.latitude,
-							lng : msg.longitude,
-							acc : 30
-						}
-					}
+					target: "maploc:" + msg.latitude + ", " + msg.longitude
 				}
 			});
 			break;
@@ -170,15 +165,20 @@ Media.getMimeType = function(fmsg, extension) {
 Media.getThumbImage = function(document, msg, callback) {
 	if (msg.media_wa_type == Message.WA_TYPE_IMAGE) {
 		var imageFile = (msg.from_me ? '' : Media.MOJOWHATSUP_MEDIA_DIR) + msg.downloadedFile;
-		imageFile = '/var/luna/data/extractfs' + encodeURIComponent(imageFile) + ':0:0:80:64:3';
+		imageFile = '/var/luna/data/extractfs' + encodeURIComponent(imageFile) + ':0:0:96:77:3';
 
 		var img = new Image();
 
 		img.onload = function() {
 			var canvas = document.createElement("canvas");
 
-			canvas.width = img.width;
-			canvas.height = img.height;
+			if (_appAssistant.isPre3()) {
+				canvas.width = Math.round(img.width * 1.5);
+				canvas.height = Math.round(img.height * 1.5);
+			} else {
+				canvas.width = img.width;
+				canvas.height = img.height;
+			}
 
 			var ctx = canvas.getContext('2d');
 			ctx.drawImage(img, 0, 0, img.width, img.height);
@@ -188,9 +188,10 @@ Media.getThumbImage = function(document, msg, callback) {
 
 			Mojo.Log.info("Canvas size %d %d, lenght %d ", canvas.width, canvas.height, data.length);
 
-			var p = new PNGlib(img.width, img.height, 256);
-			var sourceWidth = img.width;
-			var sourceHeight = img.height;
+			var p = new PNGlib(canvas.width, canvas.height, 256);
+			var background = p.color(0, 0, 0, 0);
+			var sourceWidth = canvas.width;
+			var sourceHeight = canvas.height;
 
 			var cont = 1;
 			for (var y = 0; y < sourceHeight; y++) {

@@ -149,6 +149,7 @@
 							<tool command="i686-pc-linux-gnu-g++" id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1276168629" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 								<option id="gnu.cpp.compiler.option.include.paths.602394244" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\SDL&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\openssl&quot;"/>
 								</option>
@@ -170,6 +171,8 @@
 							<tool command="i686-pc-linux-gnu-g++" id="cdt.managedbuild.tool.gnu.cpp.linker.base.1403311746" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
 								<option id="gnu.cpp.link.option.libs.1986590177" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="pdl"/>
+									<listOptionValue builtIn="false" value="SDL_image"/>
+									<listOptionValue builtIn="false" value="jpeg"/>
 									<listOptionValue builtIn="false" value="curl"/>
 									<listOptionValue builtIn="false" value="crypt"/>
 									<listOptionValue builtIn="false" value="crypto"/>
@@ -193,6 +196,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.230969737" name="JpegImageResizer.h" rcbsApplicability="disable" resourcePath="src/JpegImageResizer.h" toolsToInvoke=""/>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -239,6 +243,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.868031080" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths.344538551" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\openssl_arm&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\SDL&quot;"/>
 								</option>
@@ -256,6 +261,8 @@
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.release.1943857709" name="ARM Sourcery Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.release">
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs.552689842" name="Libraries (-l)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="pdl"/>
+									<listOptionValue builtIn="false" value="jpeg"/>
+									<listOptionValue builtIn="false" value="SDL_image"/>
 									<listOptionValue builtIn="false" value="curl"/>
 									<listOptionValue builtIn="false" value="crypt"/>
 									<listOptionValue builtIn="false" value="crypto"/>
@@ -325,6 +332,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.1642935888" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths.1283668948" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\openssl_arm&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\SDL&quot;"/>
 								</option>
@@ -340,11 +348,13 @@
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.release.38052955" name="ARM Sourcery Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.release">
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs.593347587" name="Libraries (-l)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="pdl"/>
+									<listOptionValue builtIn="false" value="jpeg"/>
 									<listOptionValue builtIn="false" value="curl"/>
 									<listOptionValue builtIn="false" value="crypt"/>
 									<listOptionValue builtIn="false" value="crypto"/>
 									<listOptionValue builtIn="false" value="SDL"/>
 									<listOptionValue builtIn="false" value="SDL_net"/>
+									<listOptionValue builtIn="false" value="SDL_image"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths.1599857065" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\device\lib&quot;"/>
@@ -409,6 +419,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level.884093161" name="Optimization level" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.optimization.level.none" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths.1108048475" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\openssl_arm&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\include\SDL&quot;"/>
 								</option>
@@ -417,7 +428,9 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti.1396215021" name="Do not use RTTI (-fno-rtti)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.nortti" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.noexceptions.601734847" name="Do not use exceptions (-fno-exceptions)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.noexceptions" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags.448978189" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags" value="-c" valueType="string"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def.1843877631" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def.1843877631" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_DEBUG"/>
+								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input.214161797" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.release.1711344032" name="ARM Sourcery Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.release"/>
@@ -427,8 +440,10 @@
 									<listOptionValue builtIn="false" value="curl"/>
 									<listOptionValue builtIn="false" value="crypt"/>
 									<listOptionValue builtIn="false" value="crypto"/>
+									<listOptionValue builtIn="false" value="jpeg"/>
 									<listOptionValue builtIn="false" value="SDL"/>
 									<listOptionValue builtIn="false" value="SDL_net"/>
+									<listOptionValue builtIn="false" value="SDL_image"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths.719176206" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP webOS\PDK\device\lib&quot;"/>
@@ -465,7 +480,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="" artifactName="../../mojo/mojowhatsup_service_plugin" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016" name="Emulator Pixi" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release" postbuildStep="">
+				<configuration artifactExtension="" artifactName="../../mojo-pixi/mojowhatsup_service_plugin" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016" name="Emulator Pixi" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release" postbuildStep="">
 					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.1580956016." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.base.1748762195" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.base.345033039" name="Debug Platform" osList="linux,hpux,aix,qnx" superClass="cdt.managedbuild.target.gnu.platform.base"/>
@@ -494,16 +509,9 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1987773291" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool command="i686-pc-linux-gnu-g++" id="cdt.managedbuild.tool.gnu.cpp.linker.base.2059840682" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
-								<option id="gnu.cpp.link.option.libs.2108488793" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="pdl"/>
-									<listOptionValue builtIn="false" value="curl"/>
-									<listOptionValue builtIn="false" value="crypt"/>
-									<listOptionValue builtIn="false" value="crypto"/>
-									<listOptionValue builtIn="false" value="SDL_net"/>
-									<listOptionValue builtIn="false" value="SDL"/>
-								</option>
+								<option id="gnu.cpp.link.option.libs.2108488793" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs"/>
 								<option id="gnu.cpp.link.option.paths.1737588526" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\Palm\PDK\emulator&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Archivos de programa\HP Webos\PDK\emulator\lib&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.strip.345103744" name="Omit all symbol information (-s)" superClass="gnu.cpp.link.option.strip" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.flags.725831703" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-Wl,--allow-shlib-undefined" valueType="string"/>
@@ -527,6 +535,10 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="whatsappwebos.cdt.managedbuild.target.gnu.cygwin.exe.1781066390" name="Executable" projectType="cdt.managedbuild.target.gnu.cygwin.exe"/>
 	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/whatsappwebos"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.release.570361245;cdt.managedbuild.config.gnu.cygwin.exe.release.570361245.;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.exe.release.360422821;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.2007281608">
@@ -538,12 +550,14 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.release.570361245;cdt.managedbuild.config.gnu.cygwin.exe.release.570361245.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.exe.release.2146656945;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.1331786590">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.;cdt.managedbuild.tool.gnu.cpp.compiler.base.1276168629;cdt.managedbuild.tool.gnu.cpp.compiler.input.1425081867">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.exe.debug.2061085186;cdt.managedbuild.config.gnu.cygwin.exe.debug.2061085186.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.exe.debug.1300806090;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.668250419">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.release.2015284564.239570052.;cdt.managedbuild.tool.gnu.c.compiler.base.834708497;cdt.managedbuild.tool.gnu.c.compiler.input.532598428">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/whatsappwebos"/>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

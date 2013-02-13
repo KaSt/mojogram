@@ -34,7 +34,9 @@ private:
 
 public:
 	WAConnection* _connection;
-
+	static const int PORTS[2];
+	static const int NUM_PORTS;
+	static int LAST_USED_PORT_INDEX;
 	XmppRunner(BGApp* app);
 	~XmppRunner();
 

@@ -6,6 +6,7 @@
 *.swo
 *.swn
 *.eg
+*.tmp
 *~
 *.o
 *.log
@@ -15,5 +16,10 @@
 ehthumbs.db
 Thumbs.db
 TODO.txt
-Release ARM Pre-Veer/
-Debug Emulator/
+Release ARM Pre-Veer
+Release ARM Pixi
+Debug Emulator
+Debug ARM Pre-Veer
+Debug
+mojowhatsup_service_plugin_win32_test.cpp.bak
+	

@@ -29,7 +29,28 @@ src/BinTreeNodeReader.d: ../src/BinTreeNodeReader.cpp \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_loadso.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_timer.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_version.h \
- ../src/WAException.h ../src/ByteArray.h
+ ../src/WAException.h ../src/ByteArray.h ../src/WAConnection.h \
+ ../src/FMessage.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h \
+ ../src/WALogin.h ../src/BinTreeNodeWriter.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
+ ../src/utilities.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h
 
 ../src/BinTreeNodeReader.h:
 
@@ -96,3 +117,49 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_version.h:
 ../src/WAException.h:
 
 ../src/ByteArray.h:
+
+../src/WAConnection.h:
+
+../src/FMessage.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
+
+../src/WALogin.h:
+
+../src/BinTreeNodeWriter.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
+
+../src/utilities.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:

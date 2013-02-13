@@ -1,11 +1,14 @@
 var _emojiSelectedGroup = 'people';
+var _emojiSelectedIndex = 0;
 
 function EmojiDialogAssistant(sceneAssistant, callBackFunc) {
     this.callBackFunc = callBackFunc;
-    this.maxRenderEmoji = 150;
+    this.maxRenderEmoji = 240;
     this.emojiListModel = {
         items : []
     };
+    this.commands = ['people','nature','events','places','symbols'];
+    this.groupIndex = this.commands.indexOf(_emojiSelectedGroup);
 }
 
 EmojiDialogAssistant.prototype.setup = function(widget) {
@@ -48,14 +51,41 @@ EmojiDialogAssistant.prototype.setup = function(widget) {
             command : "close"
         }]
     });
-
-    this.handleCommand({type: Mojo.Event.command, command: _emojiSelectedGroup});
+    this.flickHandler = this.onFlick.bindAsEventListener(this);
+    Mojo.Event.listen(this.controller.window, Mojo.Event.flick, this.flickHandler, false);
 }
+
+
+EmojiDialogAssistant.prototype.onFlick = function(event) {
+    Mojo.Log.info("velocidad %j", event.velocity);
+    if (event.velocity.x >= 500) {
+        if (this.groupIndex > 0) {
+            this.groupIndex--;
+            _emojiSelectedIndex = 0;
+            _emojiSelectedGroup = this.commands[this.groupIndex];
+            this.model.items[0].toggleCmd = _emojiSelectedGroup;
+            this.controller.modelChanged(this.model);
+            this.handleCommand({type: Mojo.Event.command, command: _emojiSelectedGroup, open:true});
+        }
+    } else if (event.velocity.x <= -500) {
+        if (this.groupIndex < 4) {
+            this.groupIndex++;
+            _emojiSelectedIndex = 0;
+            _emojiSelectedGroup = this.commands[this.groupIndex];
+            this.model.items[0].toggleCmd = _emojiSelectedGroup;
+            this.controller.modelChanged(this.model);
+            this.handleCommand({type: Mojo.Event.command, command: _emojiSelectedGroup, open:true});
+        }
+
+    }
+}
+
 
 EmojiDialogAssistant.prototype.handleCommand = function(event) {
     if (event.type == Mojo.Event.command) {
-        if (event.command != 'close')
+        if (event.command != 'close') {
             _emojiSelectedGroup = event.command;
+         }
         switch(event.command) {
             case 'close':
                 this.controller.stageController.popScene({
@@ -63,32 +93,40 @@ EmojiDialogAssistant.prototype.handleCommand = function(event) {
                 });
                 break;
             case 'people':
-                this.loadEmoji(0, 109)
+                this.loadEmoji(0, 189)
                 break;
             case 'nature':
-                this.loadEmoji(109, 162)
+                this.loadEmoji(189, 305)
                 break;
             case 'events':
-                this.loadEmoji(162, 297)
+                this.loadEmoji(305, 535)
                 break;
             case 'places':
-                this.loadEmoji(297, 367)
+				this.loadEmoji(535, 637)            
                 break;
             case 'symbols':
-                this.loadEmoji(367, 466)
+                this.loadEmoji(637, 846)
                 break;
         }
-        
-        if (this.emojiListWidget.mojo)        
-            this.emojiListWidget.mojo.revealItem(0, false);
+
+		if (!event.open)
+			_emojiSelectedIndex = 0; 
+        if (this.emojiListWidget.mojo) {
+        	Mojo.Log.error("Selected index %d", _emojiSelectedIndex);
+        	this.emojiListWidget.mojo.revealItem(_emojiSelectedIndex, false);
+        }        
     }
+}
+
+EmojiDialogAssistant.prototype.ready = function() {
+	this.handleCommand({type: Mojo.Event.command, command: _emojiSelectedGroup, open:true});
 }
 
 EmojiDialogAssistant.prototype.loadEmoji = function(start, end) {
     var list = [];
     for (var i = start; i < end; i++) {
         list.push({
-            emojiPath : "images/emoji/emoji-E" + emoji_code[i] + ".png",
+            emojiPath : "images/emoji/" + emoji_code[i] + ".png",
             emojiCode : emoji_code[i]
         });
     }
@@ -99,10 +137,12 @@ EmojiDialogAssistant.prototype.loadEmoji = function(start, end) {
 }
 
 EmojiDialogAssistant.prototype.listTapHandler = function(event) {
+	_emojiSelectedIndex = event.index;
     this.controller.stageController.popScene({
         selectedEmoji : event.item.emojiCode
     });
 }
 
 EmojiDialogAssistant.prototype.cleanup = function() {
+    Mojo.Event.stopListening( this.controller.window, Mojo.Event.flick, this.flickHandler, false ); 
 }

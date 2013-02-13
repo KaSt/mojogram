@@ -1,4 +1,4 @@
-function Chat(chatName, jid, isGroup, unread, lastMessage) {
+function Chat(chatName, jid, isGroup, unread, lastMessage, pictureid, picturepath, muteexpiry) {
 	this.chatName = chatName;
 	this.jid = jid;
 	this.isGroup = isGroup;
@@ -7,5 +7,10 @@ function Chat(chatName, jid, isGroup, unread, lastMessage) {
 		this.lastMessage = lastMessage;
 	else
 	    this.lastMessage = new Message();
+
+   
+	this.pictureid = pictureid;
+	this.picturepath = picturepath;	    
+	this.muteexpiry = muteexpiry;
 }
 

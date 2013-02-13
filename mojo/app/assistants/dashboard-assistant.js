@@ -14,20 +14,15 @@ DashboardAssistant.prototype.setup = function() {
 		delete _mediaDownloads;
 		_mediaUploads = new HashTable();
 		_mediaDownloads = new HashTable();
-
-		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+         if (!_appData.cookieData.passwordV2) {
+            _appData.put("password", _plugin.processPassword(_appData.cookieData.password));
+            _appData.put("passwordV2", true);
+         }    
+		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "true");
 	});
 
 	_mojowhatsupPlugin.whenRunnerExecuting( function() {
-		PalmServices.subscribeNetworkStatus(this.controller);
-	}.bind(this));
-
-	_mojowhatsupPlugin.safePluginCall(function() {
-		_plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
-	});
-
-	_mojowhatsupPlugin.whenRunnerExecuting( function() {
-		PalmServices.subscribeNetworkStatus(this.controller);
+		PalmServices.subscribeNetworkStatus();
 		setTimeout(function() {
 			_plugin.sendActive(0)
 		}, 10000);
@@ -41,7 +36,7 @@ DashboardAssistant.prototype.setup = function() {
 };
 
 DashboardAssistant.prototype.setBGTimeout = function() {
-	if (_appPrefs.cookieData.backgroundTimeout == "asArrive") {
+	if (_appPrefs.get().backgroundTimeout == "asArrive") {
 		PalmServices.setWakeUpAlarm();
 		PalmServices.setActivity();
 	} else {
@@ -50,7 +45,7 @@ DashboardAssistant.prototype.setBGTimeout = function() {
 }
 
 DashboardAssistant.prototype.clearBGTimeout = function() {
-	if (_appPrefs.cookieData.backgroundTimeout == "asArrive") {
+	if (_appPrefs.get().backgroundTimeout == "asArrive") {
 		PalmServices.clearWakeUpAlarm();
 		PalmServices.clearActivity();
 	} else {
@@ -117,7 +112,7 @@ DashboardAssistant.prototype.updateDashboardText = function(chat, msg) {
 				template : "dashboard/nomessages-template"
 			});
 		} else {
-			var title = this.lastChat.chatName;
+			var title = emojify(this.lastChat.chatName);
 			var jidName = _appAssistant.getNameForJid(this.lastChat, this.lastChat.lastMessage);
 			var message = this.lastChat.lastMessage.formatTextMessage(false, true, null);
 			var subtitle = (jidName == null || !this.lastChat.isGroup ? message : jidName + ": " + message);

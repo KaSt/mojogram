@@ -69,6 +69,8 @@ public:
 	static const int STATUS_USER_ADDED = 191;
 	static const int STATUS_USER_REMOVED = 192;
 	static const int STATUS_SUBJECT_CHANGED = 193;
+	static const int STATUS_PICTURE_CHANGED_SET = 194;
+	static const int STATUS_PICTURE_CHANGED_DELETE = 195;
 
 
 	static std::string getMessage_WA_Type_StrValue(unsigned char type);

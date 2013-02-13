@@ -28,6 +28,7 @@
 #include <string>
 #include <openssl/md5.h>
 #include <time.h>
+#include <vector>
 
 #ifndef _LOGWIN32
 #include <syslog.h>
@@ -46,13 +47,12 @@ namespace Utilities{
 	extern void configureLogging(const char* ident);
 	extern void closeLog();
 	extern const int MD5_DIGEST_SIZE;
-    extern string getPassword();
     extern string getCountryCode();
     extern string getMcc();
     extern string getMnc();
     extern string reverseString(const string& str);
     extern unsigned char* md5digest(unsigned char *bytes, int length, unsigned char* buffer);
-    extern string getChatPassword(const std::string& password);
+    extern string processIdentity(const std::string& password);
     extern int64_t randLong();
     extern int64_t absLong(int64_t num);
     extern string str(int64_t number, int radix);
@@ -67,6 +67,15 @@ namespace Utilities{
 	extern unsigned char forDigit(int b);
 	extern string md5String(const string& data);
 	extern bool saveStringToFile(const string& data, const string& filePath);
+	extern bool saveBytesToFile(const string& data, const string& filePath);
+	extern bool saveBytesToFile(const std::vector<unsigned char>& data, const string& filePath);
+	extern string removeWaDomainFromJid(const string& jid);
+	extern string getNameFromPath(const std::string& path);
+	extern vector<unsigned char>* loadFileToBytes(const string& path);
+	extern bool fileExists(const std::string& path);
+	extern std::vector<unsigned char>* getChallengeData(const std::string& file);
+	extern bool saveChallengeData(const std::vector<unsigned char>& data, const std::string& file);
+	extern std::string utf8_to_utf16(const std::string& utf8);
 }
 #endif
 

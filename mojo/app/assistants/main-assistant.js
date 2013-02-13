@@ -25,6 +25,12 @@ function MainAssistant() {
             contacts : [],
             unread : false
         }, {
+            name : $L("My status"),
+            icon : "Status",
+            size : "",
+            unread : false,
+            status: _appData.cookieData.statusMessage
+        },  {
             name : $L("Preferences"),
             icon : "Preferences",
             size : "",
@@ -54,11 +60,15 @@ MainAssistant.prototype.setup = function() {
         _mediaDownloads = new HashTable();
 
         _myJid = _appData.cookieData.userId + "@s.whatsapp.net";
-        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+         if (!_appData.cookieData.passwordV2) {
+            _appData.put("password", _plugin.processPassword(_appData.cookieData.password));
+            _appData.put("passwordV2", true);
+         }        
+        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "false");
     });
 
     _mojowhatsupPlugin.whenRunnerExecuting( function() {
-        PalmServices.subscribeNetworkStatus(this.controller);
+        PalmServices.subscribeNetworkStatus();
     }.bind(this));
 
     this.controller.setupWidget(Mojo.Menu.appMenu, this.attributesAppMenu = {
@@ -86,7 +96,13 @@ MainAssistant.prototype.setup = function() {
 
     this.controller.setupWidget("mainList", {
         itemTemplate : "main/menu-entry",
-
+        formatters: {
+			status: function(value, model) {
+				if (model.status)
+				 	return emojify(model.status, 18);
+				return "";
+			}        	
+        }
     }, this.mainListModel);
 
     /* add event handlers to listen to events from widgets */
@@ -103,29 +119,56 @@ MainAssistant.prototype.setup = function() {
     this.deactivateHandler = this.deactivateWindow.bind(this);
     Mojo.Event.listen(this.controller.stageController.document, Mojo.Event.stageDeactivate, this.deactivateHandler);
 
+    this.requestStatus();
     this.loadContacts();
     this.updateChats();
     this.waitForCompletion();
 };
 
-
 MainAssistant.prototype.activateWindow = function(event) {
-   _mojowhatsupPlugin.safePluginCall(function() {
+    _mojowhatsupPlugin.safePluginCall(function() {
         _plugin.sendActive(1);
-   });
+    });
 }
 
-
 MainAssistant.prototype.deactivateWindow = function(event) {
-   _mojowhatsupPlugin.safePluginCall(function() {
+    _mojowhatsupPlugin.safePluginCall(function() {
         _plugin.sendActive(0);
-   });
+    });
 }
 
 MainAssistant.prototype.restart = function() {
+	_exitApp = false;
+	_contactsImported = false;
+    _appDB.importContacts();
+    
     _mojowhatsupPlugin.safePluginCall(function() {
-        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName);
+        delete _mediaUploads;
+        delete _mediaDownloads;
+        _mediaUploads = new HashTable();
+        _mediaDownloads = new HashTable();
+
+        _myJid = _appData.cookieData.userId + "@s.whatsapp.net";
+         if (!_appData.cookieData.passwordV2) {
+            _appData.put("password", _plugin.processPassword(_appData.cookieData.password));
+            _appData.put("passwordV2", true);
+         }    
+        _plugin.startBG(_appData.cookieData.userId, _appData.cookieData.password, _appData.cookieData.pushName, "false");
     });
+
+    this.requestStatus();
+    this.loadContacts();
+    this.updateChats();
+    this.waitForCompletion();
+}
+
+MainAssistant.prototype.requestStatus = function() {
+    if (_contactsImported) {
+        _statusRequest = new StatusRequest();
+        _statusRequest.start();
+    } else {
+        setTimeout(this.requestStatus.bind(this), 10);
+    }
 }
 
 MainAssistant.prototype.loadContacts = function(callback) {
@@ -134,9 +177,9 @@ MainAssistant.prototype.loadContacts = function(callback) {
             this.mainListModel.items[1].size = contacts.length;
             this.mainListModel.items[1].contacts = contacts;
             this.controller.modelChanged(this.mainListModel);
-            this.contactsImported = true;
             if (callback)
                 callback(contacts);
+            this.contactsImported = true;
         }.bind(this));
     } else {
         setTimeout(this.loadContacts.bind(this), 10, callback);
@@ -147,24 +190,29 @@ MainAssistant.prototype.waitForCompletion = function() {
     if (_mojowhatsupPlugin.isRunnerExecuting && this.chatsLoaded && this.contactsImported) {
         this.controller.get("spinnerId").mojo.stop();
         this.controller.get("Scrim").hide();
-        _contactJidNames.setItem(_myJid, $L("You"));
+   		Updater.checkUpdate(this.controller, false, false);
+    	setTimeout(function() {
+    		this.requestChatPictures()
+    	}.bind(this), 10000);   		
     } else {
         setTimeout(this.waitForCompletion.bind(this), 30);
     }
 }
 
 MainAssistant.prototype.listTapHandler = function(event) {
-    if (event.index === 1)
+    if (event.index === 1) {
         this.controller.stageController.pushScene("contact-list", event.item.contacts);
-    else if (event.index === 0)
+    } else if (event.index === 0) {
         this.controller.stageController.pushScene("chats-list", event.item.chats);
-    else if (event.index === 2)
+    } else if (event.index === 2) {
+    	this.controller.stageController.pushScene("mystatus");
+    } else if (event.index === 3)
         this.controller.stageController.pushScene("prefs");
 }
 
 MainAssistant.prototype.activate = function(event) {
-    /* put in event handlers here that should only be in effect when this scene is active. For
-     example, key handlers that are observing the document */
+    if (event == "updateStatus")
+        this.updateMyStatus();
 };
 
 MainAssistant.prototype.deactivate = function(event) {
@@ -201,7 +249,7 @@ MainAssistant.prototype.handleCommand = function(event) {
                 this.controller.stageController.pushScene("account");
                 break;
             case Mojo.Menu.helpCmd:
-                this.controller.stageController.pushAppSupportInfoScene();
+                this.controller.stageController.pushScene("help");
                 break;
             case "exit":
                 _exitApp = true;
@@ -211,11 +259,32 @@ MainAssistant.prototype.handleCommand = function(event) {
     }
 }
 
+MainAssistant.prototype.updateMyStatus = function() {
+	this.mainListModel.items[2].status = _appData.cookieData.statusMessage;
+	this.controller.modelChanged(this.mainListModel);
+}
+
+MainAssistant.prototype.requestChatPictures = function() {
+    _appDB.getAllChatsWithMessages( function(chats) {
+        var jidList = [_myJid];
+        for (var i = 0; i < chats.length; i++) {
+            jidList.push(chats[i].jid);
+        }
+		try {
+			_plugin.sendGetPictureIds(JSON.stringify(jidList));
+		} catch (e) {
+			Mojo.Log.error("error updateChats: %j", e);
+		}
+	}.bind(this));
+}
+
 MainAssistant.prototype.updateChats = function() {
     _appDB.getAllChatsWithMessages( function(chats) {
         this.nunread = 0;
-        for (var i = 0; i < chats.length; i++)
+        var jidList = [];
+        for (var i = 0; i < chats.length; i++) {
             this.nunread += chats[i].unread;
+        }
 
         this.mainListModel.items[0].size = chats.length;
         this.mainListModel.items[0].chats = chats;

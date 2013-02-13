@@ -45,8 +45,22 @@ src/mojowhatsup_service_plugin.d: ../src/mojowhatsup_service_plugin.cpp \
  ../src/WAException.h ../src/WebosBGApp.h ../src/BGApp.h \
  ../src/XmppRunner.h ../src/WAConnection.h ../src/FMessage.h \
  ../src/WALogin.h ../src/BinTreeNodeReader.h ../src/ProtocolTreeNode.h \
- ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/ChatState.h \
- ../src/Account.h \
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
+ ../src/ChatState.h ../src/Account.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlver.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlbuild.h \
@@ -164,6 +178,34 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 ../src/ByteArray.h:
 
 ../src/BinTreeNodeWriter.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
 
 ../src/ChatState.h:
 

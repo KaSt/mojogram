@@ -20,7 +20,6 @@ ImageviewAssistant.prototype.setup = function() {
     if (this.fullScreen) {
         this.controller.get("imgTitle").hide();
     }
-
     var menuAttr = {
         omitDefaultItems : true
     };
@@ -104,11 +103,12 @@ ImageviewAssistant.prototype.setup = function() {
     if (this.orientation != "free") {
         this.controller.stageController.setWindowOrientation(this.orientation);
     } else {
+        
         this.orientation = this.controller.stageController.getWindowOrientation();
         this.controller.stageController.setWindowOrientation(this.orientation);
     }
 
-    if (!this.alt) {
+   if (!this.alt) {
         this.controller.setupWidget("imgMain", {
             noExtractFS : false,
         }, {
@@ -116,11 +116,13 @@ ImageviewAssistant.prototype.setup = function() {
             onRightFunction : this.handleRightMovement.bind(this)
         });
     }
+
     this.controller.setupWidget("spinLoading", {
         spinnerSize : 'large'
     }, {
         spinning : true
     });
+    
     if (!this.filepath.startsWith("/media/internal/") && !this.filepath.startsWith("http")) {
         var dir = Mojo.appPath.substring(7) + "_temp" + this.filepath;
         dir = dir.substring(0, dir.lastIndexOf("/") + 1);
@@ -129,7 +131,7 @@ ImageviewAssistant.prototype.setup = function() {
         // this.filemgr.createDir(dir,
         // function() {
         // this.filemgr.copy(this.filepath, this.centerUrl,
-        // this.loadImage.bind(this),
+        // this.loaImage.bind(this),
         // function(err) {
         // Error(this, $L(err.errorText));
         // }.bind(this)
@@ -140,12 +142,16 @@ ImageviewAssistant.prototype.setup = function() {
         // }.bind(this)
         // );
     }
-}
+ }
 
 ImageviewAssistant.prototype.getSize = function(orientation) {
     if (orientation == 'left' || orientation == 'right') {
         this.w = Mojo.Environment.DeviceInfo.screenHeight;
         this.h = Mojo.Environment.DeviceInfo.screenWidth;
+        if (_appAssistant.isPre3()) {
+			this.w = Math.floor(this.w / 1.5);        	
+			this.h = Math.floor(this.h / 1.5);
+        }
     } else {
         if (this.fullScreen) {
             this.h = Mojo.Environment.DeviceInfo.screenHeight;
@@ -153,6 +159,11 @@ ImageviewAssistant.prototype.getSize = function(orientation) {
             this.h = Mojo.Environment.DeviceInfo.maximumCardHeight;
         }
         this.w = Mojo.Environment.DeviceInfo.screenWidth;
+
+        if (_appAssistant.isPre3()) {
+			this.w = Math.floor(this.w / 1.5);        	
+			this.h = Math.floor(this.h / 1.5);
+        }
     }
 }
 
@@ -468,5 +479,6 @@ ImageviewAssistant.prototype.deactivate = function(event) {
 
 ImageviewAssistant.prototype.cleanup = function(event) {
     if (_mainAssistant != null && !_appAssistant.isTouchPad()) {	
-		this.controller.stageController.setWindowOrientation("up");	
+		this.controller.stageController.setWindowOrientation("up");
+	}
 };

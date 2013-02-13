@@ -1,0 +1,11 @@
+{
+	"version": "1.4.0",
+	"url": "https://github.com/amoralico/mojowhatsup/downloads",
+	"comments": [
+		"Added change status feature",
+		"Added complete picture support: profile picture, groups pictures and contacts pictures",
+		"Added new emoji collection",
+		"Fixed some minor bugs"
+	],
+	"message": "This version adds contact/group pictures and contact status features"
+}

@@ -16,13 +16,13 @@ using namespace std;
 
 class ProtocolTreeNode {
 public:
-	string* data;
+	vector<unsigned char>* data;
 	string tag;
 	map<string, string> *attributes;
 	vector<ProtocolTreeNode*> *children;
 
 	ProtocolTreeNode(const string& tag, map<string, string> *attributes, ProtocolTreeNode* child);
-	ProtocolTreeNode(const string& tag, map<string, string> *attributes, string* data = NULL, vector<ProtocolTreeNode*> *children = NULL);
+	ProtocolTreeNode(const string& tag, map<string, string> *attributes, vector<unsigned char>* data = NULL, vector<ProtocolTreeNode*> *children = NULL);
 	string toString();
 	ProtocolTreeNode* getChild(const string& id);
 	ProtocolTreeNode* getChild(size_t id);
@@ -30,6 +30,7 @@ public:
 
 	vector<ProtocolTreeNode*>* getAllChildren();
 	vector<ProtocolTreeNode*>* getAllChildren(const string& tag);
+	std::string* getDataAsString();
 
 	static bool tagEquals(ProtocolTreeNode *node, const string& tag);
 	static void require(ProtocolTreeNode *node, const string& tag);

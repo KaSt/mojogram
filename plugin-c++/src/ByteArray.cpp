@@ -9,23 +9,38 @@
 #include "WAException.h"
 #include <iostream>
 #include <algorithm>
+#include "utilities.h"
 
 ByteArrayOutputStream::ByteArrayOutputStream(int size) {
-	this->buf = new std::vector<unsigned char>(size);
-	this->count = 0;
+	this->buf = new std::vector<unsigned char>();
+	this->buf->reserve(size);
+	this->position = 0;
 }
 
-void ByteArrayOutputStream::reset() {
-	this->count = 0;
+void ByteArrayOutputStream::setLength(size_t length) {
+	this->buf->resize(length);
 }
 
-size_t ByteArrayOutputStream::getCount() {
-	return this->count;
+size_t ByteArrayOutputStream::getLength() {
+	return this->buf->size();
 }
+
+size_t ByteArrayOutputStream::getCapacity() {
+	return this->buf->capacity();
+}
+
+size_t ByteArrayOutputStream::getPosition() {
+	return this->position;
+}
+
+void ByteArrayOutputStream::setPosition(size_t count) {
+	this->position = count;
+}
+
 
 std::vector<unsigned char>* ByteArrayOutputStream::toByteArray() {
-	std::vector<unsigned char>* array = new std::vector<unsigned char>(this->count);
-	for (size_t i = 0; i < this->count; i++)
+	std::vector<unsigned char>* array = new std::vector<unsigned char>(this->buf->size());
+	for (size_t i = 0; i < this->buf->size(); i++)
 		(*array)[i] = (*this->buf)[i];
 	return array;
 }
@@ -35,11 +50,11 @@ std::vector<unsigned char>* ByteArrayOutputStream::getBuffer() {
 }
 
 void ByteArrayOutputStream::write(int i) {
-	size_t newcount = count + 1;
-	if (newcount > this->buf->size())
-		buf->resize((size_t) std::max(this->buf->size() << 1, newcount));
-	(*this->buf)[count] = (unsigned char) i;
-	this->count = newcount;
+	if (this->position == this->buf->size())
+		this->buf->push_back((unsigned char) i);
+	else
+		(*this->buf)[this->position] = (unsigned char) i;
+	this->position = this->position + 1;
 }
 
 void ByteArrayOutputStream::write(unsigned char* b, size_t len) {
@@ -120,15 +135,17 @@ void ByteArrayInputStream::print() {
 }
 
 void ByteArrayOutputStream::print() {
-	std::cout << "[";
-	for (size_t i = 0; i < this->count; i++) {
-		std::cout << (*this->buf)[i] << " ";
+	_LOGDATA("[");
+
+	std::string chars(this->buf->begin(), this->buf->end());
+	_LOGDATA("%s ", chars.c_str());
+
+	std::string numbers = "";
+	for (size_t i = 0; i < this->buf->size(); i++) {
+		numbers +=  Utilities::intToStr((int) ((signed char) (*this->buf)[i])) + " ";
 	}
-	std::cout << std::endl;
-	for (size_t i = 0; i < this->count; i++) {
-		std::cout << (int) ((signed char) (*this->buf)[i]) << " ";
-	}
-	std::cout << "]" << std::endl;
+	_LOGDATA("%s", numbers.c_str());
+	_LOGDATA("]");
 }
 
 

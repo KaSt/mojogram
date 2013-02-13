@@ -1,7 +1,7 @@
 var _mainStage = 'mainStage';
 var _notificationStage = 'nofiticationStage';
-var _appData = new AppDataCookie();
-var _appPrefs = new PreferencesCookie();
+var _appData;
+var _appPrefs;
 var _plugin = null;
 var _mojowhatsupPlugin = null;
 var _appDB = null;
@@ -10,33 +10,56 @@ var _mainAssistant = null;
 var _openChatAssistant = null;
 var _chatsAssistant = null;
 var _appAssistant = null;
+var _contactsAssistant = null;
 var _mainStageController = null;
 var _dashboardAssistant = null;
 var _dashboardStageController = null;
+var _groupAssistant = null;
+var _prefsAssistant = null;
 var _chatTextClipboard = new HashTable();
 var _contactJidNames = new HashTable();
-var _lastNotification = 0;
+var _lastSoundGroupNotification = 0;
+var _lastSoundPersonNotification = 0;
+var _lastVibrateGroupNotification = 0;
+var _lastVibratePersonNotification = 0;
+var _MINIMUM_NOTIFICATION_INTERVAL = 2000;
 var _contactsImported = false;
 var _exitApp = false;
 var _myJid = null;
+var _statusRequest = null;
+var _lastUpdateSeen = 0;
 
 function AppAssistant() {
-	Mojo.Log.error("******** INTO AppAssistant CONSTRUCTOR");
+}
+
+AppAssistant.prototype.setup = function() {
+	Mojo.Log.info("******** INTO AppAssistant SETUP");
 	_mojowhatsupPlugin = new MojowhatsupPluginModel();
 	_appDB = new AppDatabase();
 	_appAssistant = this;
+	_appData = new AppDataCookie();
+	_appPrefs = new PreferencesCookie();
+
 	_appData.get();
 	_appPrefs.get();
-	_myJid = _appData.cookieData.userId + "@s.whatsapp.net";
-	
+	_myJid = _appData.get().userId + "@s.whatsapp.net";
+	// Set locale
+	try {
+		Mojo.Locale.set(_appPrefs.cookieData.language);
+	} catch(e) {
+		Mojo.Log.error("Error " + Object.toJSON(e));
+	}
+
 	PalmServices.subscribeDisplayManager();
 }
 
 AppAssistant.prototype.cleanup = function() {
-	Mojo.Log.error("******** INTO AppAssistant CLEANUP");
+	Mojo.Log.info("******** INTO AppAssistant CLEANUP");
 }
 
 AppAssistant.prototype.handleLaunch = function(launchParams) {
+	this.setup();
+
 	try {
 		_mainStageController = this.controller.getStageController(_mainStage);
 		_dashboardStageController = this.controller.getStageController(_notificationStage);
@@ -67,7 +90,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 					name : _mainStage,
 					lightweight : true
 				};
-	
+
 				var onSuccess = function(controller) {
 					_mainStageController = controller;
 					_dashboardStageController = null;
@@ -85,7 +108,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 						}
 					}.bind(this));
 				};
-				
+
 				if (_dashboardStageController) {
 					this.controller.closeStage(_notificationStage);
 				}
@@ -179,7 +202,6 @@ AppAssistant.prototype.openChat = function(chats) {
 	}
 };
 
-
 AppAssistant.prototype.notifyUpdateGroup = function(group) {
 
 }
@@ -191,10 +213,9 @@ AppAssistant.prototype.notifyUpdateChats = function(notMe, updated) {
 		_mainAssistant.updateChats();
 	if (_chatsAssistant != null && _chatsAssistant !== notMe)
 		_chatsAssistant.updateChats();
-	if (updated &&_openChatAssistant != null 
-		&& _openChatAssistant.chat.jid == updated.jid) {
-		_openChatAssistant.updateChat();																		
-	}		
+	if (updated && _openChatAssistant != null && _openChatAssistant.chat.jid == updated.jid) {
+		_openChatAssistant.updateChat();
+	}
 }
 
 AppAssistant.prototype.notifyNewMessage = function(chat, msg) {
@@ -216,35 +237,80 @@ AppAssistant.prototype.notifyNewMessage = function(chat, msg) {
 
 AppAssistant.prototype.alertNewMessage = function(chat, msg) {
 	var name = this.getNameForJid(chat, msg);
-	var bannerText = (name == null? "": name + ": " + msg.formatTextMessage(false, false, 0));
+	var bannerText = (name == null ? "" : name + ": " + msg.formatTextMessage(false, false, 0));
 
 	var launchArguments = {
 		action : "openChat",
 		chats : [chat]
 	};
+	
+	var currentDate = new Date().getTime();
 
-	// if ((new Date().getTime() - _lastNotification) > 2000) {
 	if ((chat.isGroup && _appPrefs.cookieData.groupSound != "silence") || (!chat.isGroup && _appPrefs.cookieData.personSound != "silence")) {
-		if ((chat.isGroup && _appPrefs.cookieData.groupSound == "system") || (!chat.isGroup && _appPrefs.cookieData.personSound == "system")) {
-			this.controller.playSoundNotification("notifications");
-		} else if (chat.isGroup && _appPrefs.cookieData.groupSound == "custom") {
-			this.controller.playSoundNotification("notifications", _appPrefs.cookieData.groupTonePath);
-		} else if (!chat.isGroup && _appPrefs.cookieData.personSound == "custom") {
-			this.controller.playSoundNotification("notifications", _appPrefs.cookieData.personTonePath);
+		if ((chat.isGroup && ((currentDate - _lastSoundGroupNotification) > _MINIMUM_NOTIFICATION_INTERVAL)) ||
+			(!chat.isGroup && ((currentDate - _lastSoundPersonNotification) > _MINIMUM_NOTIFICATION_INTERVAL))) {
+			if ((chat.isGroup && _appPrefs.cookieData.groupSound == "system") || (!chat.isGroup && _appPrefs.cookieData.personSound == "system")) {
+				this.controller.playSoundNotification("notifications");
+			} else if (chat.isGroup && _appPrefs.cookieData.groupSound == "custom") {
+				this.controller.playSoundNotification("notifications", _appPrefs.cookieData.groupTonePath);
+			} else if (!chat.isGroup && _appPrefs.cookieData.personSound == "custom") {
+				this.controller.playSoundNotification("notifications", _appPrefs.cookieData.personTonePath);
+			}
 		}
+		if (chat.isGroup)
+			_lastSoundGroupNotification = currentDate;
+		else 
+			_lastSoundPersonNotification = currentDate;		
 	}
 
-	if ((chat.isGroup && _appPrefs.cookieData.groupVibrate) || (!chat.isGroup && _appPrefs.cookieData.personVibrate))
-		this.controller.playSoundNotification("vibrate");
-	// }
-
-	_lastNotification = new Date().getTime();
+	if ((chat.isGroup && _appPrefs.cookieData.groupVibrate) || (!chat.isGroup && _appPrefs.cookieData.personVibrate)) {
+		if ((chat.isGroup && ((currentDate - _lastVibrateGroupNotification) > _MINIMUM_NOTIFICATION_INTERVAL)) ||
+			(!chat.isGroup && ((currentDate - _lastVibratePersonNotification) > _MINIMUM_NOTIFICATION_INTERVAL)))  {
+			this.controller.playSoundNotification("vibrate");
+		}
+		if (chat.isGroup)
+			_lastVibrateGroupNotification = currentDate;
+		else
+			_lastVibratePersonNotification = currentDate;
+	}
 
 	if ((chat.isGroup && _appPrefs.cookieData.groupBanner) || (!chat.isGroup && _appPrefs.cookieData.personBanner)) {
 		this.controller.showBanner({
 			messageText : bannerText,
 		}, launchArguments, "newMessage");
 	}
+
+	//Patch to report bannerMessage to BT-watch SE MBW-150
+	// this.getTweaksPrefs = new Mojo.Service.Request("palm://org.webosinternals.tweaks.prefs/", {
+	// method : 'get',
+	// parameters : {
+	// 'owner' : "bluetooth-mbw150",
+	// keys : ["mbwMJWhatsup"]
+	// },
+	// onSuccess : function(response) {
+	// if (response) {
+	// if (response.mbwMJWhatsup == true) {
+
+	//Report BannerMessage to SE-Watch MBW150
+	this.mwatchRequest = new Mojo.Service.Request('palm://com.palm.applicationManager', {
+		method : 'open',
+		parameters : {
+			id : "de.metaviewsoft.mwatch",
+			params : {
+				command : "SMS",
+				info : (chat.isGroup ? "[" + chat.chatName + "]" : "") + bannerText,
+				wordwrap : true
+			}
+		},
+		onSuccess : function() {
+		},
+		onFailure : function() {
+		}
+	});
+	//}
+	// }
+	// }.bind(this)
+	// });
 
 	if ((chat.isGroup && _appPrefs.cookieData.groupBlink) || (!chat.isGroup && _appPrefs.cookieData.personBlink)) {
 		if (_mainStageController != null)
@@ -280,8 +346,9 @@ AppAssistant.prototype.getNameForJid = function(chat, msg) {
 
 	if (msg.from_me)
 		return null;
-		
-	if (msg.isNotification()) return null;
+
+	if (msg.isNotification())
+		return null;
 
 	if (chat.isGroup && _contactJidNames.getItem(msg.remote_resource) !== undefined)
 		return _contactJidNames.getItem(msg.remote_resource);
@@ -290,6 +357,20 @@ AppAssistant.prototype.getNameForJid = function(chat, msg) {
 		return _contactJidNames.getItem(msg.remote_jid);
 
 	return ((msg.notifyname != null && msg.notifyname != "") ? msg.notifyname : chat.jid);
+}
+
+AppAssistant.prototype.resetApp = function() {
+	_appData.reset();
+	_exitApp = true;
+	_myJid = "";
+	_appDB.reset( function() {
+		this.notifyUpdateChats(null, null);
+		_contactsImported = true;
+		if (_mainAssistant != null) {
+			_mainAssistant.updateMyStatus();
+			_mainAssistant.loadContacts();
+		}
+	}.bind(this));
 }
 
 AppAssistant.prototype.isTouchPad = function() {
@@ -302,6 +383,18 @@ AppAssistant.prototype.isTouchPad = function() {
 	}
 
 	if (Mojo.Environment.DeviceInfo.screenHeight == 1024) {
+		return true;
+	}
+
+	return false;
+}
+
+AppAssistant.prototype.isPre3 = function() {
+	if (Mojo.Environment.DeviceInfo.screenHeight == 800) {
+		return true;
+	}
+
+	if (Mojo.Environment.DeviceInfo.screenWidth == 800) {
 		return true;
 	}
 

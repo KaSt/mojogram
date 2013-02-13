@@ -8,13 +8,16 @@
 #include "BinTreeNodeReader.h"
 #include "WAException.h"
 #include "ProtocolTreeNode.h"
+#include "utilities.h"
 #include <string>
 
-BinTreeNodeReader::BinTreeNodeReader(MySocketConnection* connection, const char** dictionary, const int dictionarysize) {
+
+
+BinTreeNodeReader::BinTreeNodeReader(WAConnection* conn, MySocketConnection* connection, const char** dictionary, const int dictionarysize) {
+	this->conn = conn;
 	this->rawIn = connection;
 	this->tokenMap = dictionary;
 	this->tokenmapsize = dictionarysize;
-	this->bufSize = 0;
 	this->readSize = 1;
 	this->in = NULL;
 	this->buf = new std::vector<unsigned char>(BUFFER_SIZE);
@@ -34,7 +37,7 @@ ProtocolTreeNode* BinTreeNodeReader::nextTreeInternal() {
 	if (b == 2)
 		return NULL;
 
-	std::string* tag = readString(b);
+	std::string* tag = this->readStringAsString(b);
 
 	if ((size == 0) || (tag == NULL))
 		throw WAException("nextTree sees 0 list or null tag", WAException::CORRUPT_STREAM_EX, -1);
@@ -51,7 +54,19 @@ ProtocolTreeNode* BinTreeNodeReader::nextTreeInternal() {
 		delete tag;
 		return ret;
 	}
-	ProtocolTreeNode* ret = new ProtocolTreeNode(*tag, attribs, readString(b));
+
+	ReadData* obj = this->readString(b);
+	std::vector<unsigned char>* data;
+	if (obj->type == STRING) {
+		std::string* s = (std::string*) obj->data;
+		data = new std::vector<unsigned char>(s->begin(), s->end());
+		delete s;
+	} else {
+		data = (std::vector<unsigned char>*) obj->data;
+	}
+
+	ProtocolTreeNode* ret = new ProtocolTreeNode(*tag, attribs, data);
+	delete obj;
 	delete tag;
 	return ret;
 }
@@ -60,11 +75,25 @@ bool BinTreeNodeReader::isListTag(int b) {
 	return (b == 248) || (b == 0) || (b == 249);
 }
 
+void BinTreeNodeReader::decodeStream(int flags, int offset, int length) {
+	if ((flags & 8) != 0) {
+		if (length < 4) {
+			throw WAException("invalid length"  + length, WAException::CORRUPT_STREAM_EX, 0);
+		}
+		offset += 4;
+		length -= 4;
+		this->conn->inputKey->decodeMessage(&(*this->buf)[0], offset - 4, offset, length);
+	}
+	if (this->in != NULL)
+		delete this->in;
+	this->in = new ByteArrayInputStream(this->buf, offset, length);
+}
+
 std::map<string, string>* BinTreeNodeReader::readAttributes(int attribCount) {
 	std::map<string, string>* attribs = new std::map<string, string>();
 	for (int i = 0; i < attribCount; i++) {
-		std::string* key = readString();
-		std::string* value = readString();
+		std::string* key = readStringAsString();
+		std::string* value = readStringAsString();
 		(*attribs)[*key] = *value;
 		delete key;
 		delete value;
@@ -98,7 +127,7 @@ int BinTreeNodeReader::readListSize(int token) {
 			if (token == 249)
 				size = readInt16(this->in);
 			else
-				throw new WAException("invalid list size in readListSize: token " + token);
+				throw new WAException("invalid list size in readListSize: token " + token, WAException::CORRUPT_STREAM_EX, 0);
 		}
 	}
 
@@ -109,17 +138,21 @@ std::vector<ProtocolTreeNode*>* BinTreeNodeReader::readList() {
 	return readList(this->in->read());
 }
 
-std::string* BinTreeNodeReader::readString() {
+ReadData* BinTreeNodeReader::readString() {
 	return readString(this->in->read());
 }
 
-std::string* BinTreeNodeReader::readString(int token) {
+ReadData* BinTreeNodeReader::readString(int token) {
 	if (token == -1) {
 		throw WAException("-1 token in readString", WAException::CORRUPT_STREAM_EX, -1);
 	}
 
+	ReadData* ret = new ReadData();
+
 	if ((token > 4) && (token < 245)) {
-		return new std::string(getToken(token));
+		ret->type = STRING;
+		ret->data = new std::string(getToken(token));
+		return ret;
 	}
 
 	switch(token) {
@@ -129,39 +162,80 @@ std::string* BinTreeNodeReader::readString(int token) {
 		int size8 = readInt8(this->in);
 		std::vector<unsigned char>* buf8 = new std::vector<unsigned char>(size8);
 		fillArray(*buf8, size8, this->in);
-		std::string* ret = new std::string(buf8->begin(), buf8->end());
-		delete buf8;
+		// std::string* ret = new std::string(buf8->begin(), buf8->end());
+		// delete buf8;
+		ret->type = ARRAY;
+		ret->data = buf8;
 		return ret;
 	}
 	case 253: {
 		int size24 = readInt24(this->in);
 		std::vector<unsigned char>* buf24 = new std::vector<unsigned char>(size24);
 		fillArray(*buf24, size24, this->in);
-		std::string* ret = new std::string(buf24->begin(), buf24->end());
-		delete buf24;
+		// std::string* ret = new std::string(buf24->begin(), buf24->end());
+		// delete buf24;
+		ret->type = ARRAY;
+		ret->data = buf24;
+
 		return ret;
 	}
 	case 254: {
 		token = (unsigned char) this->in->read();
-		return new std::string(getToken(245 + token));
+		ret->type = STRING;
+		ret->data = new std::string(getToken(245 + token));
+		return ret;
 	}
 	case 250: {
-		std::string* user = readString();
-		std::string* server = readString();
+		std::string* user = readStringAsString();
+		std::string* server = readStringAsString();
 		if ((user != NULL) && (server != NULL)) {
-			std::string* ret = new std::string(*user + "@" + *server);
+			std::string* result = new std::string(*user + "@" + *server);
 			delete user;
 			delete server;
+			ret->type = STRING;
+			ret->data = result;
 			return ret;
 		}
 		if (server != NULL) {
-			return server;
+			ret->type = STRING;
+			ret->data = server;
+			return ret;
 		}
 		throw WAException("readString couldn't reconstruct jid", WAException::CORRUPT_STREAM_EX, -1);
 	}
 	}
 	throw WAException("readString couldn't match token" + (int) token, WAException::CORRUPT_STREAM_EX, -1);
 }
+
+std::string* BinTreeNodeReader::objectAsString(ReadData* o) {
+	if (o->type == STRING) {
+		return (std::string*) o->data;
+	}
+
+	if (o->type == ARRAY) {
+		std::vector<unsigned char>* v = (std::vector<unsigned char>*) o->data;
+		std::string* ret = new std::string(v->begin(), v->end());
+		delete v;
+		return ret;
+	}
+
+	return NULL;
+}
+
+std::string* BinTreeNodeReader::readStringAsString() {
+	ReadData* o = this->readString();
+	std::string* ret = this->objectAsString(o);
+	delete o;
+	return ret;
+}
+
+std::string* BinTreeNodeReader::readStringAsString(int token) {
+	ReadData* o = this->readString(token);
+	std::string* ret = this->objectAsString(o);
+	delete o;
+	return ret;
+}
+
 
 void BinTreeNodeReader::fillArray(std::vector<unsigned char>& buff, int len, ByteArrayInputStream* in) {
 	int count = 0;
@@ -184,22 +258,30 @@ std::string BinTreeNodeReader::getToken(int token) {
 	if ((token >= 0) && (token < this->tokenmapsize))
 		ret = std::string(this->tokenMap[token]);
 	if (ret.empty()) {
-		throw WAException("invalid token/length in getToken");
+		throw WAException("invalid token/length in getToken", WAException::CORRUPT_STREAM_EX, 0);
 	}
 	return ret;
 }
 
-void BinTreeNodeReader::fillBuffer(int stanzaSize) {
+void BinTreeNodeReader::getTopLevelStream() {
+	int stanzaSize;
+	int flags;
+	int byte = readInt8(this->rawIn);
+	flags = byte >> 4;
+	int size0 = byte & 15;
+	int size1 = readInt8(this->rawIn);
+	int size2 = readInt8(this->rawIn);
+
+	stanzaSize = (size0 << 16) + (size1 << 8) + size2;
+
 	if (this->buf->size() < (size_t) stanzaSize) {
 		int newsize = std::max((int) (this->buf->size() * 3 / 2), stanzaSize);
 		delete this->buf;
 		this->buf = new std::vector<unsigned char>(newsize);
 	}
-	this->bufSize = stanzaSize;
 	fillArray(*this->buf, stanzaSize, this->rawIn);
-	if (this->in != NULL)
-		delete this->in;
-	this->in = new ByteArrayInputStream(this->buf, 0, stanzaSize);
+
+	this->decodeStream(flags, 0, stanzaSize);
 }
 
 int BinTreeNodeReader::readInt8(ByteArrayInputStream* in) {
@@ -217,25 +299,24 @@ int BinTreeNodeReader::readInt24(ByteArrayInputStream* in) {
 	int int1 = in->read();
 	int int2 = in->read();
 	int int3 = in->read();
-	int value = (int1 << 16) + (int2 << 8) + (int3 << 0);
+	int value = (int1 << 16) + (int2 << 8) + int3;
 
 	return value;
 }
 
 ProtocolTreeNode* BinTreeNodeReader::nextTree() {
-	int stanzaSize = readInt16(this->rawIn);
-	fillBuffer(stanzaSize);
+	this->getTopLevelStream();
 	return nextTreeInternal();
 }
 
 void BinTreeNodeReader::streamStart() {
-	int stanzasize = readInt16(this->rawIn);
-	fillBuffer(stanzasize);
+	this->getTopLevelStream();
+
 	int tag = this->in->read();
 	int size = readListSize(tag);
 	tag = this->in->read();
 	if (tag != 1) {
-		throw WAException("expecting STREAM_START in streamStart");
+		throw WAException("expecting STREAM_START in streamStart", WAException::CORRUPT_STREAM_EX, 0);
 	}
 	int attribCount = (size - 2 + size % 2) / 2;
 
@@ -258,7 +339,7 @@ int BinTreeNodeReader::readInt24(MySocketConnection* in) {
 	int int1 = in->read();
 	int int2 = in->read();
 	int int3 = in->read();
-	int value = (int1 << 16) + (int2 << 8) + (int3 << 0);
+	int value = (int1 << 16) + (int2 << 8) + int3;
 
 	return value;
 }

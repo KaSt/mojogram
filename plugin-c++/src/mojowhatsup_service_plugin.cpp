@@ -17,6 +17,7 @@
 #include "fastevents.h"
 #include <curl/curl.h>
 
+
 #define PACKAGEID "com.palm.mojowhatsup"
 
 WebosBGApp* bgApp;
@@ -33,6 +34,7 @@ void cleanup(int sig) {
 	MySocketConnection::quitNetwork();
 	curl_global_cleanup();
 	PDL_Quit();
+
 	FE_Quit();
 	SDL_Quit();
 }
@@ -44,8 +46,6 @@ void sighandler(int sig) {
 
 PDL_Err plugin_initialize() {
 	_LOGDATA("Initializing Plugin");
-
-
 
 
 	// Initialize SDL library

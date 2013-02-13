@@ -221,7 +221,7 @@ static char *print_string_ptr(const char *str)
 			*ptr2++='\\';
 			switch (token=*ptr++)
 			{
-				case '\\':	*ptr2++='\\';	break;
+				case '\\':	break; // *ptr2++='\\';	break;
 				case '\"':	*ptr2++='\"';	break;
 				case '\b':	*ptr2++='b';	break;
 				case '\f':	*ptr2++='f';	break;
