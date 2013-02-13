@@ -263,6 +263,7 @@ std::string BinTreeNodeReader::getToken(int token) {
 	return ret;
 }
 
+
 void BinTreeNodeReader::getTopLevelStream() {
 	int stanzaSize;
 	int flags;

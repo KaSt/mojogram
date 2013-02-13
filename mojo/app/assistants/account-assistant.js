@@ -1,4 +1,3 @@
-
 function AccountAssistant() {
 	this.purchaseUrl = "http://www.whatsapp.com/payments/cksum_pay.php?";
 	this.login = false;
@@ -587,7 +586,6 @@ AccountAssistant.prototype.waitAccountResponse = function(data, type, method) {
 		this.enableButtons(true);
 	}
 }
-
 
 AccountAssistant.prototype.onlyNum = function(charCode) {
 	if (charCode == 46 || (charCode > 47 && charCode < 58))

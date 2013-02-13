@@ -228,7 +228,7 @@ ContactListAssistant.prototype.deactivate = function(event) {
 
 ContactListAssistant.prototype.firstLetter = function(data) {
 	// return the first letter of the position (G,C,F)
-	return data.name.toUpperCase()[0];
+	return data.name[0];
 }
 
 ContactListAssistant.prototype.cleanup = function(event) {

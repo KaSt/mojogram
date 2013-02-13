@@ -53,4 +53,3 @@ public:
 };
 
 #endif /* BYTEARRAY_H_ */
-

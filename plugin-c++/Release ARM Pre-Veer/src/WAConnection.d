@@ -31,6 +31,7 @@ src/WAConnection.d: ../src/WAConnection.cpp ../src/WAConnection.h \
  ../src/MySocketConnection.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_net.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h \
+<<<<<<< HEAD
  ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
@@ -51,6 +52,12 @@ src/WAConnection.d: ../src/WAConnection.cpp ../src/WAConnection.h \
  ../src/utilities.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
  ../src/base64.h
+=======
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/utilities.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 
 ../src/WAConnection.h:
 
@@ -128,6 +135,7 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 
 ../src/BinTreeNodeWriter.h:
 
+<<<<<<< HEAD
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
@@ -160,8 +168,16 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
 
+=======
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 ../src/utilities.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
 
+<<<<<<< HEAD
 ../src/base64.h:
+=======
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43

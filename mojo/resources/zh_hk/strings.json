@@ -164,6 +164,7 @@
 	"Russian": "俄文",
 	"Changes": "更新",
 	"Update available": "有可用更新",
+<<<<<<< HEAD
 
 	"My status": "我的狀態",
 	"Select your status": "更改您的狀態",
@@ -212,4 +213,7 @@
 	"Muted": "已靜音",
 	"Unmute": "取消靜音",
 	"Code": "驗證碼"
+=======
+	"Profile picture": "個人圖像"
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 }
