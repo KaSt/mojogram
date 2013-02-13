@@ -45,6 +45,7 @@ src/mojowhatsup_service_plugin.d: ../src/mojowhatsup_service_plugin.cpp \
  ../src/WAException.h ../src/WebosBGApp.h ../src/BGApp.h \
  ../src/XmppRunner.h ../src/WAConnection.h ../src/FMessage.h \
  ../src/WALogin.h ../src/BinTreeNodeReader.h ../src/ProtocolTreeNode.h \
+<<<<<<< HEAD
  ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h \
@@ -61,6 +62,10 @@ src/mojowhatsup_service_plugin.d: ../src/mojowhatsup_service_plugin.cpp \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
  ../src/ChatState.h ../src/Account.h \
+=======
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/ChatState.h \
+ ../src/Account.h \
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlver.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlbuild.h \
@@ -179,6 +184,7 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 
 ../src/BinTreeNodeWriter.h:
 
+<<<<<<< HEAD
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h:
@@ -207,6 +213,8 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
 
+=======
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 ../src/ChatState.h:
 
 ../src/Account.h:

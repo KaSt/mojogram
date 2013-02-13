@@ -339,6 +339,7 @@ std::string Account::encodeUrl() {
  *  MediaUploader class methods
  */
 
+
 int MediaUploader::ProgressCallBack(void *clientp, double dltotal, double dlnow,
 		double ultotal, double ulnow) {
 	MediaUploader* account = (MediaUploader*) clientp;

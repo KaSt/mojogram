@@ -39,7 +39,6 @@ AppAssistant.prototype.setup = function() {
 	_appAssistant = this;
 	_appData = new AppDataCookie();
 	_appPrefs = new PreferencesCookie();
-
 	_appData.get();
 	_appPrefs.get();
 	_myJid = _appData.get().userId + "@s.whatsapp.net";
@@ -90,7 +89,6 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 					name : _mainStage,
 					lightweight : true
 				};
-
 				var onSuccess = function(controller) {
 					_mainStageController = controller;
 					_dashboardStageController = null;
@@ -108,7 +106,6 @@ AppAssistant.prototype.handleLaunch = function(launchParams) {
 						}
 					}.bind(this));
 				};
-
 				if (_dashboardStageController) {
 					this.controller.closeStage(_notificationStage);
 				}

@@ -1,11 +1,11 @@
 {
-	"version": "1.4.0",
-	"url": "https://github.com/amoralico/mojowhatsup/downloads",
+	"version": "1.5.1",
+	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Added change status feature",
-		"Added complete picture support: profile picture, groups pictures and contacts pictures",
-		"Added new emoji collection",
-		"Fixed some minor bugs"
+                "Fixed fail-old-version problem",
+                "New improved chat header",
+                "Updated italian and chinese translations",
+                "NOTE: due to a Whatsapp change, contacts status are not updated"
 	],
-	"message": "This version adds contact/group pictures and contact status features"
+	"message": "Fixes fail-old-version problem during registration"
 }

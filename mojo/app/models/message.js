@@ -31,7 +31,6 @@ function Message(remote_jid, data) {
 	this.status = null;
 	this.data = null;
 	this.timestamp = null;
-	
 	this.media_wa_type = Message.WA_TYPE_UNDEFINED;
 	this.remote_resource = null;
 	this.notifyname = null;
@@ -60,8 +59,6 @@ function Message(remote_jid, data) {
 		// in seconds. Method processMessages() in plugin.js converts it into milliseconds.
 	}
 }
-
-
 
 Message.fromJSONString = function(messageString) {
 	var msgJson = Mojo.parseJSON(messageString);
@@ -106,6 +103,7 @@ Message.fromJSONString = function(messageString) {
 Message.removeDomainFromJid = function(jid) {
 	return jid.replace(/@s\.whatsapp\.net/g, "");
 }
+
 
 Message.prototype.cloneToSend = function(jid) {
 	var msg = new Message(jid, this.data);

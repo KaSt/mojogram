@@ -31,6 +31,7 @@ src/BGApp.d: ../src/BGApp.cpp ../src/BGApp.h ../src/XmppRunner.h \
  ../src/MySocketConnection.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_net.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h \
+<<<<<<< HEAD
  ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
@@ -50,6 +51,12 @@ src/BGApp.d: ../src/BGApp.cpp ../src/BGApp.h ../src/XmppRunner.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
  ../src/utilities.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
+=======
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/utilities.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
  ../src/ChatState.h ../src/ApplicationData.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_thread.h \
  ../src/Account.h \
@@ -60,8 +67,12 @@ src/BGApp.d: ../src/BGApp.cpp ../src/BGApp.h ../src/XmppRunner.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlrules.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/easy.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/multi.h \
+<<<<<<< HEAD
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h \
  ../src/base64.h
+=======
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 
 ../src/BGApp.h:
 
@@ -143,6 +154,7 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 
 ../src/BinTreeNodeWriter.h:
 
+<<<<<<< HEAD
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
@@ -178,6 +190,15 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
 ../src/utilities.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
+=======
+../src/utilities.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 
 ../src/ChatState.h:
 
@@ -202,5 +223,8 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/easy.h:
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/multi.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h:
+<<<<<<< HEAD
 
 ../src/base64.h:
+=======
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43

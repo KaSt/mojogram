@@ -32,6 +32,7 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  ../src/MySocketConnection.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_net.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h \
+<<<<<<< HEAD
  ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
@@ -51,6 +52,12 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
  ../src/utilities.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
+=======
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/utilities.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
  ../src/ChatState.h ../src/Account.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlver.h \
@@ -70,7 +77,11 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_Sensors.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h \
  ../src/ApplicationData.h ../src/cJSON.h ../src/fastevents.h \
+<<<<<<< HEAD
  ../src/base64.h ../src/JpegImageResizer.h \
+=======
+ ../src/JpegImageResizer.h \
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
  C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h \
  C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jconfig.h \
  C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jmorecfg.h
@@ -157,6 +168,7 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 
 ../src/BinTreeNodeWriter.h:
 
+<<<<<<< HEAD
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
@@ -192,6 +204,15 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
 ../src/utilities.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
+=======
+../src/utilities.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 
 ../src/ChatState.h:
 
@@ -237,8 +258,11 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h:
 
 ../src/fastevents.h:
 
+<<<<<<< HEAD
 ../src/base64.h:
 
+=======
+>>>>>>> 89252c21c00a79986b4abb10ac90280ffe4d9e43
 ../src/JpegImageResizer.h:
 
 C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h:
