@@ -86,8 +86,14 @@ ChatsListAssistant.prototype.setup = function() {
                 return (model.unread == 0 ? "" : "" + model.unread);
             },
             icon : function(value, model) {
-                // Mojo.Log.info("Model = " + JSON.stringify(model));
-                return (model.isGroup ? "group-icon" : "person-icon");
+                if (model.picturepath) {
+                	var imgSize = '60:60';
+                	if (_appAssistant.isPre3())
+                		imgSize = '90:90';
+              		return '<div class="chat-list-icon picture icon left" style="background-image:url(/var/luna/data/extractfs' + encodeURIComponent(model.picturepath) + ':0:0:' + imgSize + ':3)"></div>';
+                } else {
+                	return '<div class="chat-list-icon ' + (model.isGroup ? "group-icon" : "person-icon") + ' icon left"></div>';
+                }
             },
             time : function(value, model) {
                 if (model.lastMessage != null && model.lastMessage.timestamp != null) {
@@ -132,11 +138,11 @@ ChatsListAssistant.prototype.handleCommand = function(event) {
                 this.controller.stageController.popScene();
                 break;
             case 'createGroup':
-                if (Group.OWNING_GROUPS.length < _appData.cookieData.max_groups) {
+                if (Group.OWNING_GROUPS.length < _appData.get().max_groups) {
                     this.controller.stageController.pushScene('group', null, null, 'new');
                 } else {
                     var window = this.controller.stageController.activeScene().window;
-                    Mojo.Controller.errorDialog($L("You can not create more groups\n. You have reached the maximum number of owning groups") + "(" + _appData.cookieData.max_groups + ")", window);
+                    Mojo.Controller.errorDialog($L("You can not create more groups\n. You have reached the maximum number of owning groups") + "(" + _appData.get().max_groups + ")", window);
                 }
                 break;
             case 'search':
@@ -149,7 +155,7 @@ ChatsListAssistant.prototype.handleCommand = function(event) {
                 this.controller.stageController.pushScene("account");
                 break;
             case Mojo.Menu.helpCmd:
-                this.controller.stageController.pushAppSupportInfoScene();
+                this.controller.stageController.pushScene("help");
                 break;
             case "exit":
                 _exitApp = true;

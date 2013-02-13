@@ -9,6 +9,7 @@
 #define BGAPP_H_
 
 #include "XmppRunner.h"
+#include "WAException.h"
 #include "WAConnection.h"
 #include "SDL.h"
 #include "ChatState.h"
@@ -26,6 +27,7 @@ protected:
 	bool _initialized;
 	std::string _myPlainJid;
 	time_t _lastXMPPRunnerKill;
+	std::string challengeFile;
 
 	static int initialXMPPConnectionThreadCallback(void *data);
 	static int doConnect1TrheadCallBack(void *data);
@@ -36,20 +38,23 @@ public:
 	ChatState* _chatState;
 	bool _isNetworkConnected;
 	SDL_mutex* _mutex;
+	bool _bgMode;
 
 	static BGApp* getInstance();
 	static void setInstance(BGApp* app);
 
+	std::string getChallengeFile();
 	bool gotGroups();
 	void initialize();
 	void finalize();
 	bool canConnect();
 	void networkConnectionChanged(bool isConnected);
-	bool testLogin(const std::string& userId, const std::string& password, const std::string& pushName);
+	std::string testLogin(const std::string& userId, const std::string& password, const std::string& pushName);
 	virtual void sendOfflineMessages()=0;
 	virtual void sendNewStateToFG(int new_state)=0;
 	virtual void sendParticipatingGroupsToFG(const std::vector<string>& groups)=0;
 	virtual void sendContactInfoToFG(const std::string& jid, int state, time_t lastSeen)=0;
+	virtual void notifyLoginFailureToFG(const WAException& ex)=0;
 
 
 	void onPing(const std::string& id) throw (WAException);

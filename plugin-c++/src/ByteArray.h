@@ -16,18 +16,21 @@
 class ByteArrayOutputStream {
 protected:
 	std::vector<unsigned char>* buf;
-	size_t count;
+	size_t position;
 
 public:
 	ByteArrayOutputStream(int size = 32);
-	void reset();
 	std::vector<unsigned char>* toByteArray();
 	std::vector<unsigned char>* getBuffer();
-	size_t getCount();
+	size_t getPosition();
+	void setPosition(size_t count);
 	void write(int i);
 	void write(unsigned char* c, size_t length);
 	void write(const std::string& s);
 	void print();
+	void setLength(size_t length);
+	size_t getLength();
+	size_t getCapacity();
 
 	virtual ~ByteArrayOutputStream();
 };
@@ -50,3 +53,4 @@ public:
 };
 
 #endif /* BYTEARRAY_H_ */
+

@@ -36,7 +36,7 @@
 	padding: 0;
 	max-width: 170px;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 100%;
 	font-weight: normal;
 	color: red;
 }
@@ -156,6 +156,10 @@
 	font-style: oblique;
 }
 
+.message-preview {
+	font-size: 16px;
+}
+
 .status-icon {
 	width: 25px;
 	height: 16px;
@@ -227,20 +231,83 @@
 .menu-icon {
 	width: 40px;
 	height: 40px;
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
-.chat-list-icon {
-	width: 32px;
-	height: 32px;
-	margin-top: 2px;
+.chat-list-icon.icon {
+	width: 58px;
+	height: 58px;
+	margin-top: 3px;
+	margin-right: 3px;
+	border-radius: 12px;
+	background: center center no-repeat;
 }
 
-.chat-list-icon.person-icon {
+.chat-list-icon.picture {
+	width: 60px;
+	height: 60px;
+	background-size: contain;	
+}
+
+.group-image, .profile-image {
+	background: center center no-repeat;
+	width: 78px;
+	height: 78px;
+	border-radius: 12px;
+}
+
+.group-image.picture, .profile-image.picture {
+	width: 80px;
+	height: 80px;
+	background-size: contain;
+}
+
+.contact-list-icon.icon {
+	background: center center no-repeat;
+	width: 58px;
+	height: 58px;
+	border-radius: 12px;
+	margin-right: 3px;
+	margin-top: 3px;	
+}
+
+.contact-list-icon.picture {
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+}
+
+.chat-list-icon.person-icon, .profile-image.person-icon, .contact-list-icon.person-icon {
+	border-width: 2px;
+	border-style: solid;
+	border-color: white;
 	background-image: url(../images/person-icon.png);
 }
 
-.chat-list-icon.group-icon {
+.icon-header {
+	width: 30px;
+	height: 30px;
+	border-width: 1px;
+	border-radius: 4px;
+	border-color: white;	
+	border-style: solid;	
+	background-size: contain;
+	background: center center no-repeat;
+}
+
+.icon-header.group {
+	background-image: url(../images/group-icon.png);
+}
+
+.icon-header.person {
+	border-color: white;
+	background-image: url(../images/person-icon.png);
+}
+
+.chat-list-icon.group-icon, .group-image.group-icon {
+	border-width: 2px;
+	border-style: solid;
+	border-color: white;
 	background-image: url(../images/group-icon.png);
 }
 
@@ -248,6 +315,9 @@
 	background-image: url(../images/chat-icon.png);
 }
 
+.menu-icon.Status-icon {
+	background-image: url(../images/mystatus-icon.png);
+}
 
 .menu-icon.Contacts-icon {
 	background-image: url(../images/contact-icon.png);
@@ -262,11 +332,39 @@
 	background-image: url(../images/mojowhatsup48.png);
 }
 
-.list-unread-container {
+.icon.mojowhatsup-icon {
+	background-image: url(../images/mojowhatsup48.png);
+}
+
+.help-icon {
+	margin-top: 5px;
+}
+
+.help-icon.scene {
+	background-image: url(../images/mojowhatsup32.png);
+}
+
+.help-icon.web {
+	background-image: url(../images/web.png);
+}
+
+.help-icon.email {
+	background-image: url(../images/email.png);
+}
+
+.mojowhatsup-icon-nomessages {
+	background-image: url(../images/mojowhatsupgray48.png);
+}
+
+.list-unread-containertrue {
 	text-align: right;
 }
 
-.list-unread-container .icon {
+.list-unread-containerfalse {
+	display: none;
+}
+
+.list-unread-containertrue .icon {
 	width: auto;
 	height: auto;
 }
@@ -319,49 +417,72 @@
 .messageTextWidget {
 	overflow: hidden;
 	max-height: 220px;
-	font-size: 18px;
+	font-family:"Droid Sans Fallback";	
+}
+
+#messageText INPUT, #messageText TEXTAREA, 
+#textFieldStatus INPUT, #textFieldStatus TEXTAREA,
+#textFieldSubject INPUT, #textFieldSubject TEXTAREA  {
+	font-family:"Droid Sans Fallback";
 }
 
 .grid-layout .palm-list .palm-row {
 	clear: none;
 	float: left;
-	height: 53px;
 	width: 53px;
+	max-height: 43px;
+	padding-bottom: 0px;
 	margin-bottom: 0px;
 	margin-right: 0px;
 }
 
 .grid-layout .palm-list .palm-row.selected {
 	width: 53px;
-	height: 53px;
+	max-height: 43px;
 	background: none;
+	padding-bottom: 0px;
 	margin-right: 0px;
 }
 
 .people-emoji {
-	background-image: url(../images/emoji/emoji-E415.png);
+	background-size:cover;	
+	width: 32px;
+	height: 32px;
+	background: url(../images/emoji/E415.png) center center no-repeat;
 }
 
 .places-emoji {
-	background-image: url(../images/emoji/emoji-E036.png);
+	background-size:cover;	
+	width: 32px;
+	height: 32px;
+	background: url(../images/emoji/E036.png) center center no-repeat;
 }
 
 .nature-emoji {
-	background-image: url(../images/emoji/emoji-E04A.png);
+	background-size:cover;	
+	width: 32px;
+	height: 32px;
+	background: url(../images/emoji/E04A.png) center center no-repeat;
 }
 
 .events-emoji {
-	background-image: url(../images/emoji/emoji-E325.png);
+	background-size:cover;	
+	width: 32px;
+	height: 32px;
+	background: url(../images/emoji/E325.png) center center no-repeat;
 }
 
 .symbols-emoji {
-	background-image: url(../images/emoji/emoji-E210.png);
+	background-size:cover;	
+	width: 32px;
+	height: 32px;
+	background: url(../images/emoji/E210.png) center center no-repeat;
 }
 
 .preview-image {
 	margin-right: 10px;
-	width: 80px;
-	height: 64px;
+	width: 96px;
+	height: 77px;
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -369,8 +490,7 @@
 
 .preview-image.image-custom {
 	border-style: solid;
-	border-width: 5px;
-	border-radius: 15px;
+	border-width: 2px;
 	border-color: white;
 }
 
@@ -404,6 +524,33 @@
 	background-image: url(../images/preview-contact.png);
 }
 
+
+.preview-icon {
+	width: 60px;
+	height: 50px;
+	background-size: contain;
+}
+
+.preview-icon.image-default {
+	background-image: url(../images/preview-image.png);
+}
+
+.preview-icon.audio-default {
+	background-image: url(../images/preview-audio.png);
+}
+
+.preview-icon.video-default {
+	background-image: url(../images/preview-video.png);
+}
+
+.preview-icon.location-default {
+	background-image: url(../images/preview-location.png);
+}
+
+.preview-icon.contact-default {
+	background-image: url(../images/preview-contact.png);
+}
+
 .subject-wrapper {
    	display: -webkit-box;
    -webkit-box-orient:horizontal;
@@ -412,6 +559,7 @@
 .subject-wrapper .textfield-subject {
   	-webkit-box-flex: 1;
   	width:auto;
+	font-family:"Droid Sans Fallback";
 }
 
 .palm-button.emojibutton-subject {
@@ -431,5 +579,16 @@
 	-webkit-box-orient: horizontal;
 	-webkit-box-pack: center;    
 }
- 
+
+.preview.contact-status {
+	padding-top: 0px;
+	margin-top: 0px;
+	font-size: 80%;
+}
+
+.time-info.label {
+	float: none;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
 

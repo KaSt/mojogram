@@ -130,6 +130,66 @@
 	"Donate":                                                                                       "Doneren",
 	"Discussion Forums":                                                                            "Fora",
 	"Change Log":                                                                                   "Wijzigingslog",
-	"Back":                                                                                         "Terug"
-}
-                                                                                               
+	"Back":                                                                                         "Terug",
+	
+	"Messages text font": "Lettertype van berichten",
+	"Size": "Formaat",
+	
+	"Send e-mail":                                                                                   "E-mail verzenden",
+	"Help & Support":                                                                                "Help en support",
+
+    "Reduce image before sending":                                                                   "Bestand verkleinen voor het versturen",
+    "No reduce":                                                                                     "Geen verkleining",
+    "Phone type":                                                                                    "Telefoon type",
+    "All phone types":                                                                               "Alle telefoon types",
+    "Only mobile":                                                                                   "Alleen mobiele telefoons",
+    "Mobile and work":                                                                               "Mobiel en werk",
+
+    "Language":                                                                                      "Taal",
+    "English":                                                                                       "Engels",
+    "Spanish":                                                                                       "Spaans",
+    "French":                                                                                        "Frans",
+    "Italian":                                                                                       "Italiaans",
+    "Dutch":                                                                                         "Nederlands",
+    "German":                                                                                        "Duits",
+    "Chinese (Simplified)":                                                                          "Chinees (versimpeld)",
+    "Chinese (Traditional)":                                                                         "Chinees (traditioneel)",
+    "Chinese (Hong Kong)":                                                                           "Chinees (Hong Kong)",
+    "Notification":                                                                                  "Notificaties",
+    "It is necessary to restart the application so that this change can take effect":                "Om deze wijziging door te voeren is een herstart vereist",
+    
+    "Check for updates":                                                                             "Controleer op updates",
+    "Your #{appName} is up to date":                                                                 "#{appName} is up to date",
+    "New version":                                                                                   "Nieuwe versie",                                             
+    "Russian":                                                                                       "Russisch",                                                  
+    "Changes":                                                                                       "Wijzigingen",                                               
+    "Update available":                                                                              "Update beschikbaar",                                        
+
+    "My status":                                                                                     "Mijn status",                                               
+    "Select your status":                                                                            "Selecteer je status",                                       
+    "Your current status":                                                                           "Je huidige status",                                         
+    "Empty status. Please enter your status.":                                                       "Blanco status. Voer a.u.b. een status in",                  
+    "Status cannot be changed. Try again.":                                                          "Status kan niet worden gewijzigd. Probeer a.u.b. opnieuw",  
+    "Empty subject. Please insert a subject for the group":                                          "Geen onderwerp. Voer a.u.b. een onderwerp in voor de groep",
+    "Available":                                                                                     "Beschikbaar",                                               
+    "Busy":                                                                                          "Bezig",                                                     
+    "At school":                                                                                     "Op school",                                                 
+    "At the movies":                                                                                 "In de bioscoop",                                            
+    "At work":                                                                                       "Aan het werk",                                              
+    "Battery about to die":                                                                          "Batterij bijna leeg",                                       
+    "In a meeting":                                                                                  "In een vergadering",                                        
+    "At the gym":                                                                                    "In de sportschool",                                         
+    "Sleeping":                                                                                      "Slapende",                                                  
+    "Custom":                                                                                        "Aangepast",                                                 
+
+    "#{id} updated the group picture":                                                               "#{id} heeft de groeps afbeelding aangepast",                
+    "#{id} deleted the group picture":                                                               "#{id} heeft de groeps afbeelding verwijderd",               
+    "Change":                                                                                        "Wijzig",                                                    
+    "View":                                                                                          "Laat zien",                                                 
+    "Delete":                                                                                        "Verwijderen",                                               
+    "Profile picture":                                                                               "Profiel afbeelding",                                        
+    "View profile picture":                                                                          "Profiel afbeelding laten zien",                             
+    "This contact does not have a profile picture":                                                  "Deze contactpersoon heeft geen profiel afbeelding",
+    
+    "Get voice code": "Haal stem code op"
+}                                                                                                    

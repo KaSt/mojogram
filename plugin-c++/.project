@@ -27,11 +27,11 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>
-					<value>cs-make</value>
+					<value>make</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/whatsappwebos/Release ARM Pree-Veer}</value>
+					<value>${workspace_loc:/whatsappwebos/Debug}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>

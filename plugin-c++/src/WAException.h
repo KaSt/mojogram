@@ -14,10 +14,10 @@
 #include <string>
 
 class WAException: public std::runtime_error {
-
 public:
 	int type;
 	int subtype;
+	time_t expire_date; // in seconds
 
 	static const int LOGIN_FAILURE_EX = 1;
 	static const int LOGIN_FAILURE_EX_TYPE_PASSWORD = 0;
@@ -32,8 +32,9 @@ public:
 	static const int SOCKET_EX_SEND = 3;
 	static const int SOCKET_EX_RECV = 4;
 
-	WAException(const std::string& err): std::runtime_error(err) {this->type = 0;};
-	WAException(const std::string& err, int type, int subtype): std::runtime_error(err) {this->type = type; this->subtype = subtype;};
+	WAException(const std::string& err): runtime_error(err) {this->type = 0; this->subtype = 0; this->expire_date = 0;};
+	WAException(const std::string& err, int type, int subtype): runtime_error(err), type(type), subtype(subtype), expire_date(0) {};
+	WAException(const std::string& err, int type, int subtype, time_t expireDate): runtime_error(err), type(type), subtype(subtype), expire_date(expireDate) {};
 };
 
 #endif /* WAEXCEPTION_H_ */

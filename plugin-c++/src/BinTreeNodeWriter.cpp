@@ -8,43 +8,79 @@
 #include "BinTreeNodeWriter.h"
 #include "WAException.h"
 #include <cstring>
+#include "utilities.h"
 
-BinTreeNodeWriter::BinTreeNodeWriter(MySocketConnection* connection,
+BinTreeNodeWriter::BinTreeNodeWriter(WAConnection* conn, MySocketConnection* connection,
 		const char** dictionary, const int dictionarysize) {
-	this->out = new ByteArrayOutputStream(1024);
+	this->conn = conn;
+	this->out = new ByteArrayOutputStream(2048);
 	this->realOut = connection;
 	for (int i = 0; i < dictionarysize; i++) {
-		if (!strcmp(dictionary[i], "") == 0)
-			this->tokenMap[dictionary[i]] = i;
+		std::string token(dictionary[i]);
+		if (token.compare("") != 0)
+			this->tokenMap[token] = i;
 	}
 	this->mutex = SDL_CreateMutex();
+	this->dataBegin = 0;
+}
+
+void BinTreeNodeWriter::writeDummyHeader()
+{
+	int num = 3;
+	this->dataBegin = this->out->getPosition();
+	int num2 = this->dataBegin + num;
+	this->out->setLength(num2);
+	this->out->setPosition(num2);
+}
+
+
+void BinTreeNodeWriter::processBuffer()
+{
+	bool flag = this->conn->outputKey != NULL;
+	uint num = 0u;
+	if (flag)
+	{
+		long num2 = this->out->getLength() + 4L;
+		this->out->setLength(num2);
+		this->out->setPosition(num2);
+		num |= 1u;
+	}
+	long num3 = this->out->getLength() - 3L - (long) this->dataBegin;
+	if (num3 >= 1048576L)
+	{
+		throw WAException("Buffer too large: " + num3, WAException::CORRUPT_STREAM_EX, 0);
+	}
+
+	std::vector<unsigned char>* buffer = this->out->getBuffer();
+	if (flag)
+	{
+		int num4 = (int)num3 - 4;
+		this->conn->outputKey->encodeMessage(buffer->data(), this->dataBegin + 3 + num4, this->dataBegin + 3, num4);
+	}
+	(*buffer)[this->dataBegin] = (unsigned char)((ulong)((ulong)num << 4) | (ulong)((num3 & 16711680L) >> 16));
+	(*buffer)[this->dataBegin + 1] = (unsigned char)((num3 & 65280L) >> 8);
+	(*buffer)[this->dataBegin + 2] = (unsigned char)(num3 & 255L);
 }
 
 void BinTreeNodeWriter::streamStart(std::string domain, std::string resource) {
 	SDL_mutexP(this->mutex);
 	try {
-		this->realOut->write(87);
-		this->realOut->write(65);
-
-		// OJO: en la versión python de wazapp las dos siguientes lineas son
-		// this->realOut->write(1);
-		// this->realOut->write(0);
-
-		// this->realOut->write(0);
-		// this->realOut->write(4);
-
-		this->realOut->write(1);
-		this->realOut->write(1);
+		this->out->setPosition(0);
+		this->out->setLength(0);
+		this->out->write(87);
+		this->out->write(65);
+		this->out->write(1);
+		this->out->write(2);
 
 		std::map<string, string> attributes;
 		attributes["to"] = domain;
 		attributes["resource"] = resource;
+		this->writeDummyHeader();
 		this->writeListStart(attributes.size() * 2 + 1);
-
 		this->out->write(1);
-
 		this->writeAttributes(&attributes);
-		this->flushBuffer(false);
+		this->processBuffer();
+		this->flushBuffer(true, 0);
 	} catch (exception& ex) {
 		SDL_mutexV(this->mutex);
 		throw ex;
@@ -110,7 +146,7 @@ void BinTreeNodeWriter::writeString(const std::string& tag) {
 
 void BinTreeNodeWriter::writeJid(std::string* user, const std::string& server) {
 	this->out->write(250);
-	if (user != NULL) {
+	if (user != NULL && !user->empty()) {
 		writeString(*user);
 	} else {
 		writeToken(0);
@@ -121,10 +157,10 @@ void BinTreeNodeWriter::writeJid(std::string* user, const std::string& server) {
 
 void BinTreeNodeWriter::writeToken(int intValue) {
 	if (intValue < 245)
-		this->out->write((unsigned char) intValue);
+		this->out->write(intValue);
 	else if (intValue <= 500) {
 		this->out->write(254);
-		this->out->write((unsigned char) (intValue - 245));
+		this->out->write(intValue - 245);
 	}
 }
 
@@ -142,7 +178,7 @@ void BinTreeNodeWriter::writeBytes(unsigned char* bytes, int length) {
 void BinTreeNodeWriter::writeInt24(int v) {
 	this->out->write((v & 0xFF0000) >> 16);
 	this->out->write((v & 0xFF00) >> 8);
-	this->out->write((v & 0xFF) >> 0);
+	this->out->write(v & 0xFF);
 }
 
 void BinTreeNodeWriter::writeInternal(ProtocolTreeNode* node) {
@@ -153,9 +189,8 @@ void BinTreeNodeWriter::writeInternal(ProtocolTreeNode* node) {
 	writeString(node->tag);
 	writeAttributes(node->attributes);
 	if (node->data != NULL) {
-		writeBytes((unsigned char*) node->data->data(), node->data->length());
+		writeBytes((unsigned char*) node->data->data(), node->data->size());
 	}
-
 	if (node->children != NULL && !node->children->empty()) {
 		writeListStart(node->children->size());
 		for (size_t a = 0; a < node->children->size(); a++) {
@@ -164,19 +199,32 @@ void BinTreeNodeWriter::writeInternal(ProtocolTreeNode* node) {
 	}
 }
 
-void BinTreeNodeWriter::flushBuffer(bool flushNetwork) {
-	int size = this->out->getCount();
-	if ((size & 0xFFFF0000) != 0) {
-		throw WAException("Buffer too large" + size);
+void BinTreeNodeWriter::flushBuffer(bool flushNetwork)
+{
+	this->flushBuffer(flushNetwork, this->dataBegin);
+}
+
+void BinTreeNodeWriter::flushBuffer(bool flushNetwork, int startingOffset) {
+	try {
+		this->processBuffer();
+	} catch (WAException& ex) {
+		this->out->setPosition(0);
+		this->out->setLength(0);
+		throw ex;
 	}
 
-	writeInt16(size, this->realOut);
-	// this->out->print();
-	this->realOut->write(*this->out->getBuffer(), size);
-	this->out->reset();
-	if (flushNetwork)
-		this->realOut->flush();
+	// _LOGDATA("buffer size %d, buffer position %d, dataBegin %d", this->out->getLength(), this->out->getPosition(), this->dataBegin);
 
+	std::vector<unsigned char> buffer(this->out->getBuffer()->begin(), this->out->getBuffer()->end());
+	int num = (int)(this->out->getLength() - (long)startingOffset);
+	if (flushNetwork && ((long)this->out->getCapacity() - this->out->getLength() < 3L || this->out->getLength() > 4096L))
+	{
+		delete this->out;
+		this->out = new ByteArrayOutputStream(4096);
+	}
+
+	if (flushNetwork)
+		this->realOut->write(buffer, startingOffset, num);
 }
 
 void BinTreeNodeWriter::streamEnd() {
@@ -199,14 +247,16 @@ void BinTreeNodeWriter::write(ProtocolTreeNode* node) {
 void BinTreeNodeWriter::write(ProtocolTreeNode* node, bool needsFlush) {
 	SDL_mutexP(this->mutex);
 	try {
+		this->writeDummyHeader();
 		if (node == NULL)
 			this->out->write(0);
-		else
+		else {
 			writeInternal(node);
+		}
 		flushBuffer(needsFlush);
 	} catch (exception& ex) {
 		SDL_mutexV(this->mutex);
-		throw ex;
+		throw WAException(ex.what());
 	}
 	SDL_mutexV(this->mutex);
 }

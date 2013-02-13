@@ -1,4 +1,5 @@
 /*
+ *
  * BGApp2.cpp
  *
  *  Created on: 04/07/2012
@@ -13,6 +14,8 @@
 #include "BinTreeNodeReader.h"
 #include "WAConnection.h"
 #include "Account.h"
+#include "base64.h"
+
 BGApp* BGApp::_instance = NULL;
 
 BGApp::BGApp() {
@@ -24,7 +27,7 @@ BGApp::BGApp() {
 	this->_xmpprunner = NULL;
 	this->_chatState = NULL;
 	this->_xmppthread = NULL;
-
+	this->_bgMode = false;
 }
 
 BGApp::~BGApp() {
@@ -47,8 +50,11 @@ void BGApp::finalize() {
 				_LOGDATA("Error sending BGApp::finalize:sendingClose: %s", ex.what());
 			}
 		}
-		this->_xmpprunner->killWithConfirmation();
+		if (this->_xmpprunner != NULL)
+			this->_xmpprunner->killWithConfirmation();
+
 		SDL_KillThread(this->_xmppthread);
+
 		ChatState::finalize();
 
 		if (this->_xmpprunner != NULL)
@@ -62,41 +68,74 @@ void BGApp::finalize() {
 	SDL_mutexV(this->_mutex);
 }
 
-bool BGApp::testLogin(const std::string& userId, const std::string& password, const std::string& pushName) {
+std::string BGApp::testLogin(const std::string& userId, const std::string& password, const std::string& pushName) {
 	_LOGDATA("Test Login");
 	std::string usePushName = pushName;
 	MySocketConnection* conn = NULL;
 	WAConnection* connection = NULL;
+	WALogin* login = NULL;
 
 	try {
-		std::string resource = ACCOUNT_RESOURCE;
 		std::string socketURL = WHATSAPP_LOGIN_SERVER;
-		int socketPort = WHATSAPP_LOGIN_PORT;
+
 		if (usePushName.empty())
 			usePushName = "HP Webos user";
 
-		conn = new MySocketConnection(socketURL, socketPort);
-		WALogin* login = new WALogin(new BinTreeNodeReader(conn, WAConnection::dictionary, WAConnection::DICTIONARY_LEN),
-				new BinTreeNodeWriter(conn, WAConnection::dictionary, WAConnection::DICTIONARY_LEN));
-		connection = new WAConnection(login, "s.whatsapp.net", resource, userId, usePushName, Utilities::getChatPassword(password), NULL, NULL);
+		bool done = false;
+		int usedPorts = 0;
+		std::string resource;
+		do {
+			int socketPort = XmppRunner::PORTS[XmppRunner::LAST_USED_PORT_INDEX];
+			resource = std::string() + ACCOUNT_RESOURCE + "-" + Utilities::intToStr(socketPort);
+			try {
+				conn = new MySocketConnection(socketURL, socketPort);
+				done = true;
+			} catch (WAException& ex) {
+				usedPorts++;
+				XmppRunner::LAST_USED_PORT_INDEX = (XmppRunner::LAST_USED_PORT_INDEX + 1) % XmppRunner::NUM_PORTS;
+				if (usedPorts == XmppRunner::NUM_PORTS) {
+					throw ex;
+				}
+			}
+		} while (!done);
+
+		connection = new WAConnection(NULL, NULL);
+		login = new WALogin(connection, new BinTreeNodeReader(connection, conn, WAConnection::dictionary, WAConnection::DICTIONARY_LEN),
+				new BinTreeNodeWriter(connection, conn, WAConnection::dictionary, WAConnection::DICTIONARY_LEN),
+				"s.whatsapp.net", userId, resource, base64_decode(password), usePushName);
 		connection->setVerboseId(true);
-		login->setConnection(connection);
-		connection->setReceiptAckCapable(true);
-		login->login();
+		std::vector<unsigned char>* existingChallenge = new std::vector<unsigned char>(0);
+		std::vector<unsigned char>* nextChallenge = login->login(*existingChallenge);
+		connection->setLogin(login);
+		delete existingChallenge;
+		delete nextChallenge;
 	} catch (WAException& ex) {
 		_LOGDATA("Error test login: %s, %d, %d", ex.what(), ex.type, ex.subtype);
+		time_t expire_date;
+		if (login != NULL)
+			expire_date = login->expire_date;
+		if ((connection->getLogin() == NULL) && (login != NULL))
+			delete login;
 		if (conn != NULL)
 			delete conn;
 		if (connection != NULL)
 			delete connection;
-		return false;
+		if (ex.type == WAException::CORRUPT_STREAM_EX)
+			return "corrupt stream";
+		else if ((ex.type == WAException::LOGIN_FAILURE_EX) && (ex.subtype == WAException::LOGIN_FAILURE_EX_TYPE_PASSWORD)) {
+			return "password failure";
+		} else if ((ex.type == WAException::LOGIN_FAILURE_EX) && (ex.subtype == WAException::LOGIN_FAILURE_EX_TYPE_EXPIRED)) {
+			return "account expired on " + std::string(ctime(&expire_date));
+		} else {
+			return "connection error";
+		}
 	}
 
 	if (conn != NULL)
 		delete conn;
 	if (connection != NULL)
 		delete connection;
-	return true;
+	return "ok";
 }
 
 void BGApp::initialize() {
@@ -280,10 +319,19 @@ void BGApp::onLastSeen(const std::string& jid, int seconds, std::string* status)
 	this->sendContactInfoToFG(nakedJid, 2, lastSeen);
 }
 
+std::string BGApp::getChallengeFile() {
+	return this->challengeFile;
+}
+
 void BGApp::onAccountChange(int paramInt, long paramLong) {}
 void BGApp::onPrivacyBlockListAdd(const std::string& paramString) {}
 void BGApp::onPrivacyBlockListClear() {}
-void BGApp::onDirty(const std::map<string,string>& paramHashtable) {}
+void BGApp::onDirty(const std::map<string,string>& paramHashtable) {
+	if (paramHashtable.find("groups") != paramHashtable.end()) {
+		if (this->_xmpprunner != NULL && this->_xmpprunner->_connection != NULL)
+			this->_xmpprunner->_connection->sendGetGroups();
+	}
+}
 void BGApp::onDirtyResponse(int paramHashtable) {}
 void BGApp::onRelayRequest(const std::string& paramString1, int paramInt, const std::string& paramString2) {}
 

@@ -8,7 +8,7 @@
 #include "WAException.h"
 #include "ProtocolTreeNode.h"
 
-ProtocolTreeNode::ProtocolTreeNode(const string& tag, map<string, string> *attributes, string* data, vector<ProtocolTreeNode*> *children) {
+ProtocolTreeNode::ProtocolTreeNode(const string& tag, map<string, string> *attributes, vector<unsigned char>* data, vector<ProtocolTreeNode*> *children) {
 	this->tag = tag;
 	this->data = data;
 	this->attributes = attributes;
@@ -46,7 +46,9 @@ string ProtocolTreeNode::toString() {
 			out += "" + ii->first + "=\"" + ii->second + "\"";
 	}
 	out += ">\n";
-	out += (this->data != NULL?*this->data:"");
+	std::string* data = getDataAsString();
+	out += (this->data != NULL? *data:"");
+	delete data;
 
 	if (this->children != NULL) {
 		vector<ProtocolTreeNode*>::iterator ii;
@@ -101,6 +103,12 @@ vector<ProtocolTreeNode*>* ProtocolTreeNode::getAllChildren() {
 	return this->children;
 }
 
+std::string* ProtocolTreeNode::getDataAsString() {
+	if (this->data == NULL)
+		return NULL;
+	return new std::string(this->data->begin(), this->data->end());
+}
+
 vector<ProtocolTreeNode*>* ProtocolTreeNode::getAllChildren(const string& tag) {
 	vector<ProtocolTreeNode*>* ret = new vector<ProtocolTreeNode*>();
 
@@ -121,7 +129,7 @@ bool ProtocolTreeNode::tagEquals(ProtocolTreeNode *node, const string& tag) {
 
 void ProtocolTreeNode::require(ProtocolTreeNode *node, const string& tag) {
 	if (!tagEquals(node, tag))
-		throw WAException("failed require. node:" + node->toString() + "tag: " + tag);
+		throw WAException("failed require. node:" + node->toString() + "tag: " + tag, WAException::CORRUPT_STREAM_EX, 0);
 }
 
 

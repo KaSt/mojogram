@@ -11,6 +11,15 @@ function AppDatabase() {
 	this.contactRequest = false;
 }
 
+AppDatabase.getJidList = function(contacts) {
+	var result = "";
+	if (contacts.length > 0)
+		result = "'" + contacts[0].jid + "'";
+	for (var i = 1; i < contacts.length; i++)
+		result += "," + "'" + contacts[i].jid + "'";
+	return result;
+}
+
 AppDatabase.prototype.createTables = function() {
 	var sql1 = "CREATE TABLE IF NOT EXISTS 'contacts' (name TEXT, mobilePhone TEXT, jid TEXT PRIMARY KEY, favourite BOOLEAN DEFAULT 0);";
 	var sql2 = "CREATE TABLE IF NOT EXISTS 'chats' (jid TEXT PRIMARY KEY, chatname TEXT, isgroup BOOLEAN DEFAULT 0, unread INTEGER, lmremotejid TEXT DEFAULT NULL, lmfromme BOOLEAN DEFAULT NULL, lmkeyid TEXT DEFAULT NULL);";
@@ -19,6 +28,12 @@ AppDatabase.prototype.createTables = function() {
 	var sql5 = "CREATE INDEX IF NOT EXISTS 'contact_name' ON 'contacts' (name ASC)";
 	var sql6 = "CREATE INDEX IF NOT EXISTS 'messages_list_desc' ON 'messages' (remotejid, timestamp DESC)";
 	var sql7 = "CREATE INDEX IF NOT EXISTS 'messages_list_status_asc' ON 'messages' (status ASC, timestamp ASC)";
+	var sql8 = "ALTER TABLE 'contacts' ADD COLUMN status TEXT";
+	var sql9 = "ALTER TABLE 'contacts' ADD COLUMN cc INTEGER";
+	var sql10 = "CREATE INDEX IF NOT EXISTS 'contact_cc' ON 'contacts' (cc ASC)";
+	var sql11 = "ALTER TABLE 'chats' ADD COLUMN pictureid TEXT";	
+	var sql12 = "ALTER TABLE 'chats' ADD COLUMN picturepath TEXT";
+	var sql13 = "ALTER TABLE 'chats' ADD COLUMN muteexpiry DATETIME";
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql2, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
@@ -27,6 +42,32 @@ AppDatabase.prototype.createTables = function() {
 		t.executeSql(sql5, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql6, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql7, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql8, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql9, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql10, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql11, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));		
+		t.executeSql(sql12, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql13, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+	}.bind(this));
+}
+
+AppDatabase.prototype.reset = function(onReset) {
+	var sql1 = "DELETE FROM messages";
+	var sql2 = "DELETE FROM chats";
+	var sql3 = "DELETE FROM groups";
+	var sql4 = "DELETE FROM contacts";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql1, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql2, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));		
+		t.executeSql(sql3, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql4, [], function (t,r) {
+			if (onReset)
+				onReset(); 
+		}.bind(this), function (t,r) {
+			if (onReset)
+				onReset();
+			return false; 
+		}.bind(this));		
 	}.bind(this));
 }
 
@@ -40,7 +81,7 @@ AppDatabase.prototype.importContacts = function() {
 		method : "find",
 		parameters : {
 			"query" : {
-				"from" : "com.palm.person:1",
+				"from" : "com.palm.contact:1",
 				"limit" : this.contactRequestSize
 			},
 			"count" : true
@@ -54,42 +95,74 @@ AppDatabase.prototype.impersonate = function(e1) {
 	if (e1.results) {
 		Mojo.Log.info("find success!, results= %s, count = %d, next  = %s", JSON.stringify(e1.results.length), e1.count, e1.next);
 		for (var i = 0; i < e1.results.length; i++) {
-			var id = e1.results[i]._id;
-			if ('name' in e1.results[i]) {
-				var name = (e1.results[i].name.givenName ? e1.results[i].name.givenName : "") + (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "");
-				name = name.replace(/^\s+/, "").replace(/\s+$/, "");
+			if ('phoneNumbers' in e1.results[i]) {
+				var name = "";
+				if ('name' in e1.results[i] || 'nickname' in e1.results[i]) {
+					if ('name' in e1.results[i])
+						name = (e1.results[i].name.givenName ? e1.results[i].name.givenName : "") + (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "");
+					name = name.replace(/^\s+/, "").replace(/\s+$/, "");
+					var nickname = ("nickname" in e1.results[i] ? e1.results[i].nickname : "");
+					if (name == "")
+						name = nickname;
+				}
 				// trim string
-				var mobilePhone = null;
-				if ('phoneNumbers' in e1.results[i]) {
-					for (var j = 0; j < e1.results[i].phoneNumbers.length; j++) {
-						if (e1.results[i].phoneNumbers[j].type == "type_mobile") {
-							mobilePhone = this.normalizeMobile(e1.results[i].phoneNumbers[j].value);
-							if (mobilePhone != null) {
-								var contact = {
-									"name" : name,
-									"mobilePhone" : mobilePhone,
-									"jid" : mobilePhone + "@s.whatsapp.net"
-								};
-								this.contacts.push(contact);
-							}
+
+				for (var j = 0; j < e1.results[i].phoneNumbers.length; j++) {
+					var checkPhoneType = false;
+					switch (_appPrefs.cookieData.phoneTypes) {
+						case "all":
+							checkPhoneType = true;
+							break;
+						case "mobile":
+							checkPhoneType = (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("mobile") != -1);
+							break;
+						case "mobilework":
+							checkPhoneType = (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("mobile") != -1) || (e1.results[i].phoneNumbers[j].type.toLowerCase().indexOf("work") != -1);
+							break;
+						default:
+							checkPhoneType = true;
+							break;
+					}
+
+					if (checkPhoneType == true) {
+						var cc = _appData.cookieData.cc;
+						var number = e1.results[i].phoneNumbers[j].value;
+						number = PhoneNumber.normalizeMobile(number);
+						if (PhoneNumber.isInternational(number)) {
+							cc = PhoneNumber.parseCc(number);
+							if (cc == null)
+								cc = "";
+							number = PhoneNumber.removeCc(cc, number);
+							number = PhoneNumber.normalizeMobile(number);
+						}
+
+						if (cc != "" && number != "") {
+							var contact = {
+								"name" : name,
+								"cc" : cc,
+								"mobilePhone" : number,
+								"jid" : "" + cc + number + "@s.whatsapp.net"
+							};
+							this.contacts.push(contact);
 						}
 					}
+
 				}
-				if (!mobilePhone)
-					continue;
 			}
 			this.contactResults++;
 		}
 		Mojo.Log.info("Contacts! = " + JSON.stringify(this.contacts.length));
 
 		var total = this.contactResults + e1.count - e1.results.length;
+
 		if (this.contactResults < total) {
-			if (this.contactRequest) this.contactRequest.cancel();			
+			if (this.contactRequest)
+				this.contactRequest.cancel();
 			this.contactRequest = new Mojo.Service.Request("palm://com.palm.db/", {
 				method : "find",
 				parameters : {
 					"query" : {
-						"from" : "com.palm.person:1",
+						"from" : "com.palm.contact:1",
 						"limit" : this.contactRequestSize,
 						"page" : e1.next
 					},
@@ -99,54 +172,49 @@ AppDatabase.prototype.impersonate = function(e1) {
 				onFailure : this.errorHandlerTrue.bind(this)
 			});
 		} else {
-			if (this.contactRequest) this.contactRequest.cancel();
+			if (this.contactRequest)
+				this.contactRequest.cancel();
 			this.contactRequest = false;
 			this.contactResults = 0;
 			this.updateContacts(this.contacts);
-			_contactsImported = true;
 		}
 	}
-}
-
-AppDatabase.prototype.normalizeMobile = function(phoneNumber) {
-	phoneNumber = phoneNumber.replace(/[^\d+]+/g, "");
-	var putPrefix = false;
-	if (phoneNumber.indexOf('+') == 0) {
-		phoneNumber = phoneNumber.replace(/^\+0*/g, "");
-	} else {
-		phoneNumber = phoneNumber.replace(/^0+/g, "");
-		putPrefix = true;
-	}
-
-	if (phoneNumber.length == 0)
-		return null;
-
-	if (putPrefix)
-		phoneNumber = _appData.cookieData.cc + phoneNumber;
-
-	return phoneNumber;
 }
 
 AppDatabase.prototype.updateContacts = function(contacts) {
-	var sql = "INSERT INTO 'contacts' (name, mobilePhone, jid) VALUES (?,?,?);";
-	var sql2 = "UPDATE chats SET chatName = ? WHERE jid = ?";
+	var sql = "INSERT INTO 'contacts' (name, mobilePhone, jid, cc) VALUES (?,?,?,?);";
+	var sql2 = "UPDATE 'contacts' SET name = ?, cc = ?, mobilePhone = ? WHERE jid = ?";
+	var sql3 = "UPDATE chats SET chatName = ? WHERE jid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql("DELETE FROM 'contacts'", [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
-		for (var i = 0; i < contacts.length; i++) {
-			var contact = contacts[i];
-			t.executeSql(sql, [contact.name, contact.mobilePhone, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
-			t.executeSql(sql2, [contact.name, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
-			_contactJidNames.setItem(contact.jid, contact.name);
-		}
-		this.contacts = [];
+		t.executeSql("DELETE FROM 'contacts' WHERE jid NOT IN (" + AppDatabase.getJidList(contacts) + ")", [], function(t, r) {
+			for (var i = 0; i < contacts.length; i++) {
+				var contact = contacts[i];
+
+				t.executeSql(sql, [contact.name, contact.mobilePhone, contact.jid, contact.cc], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+				t.executeSql(sql2, [contact.name, contact.cc, contact.mobilePhone, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+				t.executeSql(sql3, [contact.name, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+				_contactJidNames.setItem(contact.jid, contact.name);
+				if (contact.jid == _myJid)
+					_contactJidNames.setItem(_myJid, $L("You"));
+			}
+			_contactsImported = true;
+			this.contacts = [];
+		}.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
 AppDatabase.prototype.updateContact = function(contact) {
 	Mojo.Log.info("Update Contact = " + JSON.stringify(contact));
-	var sql = "UPDATE contacts SET name=?, mobilePhone=?,favourite=? WHERE jid = ?";
+	var sql = "UPDATE contacts SET name=?, mobilePhone=?,favourite=?,cc = ? WHERE jid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [contact.name, contact.mobilePhone, (contact.favourite ? 1 : 0), contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql, [contact.name, contact.mobilePhone, (contact.favourite ? 1 : 0), contact.cc, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
+AppDatabase.prototype.updateContactStatus = function(jid, status) {
+	var sql = "UPDATE contacts SET status = ? WHERE jid = ?";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [status, jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
@@ -160,7 +228,9 @@ AppDatabase.prototype.findContact = function(jid, callback) {
 					name : r.rows.item(0).name,
 					mobilePhone : r.rows.item(0).mobilePhone,
 					favourite : (r.rows.item(0).favourite == 0 ? false : true),
-					jid : r.rows.item(0).jid
+					jid : r.rows.item(0).jid,
+					cc : r.rows.item(0).cc,
+					status : r.rows.item(0).status
 				};
 			}
 			callback(contact);
@@ -169,7 +239,8 @@ AppDatabase.prototype.findContact = function(jid, callback) {
 }
 
 AppDatabase.prototype.getAllContacts = function(callback) {
-	var sql = "SELECT * FROM 'contacts' ORDER BY name ASC;";
+	var sql = "SELECT c.*, ch.picturepath FROM contacts c LEFT OUTER JOIN chats ch ON (c.jid = ch.jid) ORDER BY name ASC;";
+	// var sql = "SELECT * FROM 'contacts' ORDER BY name ASC;";
 	var contacts = [];
 	this.appDb.readTransaction( function(t) {
 		t.executeSql(sql, [], function(t, r) {
@@ -178,7 +249,31 @@ AppDatabase.prototype.getAllContacts = function(callback) {
 					"name" : r.rows.item(i).name,
 					"mobilePhone" : r.rows.item(i).mobilePhone,
 					"jid" : r.rows.item(i).jid,
-					"favourite" : (r.rows.item(i).favourite == 1 ? true : false)
+					"favourite" : (r.rows.item(i).favourite == 1 ? true : false),
+					"cc" : (r.rows.item(i).cc),
+					"status" : (r.rows.item(i).status),
+					"picturepath" : (r.rows.item(i).picturepath)
+				};
+				contacts.push(contact);
+			}
+			callback(contacts);
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
+AppDatabase.prototype.getAllContactsByCc = function(callback) {
+	var sql = "SELECT * FROM 'contacts' ORDER BY cc ASC;";
+	var contacts = [];
+	this.appDb.readTransaction( function(t) {
+		t.executeSql(sql, [], function(t, r) {
+			for (var i = 0; i < r.rows.length; i++) {
+				var contact = {
+					"name" : r.rows.item(i).name,
+					"mobilePhone" : r.rows.item(i).mobilePhone,
+					"jid" : r.rows.item(i).jid,
+					"favourite" : (r.rows.item(i).favourite == 1 ? true : false),
+					"cc" : (r.rows.item(i).cc),
+					"status" : (r.rows.item(i).status)
 				};
 				contacts.push(contact);
 			}
@@ -197,9 +292,9 @@ AppDatabase.prototype.saveMessage = function(message, callback) {
 }
 
 AppDatabase.prototype.updateMediaMessage = function(message, callback) {
-	var sql = "UPDATE messages SET status = ?, data = ?, downloadfile = ?, mediaurl = ?, medianame = ?, mediasize = ?, mediaseconds = ?, longitude = ?, latitude = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
+	var sql = "UPDATE messages SET status = ?, timestamp = ?, data = ?, downloadfile = ?, mediaurl = ?, medianame = ?, mediasize = ?, mediaseconds = ?, longitude = ?, latitude = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [message.status, message.data, message.downloadedFile, message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
+		t.executeSql(sql, [message.status, message.timestamp, message.data, message.downloadedFile, message.media_url, message.media_name, message.media_size, message.media_duration_seconds, message.longitude, message.latitude, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
 			if (callback)
 				callback();
 		}, this.errorHandlerTrue.bind(this));
@@ -207,9 +302,11 @@ AppDatabase.prototype.updateMediaMessage = function(message, callback) {
 }
 
 AppDatabase.prototype.updateMessageStatus = function(message, callback) {
-	var sql = "UPDATE messages SET status = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
+	// var sql = "UPDATE messages SET status = ?, timestamp = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";
+    var sql = "UPDATE messages SET status = ? WHERE remotejid = ? AND fromme = ? AND keyid = ?";	
+
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [message.status, message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
+		t.executeSql(sql, [message.status, /* message.timestamp, */ message.remote_jid, (message.from_me ? 1 : 0), message.keyId], function(t, r) {
 			if (callback)
 				callback();
 		}, this.errorHandlerTrue.bind(this));
@@ -357,6 +454,12 @@ AppDatabase.prototype.deleteChat = function(chat, callback) {
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [chat.jid], function(t, r) {
 			t.executeSql(sql2, [chat.jid], function(t, r) {
+				try {
+					if (chat.picturepath)
+						_plugin.removeFile(chat.picturepath);
+				} catch (e) {
+					Mojo.Log.error("database:deleteChat:error deleting chat picture: %j", e);
+				}
 				callback();
 			}, this.errorHandlerTrue.bind(this));
 		}.bind(this), this.errorHandlerTrue.bind(this));
@@ -385,18 +488,38 @@ AppDatabase.prototype.findChat = function(jid, callback) {
 			var chat = null;
 			if (result.rows.length > 0) {
 				row = result.rows.item(0);
-				chat = new Chat(row.chatname, row.jid, (row.isgroup == 0 ? false : true), row.unread, AppDatabase.messageFromRowItem(row));
+				chat = new Chat(
+							row.chatname, 
+							row.jid, 
+							(row.isgroup == 0 ? false : true), 
+							row.unread, 
+							AppDatabase.messageFromRowItem(row),
+							row.pictureid,
+							row.picturepath,
+							row.muteexpiry);
 			}
 			callback(chat);
 		}, this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
+AppDatabase.prototype.updateChatPicture = function(jid, pictureid, picturePath, callback) {
+	var sql = "UPDATE chats SET pictureid = ?, picturepath = ? WHERE jid = ?";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [pictureid, picturePath, jid], 
+		function(t, r) {
+			if (callback)
+				callback();
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
+	
+}
+
 AppDatabase.prototype.updateChat = function(chat, callback) {
 	// Mojo.Log.info("update chat = " + JSON.stringify(chat));
-	var sql = "UPDATE chats SET chatname = ?, unread = ?, isgroup = ?, lmremotejid = ?, lmfromme = ?, lmkeyid = ? WHERE jid = ?";
+	var sql = "UPDATE chats SET chatname = ?, unread = ?, isgroup = ?, lmremotejid = ?, lmfromme = ?, lmkeyid = ?, muteexpiry = ? WHERE jid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [chat.chatName, chat.unread, (chat.isGroup ? 1 : 0), chat.lastMessage.remote_jid, (chat.lastMessage.from_me ? 1 : 0), chat.lastMessage.keyId, chat.jid], function(t, r) {
+		t.executeSql(sql, [chat.chatName, chat.unread, (chat.isGroup ? 1 : 0), chat.lastMessage.remote_jid, (chat.lastMessage.from_me ? 1 : 0), chat.lastMessage.keyId, chat.muteexpiry, chat.jid], function(t, r) {
 			if (callback)
 				callback(chat);
 		}, this.errorHandlerTrue.bind(this));
@@ -411,7 +534,15 @@ AppDatabase.prototype.getAllChatsWithMessages = function(callback) {
 		t.executeSql(sql, [], function(t, r) {
 			for (var i = 0; i < r.rows.length; i++) {
 				var row = r.rows.item(i);
-				var chat = new Chat(row.chatname, row.jid, (row.isgroup == 0 ? false : true), row.unread, AppDatabase.messageFromRowItem(row));
+				var chat = new Chat(
+					row.chatname, 
+					row.jid, 
+					(row.isgroup == 0 ? false : true), 
+					row.unread, 
+					AppDatabase.messageFromRowItem(row),
+					row.pictureid,
+					row.picturepath,
+					row.muteexpiry);
 				// chat.lastMessage.remote_jid = row.lmremotejid;
 				// chat.lastMessage.from_me= (row.lmfromme == 1?true:false);
 				// chat.lastMessage.keyId = row.lmkeyid;
@@ -422,6 +553,52 @@ AppDatabase.prototype.getAllChatsWithMessages = function(callback) {
 		}, this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
+
+AppDatabase.prototype.getAllGroupChats = function(callback) {
+	var sql = "SELECT * FROM chats c WHERE c.isgroup = 1 ORDER BY c.chatname ASC";
+	var chats = [];
+	this.appDb.readTransaction( function(t) {
+		t.executeSql(sql, [], function(t, r) {
+			for (var i = 0; i < r.rows.length; i++) {
+				var row = r.rows.item(i);
+				var chat = new Chat(
+					row.chatname, 
+					row.jid, 
+					(row.isgroup == 0 ? false : true), 
+					row.unread, 
+					null,
+					row.pictureid,
+					row.picturepath,
+					row.muteexpiry);
+				chats.push(chat);
+			}
+			callback(chats);
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
+
+AppDatabase.prototype.getAllGroupSettingsWithMuteExpiration = function(callback) {
+	var sql = "SELECT * FROM chats c WHERE c.isgroup = 1 AND c.muteexpiry IS NOT NULL";
+	var chats = [];
+	this.appDb.readTransaction( function(t) {
+		t.executeSql(sql, [], function(t, r) {
+			for (var i = 0; i < r.rows.length; i++) {
+				var row = r.rows.item(i);
+				var chat = {
+					jid: row.jid,
+					enabled: true, 
+					muteExpiry: row.muteexpiry
+					};
+				if (chat.muteExpiry > (new Date().getTime() / 1000)) {					
+					chats.push(chat);
+				}
+			}
+			callback(chats);
+		}, this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
 /******
  * GROUP storage
  */
@@ -504,7 +681,7 @@ AppDatabase.prototype.killTransaction = function(transaction, error) {
 AppDatabase.prototype.errorHandlerTrue = function(transaction, error) {
 	// error.message is a human-readable string.
 	// error.code is a numeric error code
-	Mojo.Log.error("find failure! Err = " + JSON.stringify(transaction) + ":" + JSON.stringify(error));
+	Mojo.Log.info("find failure treu! Err = " + JSON.stringify(transaction) + ":" + JSON.stringify(error));
 
 	return true;
 }
@@ -512,7 +689,7 @@ AppDatabase.prototype.errorHandlerTrue = function(transaction, error) {
 AppDatabase.prototype.errorHandlerFalse = function(transaction, error) {
 	// error.message is a human-readable string.
 	// error.code is a numeric error code
-	Mojo.Log.info("find failure! Err = " + JSON.stringify(transaction) + ":" + JSON.stringify(error));
+	Mojo.Log.info("find failure false! Err = " + JSON.stringify(transaction) + ":" + JSON.stringify(error));
 
 	return false;
 }

@@ -1,0 +1,40 @@
+<div class="palm-hasheader">
+	<div class="palm-header" id="headerTitle">
+		My status
+	</div>
+</div>
+
+<div class="palm-header-spacer"></div>
+
+<div class="palm-group">
+	<div class="palm-group-title" id="statusListTitle">
+		Select your status
+	</div>
+	<div x-mojo-element="ListSelector" id="defaultStatusList"></div>
+</div>
+
+
+<div class="palm-group" id="customStatus">
+	<div class="palm-group-title" id="currentStatusTitle">
+		Enter your status
+	</div>	
+	<div class="palm-list">
+		<div class='palm-row single'>
+			<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+				<div class="title subject-wrapper">
+					<div x-mojo-element="TextField" id="textFieldStatus" class="textfield-subject"></div>
+					<div class="palm-button secondary emojibutton-subject" id="emojiButton">
+						<div class="palm-button-wrapper">
+							<div class="icon emojibutton-icon"></div>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="palm-inline-error" style="display:none" id="error_message">
+	<div class="error-message" id="errorMessageText"></div>
+</div>
+<div x-mojo-element="Button" id="saveChangesButton"></div>
+

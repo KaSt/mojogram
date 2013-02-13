@@ -14,6 +14,7 @@
 #include "MySocketConnection.h"
 #include "ByteArray.h"
 #include <SDL.h>
+#include "WAConnection.h"
 
 using namespace std;
 
@@ -29,12 +30,16 @@ using namespace std;
 
 #include <map>
 
+class WAConnection;
+
 class BinTreeNodeWriter {
 private:
+	WAConnection* conn;
 	map<string,int> tokenMap;
 	MySocketConnection *realOut;
 	ByteArrayOutputStream *out;
 	SDL_mutex* mutex;
+	int dataBegin;
 
 	void writeListStart(int i);
 	void writeInt8(int v);
@@ -48,11 +53,14 @@ private:
 	void writeBytes(unsigned char* bytes, int length);
 	void writeInt24(int v);
     void writeInternal(ProtocolTreeNode* node);
+    void writeDummyHeader();
+    void processBuffer();
 
 public:
-	BinTreeNodeWriter(MySocketConnection* connection, const char** dictionary, const int dictionarysize);
+	BinTreeNodeWriter(WAConnection* conn, MySocketConnection* connection, const char** dictionary, const int dictionarysize);
 	void streamStart(std::string domain, std::string resource);
 	void flushBuffer(bool flushNetwork);
+	void flushBuffer(bool flushNetwork, int startingOffset);
 	void streamEnd();
 	void write(ProtocolTreeNode* node);
 	void write(ProtocolTreeNode* node, bool needsFlush);

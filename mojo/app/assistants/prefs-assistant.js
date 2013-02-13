@@ -1,35 +1,37 @@
 function PrefsAssistant() {
-}
+	_prefsAssistant = this;
 
-PrefsAssistant.prototype.setup = function() {
-	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
-		var menuModel = {
-			visible : true,
-			items : [{
-				icon : "back",
-				command : "goBack"
-			}]
-		};
-
-		this.controller.setupWidget(Mojo.Menu.commandMenu, this.attributes = {
-			spacerHeight : 0,
-			menuClass : 'no-fade'
-		}, menuModel);
-	}
-
-	this.controller.get("headerTitle").update($L("Preferences"));
-	this.controller.get("personGroupTitle").update($L("Persons notifications"));
-	this.controller.get("groupGroupTitle").update($L("Groups notifications"));
-	this.controller.get("bgGroupTitle").update($L("Background"));
-	this.controller.get("personVibrateLabel").update($L("Vibrate"));
-	this.controller.get("groupVibrateLabel").update($L("Vibrate"));
-	this.controller.get("personBannerLabel").update($L("Show banner"));
-	this.controller.get("groupBannerLabel").update($L("Show banner"));
-	this.controller.get("personBlinkLabel").update($L("Light bar"));
-	this.controller.get("groupBlinkLabel").update($L("Light bar"));
-	this.controller.get("personToneLabel").update($L("Tone"));
-	this.controller.get("groupToneLabel").update($L("Tone"));
-	this.controller.get("chatsGroupTitle").update($L("Messages text font"));
+	this.languageChoices = [{
+		label : $L("English"),
+		value : "en_gb"
+	}, {
+		label : $L("Spanish"),
+		value : "es_es"
+	}, {
+		label : $L("German"),
+		value : "de_de"
+	}, {
+		label : $L("Italian"),
+		value : "it_it"
+	}, {
+		label : $L("French"),
+		value : "fr_fr"
+	}, {
+		label : $L("Dutch"),
+		value : "nl_nl"
+	}, {
+		label : $L("Chinese (Simplified)"),
+		value : "zh_cn"
+	}, {
+		label : $L("Chinese (Traditional)"),
+		value : "zh_tw"
+	}, {
+		label : $L("Chinese (Hong Kong)"),
+		value : "zh_hk"
+	}, {
+		label : $L("Russian"),
+		value : "ru_ru"
+	}];
 
 	this.soundChoices = [{
 		label : $L("System sound"),
@@ -41,89 +43,6 @@ PrefsAssistant.prototype.setup = function() {
 		label : $L("Silence"),
 		value : "silence"
 	}];
-
-	this.controller.setupWidget('personSoundSelector', {
-		label : $L('Sound'),
-		choices : this.soundChoices,
-		modelProperty : "currentSound"
-	}, {
-		currentSound : _appPrefs.cookieData.personSound
-	});
-	this.controller.listen('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler.bindAsEventListener(this));
-
-	if (_appPrefs.cookieData.personSound == "custom") {
-		this.controller.get('personTonePathRow').show();
-	} else {
-		this.controller.get('personTonePathRow').hide();
-	}
-	this.controller.get('personTonePath').update(_appPrefs.cookieData.personToneName);
-	this.controller.listen('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('personVibrateToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.personVibrate
-	});
-	this.controller.listen('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('personBannerToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.personBanner
-	});
-	this.controller.listen('personBannerToggle', Mojo.Event.propertyChanged, this.personBannerHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('personBlinkToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.personBlink
-	});
-	this.controller.listen('personBlinkToggle', Mojo.Event.propertyChanged, this.personBlinkHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('groupSoundToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.groupSound
-	});
-
-	this.controller.setupWidget('groupSoundSelector', {
-		label : $L('Sound'),
-		choices : this.soundChoices,
-		modelProperty : "currentSound"
-	}, {
-		currentSound : _appPrefs.cookieData.groupSound
-	});
-
-	this.controller.listen('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler.bindAsEventListener(this));
-
-	if (_appPrefs.cookieData.groupSound == "custom") {
-		this.controller.get('groupTonePathRow').show();
-	} else {
-		this.controller.get('groupTonePathRow').hide();
-	}
-	this.controller.get('groupTonePath').update(_appPrefs.cookieData.groupToneName);
-	this.controller.listen('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('groupVibrateToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.groupVibrate
-	});
-	this.controller.listen('groupVibrateToggle', Mojo.Event.propertyChanged, this.groupVibrateHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('groupBannerToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.groupBanner
-	});
-	this.controller.listen('groupBannerToggle', Mojo.Event.propertyChanged, this.groupBannerHandler.bindAsEventListener(this));
-
-	this.controller.setupWidget('groupBlinkToggle', {
-		modelProperty : "value"
-	}, {
-		value : _appPrefs.cookieData.groupBlink
-	});
-	this.controller.listen('groupBlinkToggle', Mojo.Event.propertyChanged, this.groupBlinkHandler.bindAsEventListener(this));
 
 	this.timeouts = [{
 		label : $L('As items arrive'),
@@ -160,6 +79,135 @@ PrefsAssistant.prototype.setup = function() {
 		value : "24:00:00"
 	}];
 
+}
+
+PrefsAssistant.prototype.setup = function() {
+	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+		var menuModel = {
+			visible : true,
+			items : [{
+				icon : "back",
+				command : "goBack"
+			}]
+		};
+
+		this.controller.setupWidget(Mojo.Menu.commandMenu, this.attributes = {
+			spacerHeight : 0,
+			menuClass : 'no-fade'
+		}, menuModel);
+	}
+
+	this.controller.get("langTitle").update($L("Language"));
+	this.controller.get("headerTitle").update($L("Preferences"));
+	this.controller.get("personGroupTitle").update($L("Persons notifications"));
+	this.controller.get("groupGroupTitle").update($L("Groups notifications"));
+	this.controller.get("bgGroupTitle").update($L("Background"));
+	this.controller.get("personVibrateLabel").update($L("Vibrate"));
+	this.controller.get("groupVibrateLabel").update($L("Vibrate"));
+	this.controller.get("personBannerLabel").update($L("Show banner"));
+	this.controller.get("groupBannerLabel").update($L("Show banner"));
+	this.controller.get("personBlinkLabel").update($L("Light bar"));
+	this.controller.get("groupBlinkLabel").update($L("Light bar"));
+	this.controller.get("personToneLabel").update($L("Tone"));
+	this.controller.get("groupToneLabel").update($L("Tone"));
+	this.controller.get("chatsGroupTitle").update($L("Messages text font"));
+	this.controller.get("resizeImage").update($L("Reduce image before sending"));
+	this.controller.get("phoneTypesTitle").update($L("Contacts"));
+
+	_appPrefs.get();
+
+	this.controller.setupWidget("spinnerId", this.attributesSpinner = {
+		spinnerSize : "small"
+	}, this.modelSpinner = {
+		spinning : false
+	});
+
+	this.controller.get('spinnerId').hide();
+
+	this.controller.get('profilePictureTitle').update($L("Profile picture"));
+	this.setPicture();
+	this.controller.listen("profileImage", Mojo.Event.tap, this.profileImageHandler.bindAsEventListener(this));
+
+	this.controller.setupWidget('language', {
+		label : $L('Language'),
+		choices : this.languageChoices,
+		modelProperty : "locale"
+	}, {
+		locale : (_appPrefs.cookieData.language)
+	});
+
+	this.controller.setupWidget('personSoundSelector', {
+		label : $L('Sound'),
+		choices : this.soundChoices,
+		modelProperty : "currentSound"
+	}, {
+		currentSound : _appPrefs.cookieData.personSound
+	});
+
+	if (_appPrefs.cookieData.personSound == "custom") {
+		this.controller.get('personTonePathRow').show();
+	} else {
+		this.controller.get('personTonePathRow').hide();
+	}
+	this.controller.get('personTonePath').update(_appPrefs.cookieData.personToneName);
+
+	this.controller.setupWidget('personVibrateToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.personVibrate
+	});
+
+	this.controller.setupWidget('personBannerToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.personBanner
+	});
+
+	this.controller.setupWidget('personBlinkToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.personBlink
+	});
+
+	this.controller.setupWidget('groupSoundToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.groupSound
+	});
+
+	this.controller.setupWidget('groupSoundSelector', {
+		label : $L('Sound'),
+		choices : this.soundChoices,
+		modelProperty : "currentSound"
+	}, {
+		currentSound : _appPrefs.cookieData.groupSound
+	});
+
+	if (_appPrefs.cookieData.groupSound == "custom") {
+		this.controller.get('groupTonePathRow').show();
+	} else {
+		this.controller.get('groupTonePathRow').hide();
+	}
+	this.controller.get('groupTonePath').update(_appPrefs.cookieData.groupToneName);
+
+	this.controller.setupWidget('groupVibrateToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.groupVibrate
+	});
+
+	this.controller.setupWidget('groupBannerToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.groupBanner
+	});
+
+	this.controller.setupWidget('groupBlinkToggle', {
+		modelProperty : "value"
+	}, {
+		value : _appPrefs.cookieData.groupBlink
+	});
+
 	this.controller.setupWidget('bgTimeoutSelector', {
 		label : $L('Get messages'),
 		choices : this.timeouts,
@@ -167,21 +215,222 @@ PrefsAssistant.prototype.setup = function() {
 	}, {
 		currentTimeout : _appPrefs.cookieData.backgroundTimeout
 	});
-	this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
-	
+
 	this.controller.setupWidget('chatTextSize', {
 		label : $L('Size'),
-		choices : [{label: 14, value: 14}, {label: 16, value: 16}, {label: 18, value: 18}, {label: 20, value: 20}, {label: 22, value: 22}, {label: 24, value: 24}],
+		choices : [{
+			label : 14,
+			value : 14
+		}, {
+			label : 16,
+			value : 16
+		}, {
+			label : 18,
+			value : 18
+		}, {
+			label : 20,
+			value : 20
+		}, {
+			label : 22,
+			value : 22
+		}, {
+			label : 24,
+			value : 24
+		}],
 		modelProperty : 'currentSize'
 	}, {
 		currentSize : _appPrefs.cookieData.chatTextSize
 	});
+
+	this.controller.setupWidget('imageSize', {
+		label : $L('Size'),
+		choices : [{
+			label : $L("No reduce"),
+			value : 0
+		}, {
+			label : "240 x 320",
+			value : 320
+		}, {
+			label : "480 x 640",
+			value : 640
+		}, {
+			label : "600 x 800",
+			value : 800
+		}, {
+			label : "768 x 1024",
+			value : 1024
+		}, {
+			label : "1024 x 1280",
+			value : 1280
+		}],
+		modelProperty : 'currentSize'
+	}, {
+		currentSize : _appPrefs.cookieData.imageResolution
+	});
+
+	this.controller.setupWidget('phoneType', {
+		label : $L('Phone type'),
+		choices : [{
+			label : $L("All phone types"),
+			value : "all"
+		}, {
+			label : $L("Only mobile"),
+			value : "mobile"
+		}, {
+			label : $L("Mobile and work"),
+			value : "mobilework"
+		}],
+		modelProperty : 'currentSize'
+	}, {
+		currentSize : _appPrefs.cookieData.phoneTypes
+	});
+
+	this.controller.listen('language', Mojo.Event.propertyChanged, this.languageHandler.bindAsEventListener(this));
+	this.controller.listen('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler.bindAsEventListener(this));
+	this.controller.listen('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler.bindAsEventListener(this));
+	this.controller.listen('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler.bindAsEventListener(this));
+	this.controller.listen('personBannerToggle', Mojo.Event.propertyChanged, this.personBannerHandler.bindAsEventListener(this));
+	this.controller.listen('personBlinkToggle', Mojo.Event.propertyChanged, this.personBlinkHandler.bindAsEventListener(this));
+	this.controller.listen('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler.bindAsEventListener(this));
+	this.controller.listen('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler.bindAsEventListener(this));
+	this.controller.listen('groupVibrateToggle', Mojo.Event.propertyChanged, this.groupVibrateHandler.bindAsEventListener(this));
+	this.controller.listen('groupBannerToggle', Mojo.Event.propertyChanged, this.groupBannerHandler.bindAsEventListener(this));
+	this.controller.listen('groupBlinkToggle', Mojo.Event.propertyChanged, this.groupBlinkHandler.bindAsEventListener(this));
+	this.controller.listen('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler.bindAsEventListener(this));
 	this.controller.listen('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler.bindAsEventListener(this));
-	
+	this.controller.listen('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler.bindAsEventListener(this));
+	this.controller.listen('phoneType', Mojo.Event.propertyChanged, this.phoneTypeHandler.bindAsEventListener(this));
+}
+
+PrefsAssistant.prototype.setPicture = function() {
+	var imgSize = '80:80';
+	if (_appAssistant.isPre3())
+		imgSize = '120:120';
+
+	if (_appData.cookieData.mypicture != "") {
+		this.controller.get('profileImage').update('<div class="profile-image picture" style="background-image:url(/var/luna/data/extractfs' + encodeURIComponent(_appData.cookieData.mypicture) + ':0:0:' + imgSize + ':3)"></div>');
+	} else {
+		this.controller.get('profileImage').update('<div class="profile-image person-icon"></div>');
+	}
+}
+
+PrefsAssistant.prototype.updatePicture = function(path) {
+	if (path != "error") {
+		this.setPicture();
+	}
+
+	this.modelSpinner.spinning = false;
+	this.controller.modelChanged(this.modelSpinner);
+	this.controller.get("spinnerId").hide();
+}
+
+PrefsAssistant.prototype.profileImageHandler = function(event) {
+	Event.stop(event);
+	var items = [];
+	items.push({
+		label : $L("Change"),
+		command : "change"
+	});
+
+	if (_appData.cookieData.mypicture != "") {
+		items.push({
+			label : $L("View"),
+			command : "view"
+		});
+		items.push({
+			label : $L("Delete"),
+			command : "delete"
+		});
+	}
+
+	this.controller.popupSubmenu({
+		onChoose : this.popupImageHandler,
+		placeNear : this.controller.get("profileImage"),
+		items : items
+	});
+}
+
+PrefsAssistant.prototype.popupImageHandler = function(command) {
+	switch (command) {
+		case 'change':
+			var params = {
+				kind : "image",
+				actionName : $L("Send"),
+				extensions : ["jpg"],
+				crop: { width: 320, height: 320 },
+				onSelect : function(file) {
+					this.modelSpinner.spinning = true;
+					this.controller.modelChanged(this.modelSpinner);
+					this.controller.get("spinnerId").show();
+					_mojowhatsupPlugin.safePluginCall( function() {
+	                   	var cropInfo = {
+    	               		size: 480,
+        	           		scale: file.cropInfo.window.scale * 1.5,
+            	       		x: Math.floor(file.cropInfo.window.suggestedXTop * file.cropInfo.window.scale * 1.5),
+                	   		y: Math.floor(file.cropInfo.window.suggestedYTop * file.cropInfo.window.scale * 1.5)
+                   		};
+                    	_plugin.sendSetPicture(_myJid, file.fullPath, JSON.stringify(cropInfo));   
+					}.bind(this));
+				}.bind(this)
+			};
+			Mojo.FilePicker.pickFile(params, this.controller.stageController);
+			break;
+		case 'view':
+			this.controller.stageController.pushScene("imageview", {
+				path : _appData.cookieData.mypicture
+			});
+			break;
+		case 'delete':
+			this.modelSpinner.spinning = true;
+			this.controller.modelChanged(this.modelSpinner);
+			this.controller.get("spinnerId").show();
+
+			_mojowhatsupPlugin.safePluginCall( function() {
+				_plugin.sendSetPicture(_myJid, "", "");
+			}.bind(this));
+			break;
+	}
+}
+
+PrefsAssistant.prototype.languageHandler = function(event) {
+	_appPrefs.put("language", event.value);
+	try {
+		Mojo.Locale.set(_appPrefs.cookieData.language);
+	} catch(e) {
+		Mojo.Log.error("Error " + Object.toJSON(e));
+	}
+	_appAssistant.controller.getActiveStageController().activeScene().showAlertDialog({
+		title : $L("Notification"),
+		message : $L("It is necessary to restart the application so that this change can take effect"),
+		choices : [{
+			label : $L('Close application'),
+			value : "close",
+			type : 'affirmative'
+		}],
+		preventCancel : true,
+		onChoose : function(value) {
+			_exitApp = true;
+			if (value == 'close') {
+				if (_dashboardStageController)
+					_appAssistant.controller.closeStage(_notificationStage);
+				if (_mainStageController)
+					_appAssistant.controller.closeStage(_mainStage);
+			}
+		}
+	});
+
+}
+
+PrefsAssistant.prototype.phoneTypeHandler = function(event) {
+	_appPrefs.put("phoneTypes", String(event.value));
+}
+
+PrefsAssistant.prototype.imageSizeHandler = function(event) {
+	_appPrefs.put("imageResolution", Number(event.value));
 }
 
 PrefsAssistant.prototype.chatTextSizeHandler = function(event) {
-	_appPrefs.put("chatTextSize", Number(event.value));	
+	_appPrefs.put("chatTextSize", Number(event.value));
 }
 
 PrefsAssistant.prototype.deactivate = function(event) {
@@ -189,7 +438,6 @@ PrefsAssistant.prototype.deactivate = function(event) {
 		_openChatAssistant.refreshList();
 	}
 }
-
 
 PrefsAssistant.prototype.personTonePathTapHandler = function(event) {
 	Mojo.FilePicker.pickFile({
@@ -280,6 +528,9 @@ PrefsAssistant.prototype.groupBlinkHandler = function(event) {
 }
 
 PrefsAssistant.prototype.cleanup = function() {
+	_prefsAssistant = null;
+
+	this.controller.stopListening('language', Mojo.Event.propertyChanged, this.languageHandler);
 	this.controller.stopListening('personSoundSelector', Mojo.Event.propertyChanged, this.personSoundHandler);
 	this.controller.stopListening('personVibrateToggle', Mojo.Event.propertyChanged, this.personVibrateHandler);
 	this.controller.stopListening('groupSoundSelector', Mojo.Event.propertyChanged, this.groupSoundHandler);
@@ -292,5 +543,8 @@ PrefsAssistant.prototype.cleanup = function() {
 	this.controller.stopListening('bgTimeoutSelector', Mojo.Event.propertyChanged, this.bgTimeoutHandler);
 	this.controller.stopListening('personTonePathRow', Mojo.Event.tap, this.personTonePathTapHandler);
 	this.controller.stopListening('groupTonePathRow', Mojo.Event.tap, this.groupTonePathTapHandler);
-	this.controller.stopListening('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler);	
+	this.controller.stopListening('chatTextSize', Mojo.Event.propertyChanged, this.chatTextSizeHandler);
+	this.controller.stopListening('imageSize', Mojo.Event.propertyChanged, this.imageSizeHandler);
+	this.controller.stopListening('phoneType', Mojo.Event.propertyChanged, this.phoneTypeHandler);
+	this.controller.stopListening("profileImage", Mojo.Event.tap, this.profileImageHandler);
 }

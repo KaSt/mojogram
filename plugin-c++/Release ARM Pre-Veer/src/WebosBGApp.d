@@ -32,10 +32,25 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  ../src/MySocketConnection.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL_net.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h \
- ../src/ByteArray.h ../src/BinTreeNodeWriter.h ../src/utilities.h \
- C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
- C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ ../src/ByteArray.h ../src/BinTreeNodeWriter.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h \
+ ../src/utilities.h \
+ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h \
  ../src/ChatState.h ../src/Account.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curl.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/curl/curlver.h \
@@ -54,7 +69,11 @@ src/WebosBGApp.d: ../src/WebosBGApp.cpp ../src/WebosBGApp.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_Purchase.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_Sensors.h \
  C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h \
- ../src/ApplicationData.h ../src/cJSON.h ../src/fastevents.h
+ ../src/ApplicationData.h ../src/cJSON.h ../src/fastevents.h \
+ ../src/base64.h ../src/JpegImageResizer.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jconfig.h \
+ C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jmorecfg.h
 
 ../src/WebosBGApp.h:
 
@@ -138,13 +157,41 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include\SDL/SDL.h:
 
 ../src/BinTreeNodeWriter.h:
 
-../src/utilities.h:
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/rc4.h:
 
-C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/hmac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/evp.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/ossl_typ.h:
 
 C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/e_os2.h:
 
-C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslconf.h:
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/symhacks.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bio.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/crypto.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/stack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/safestack.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/opensslv.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/objects.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/obj_mac.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/asn1.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/bn.h:
+
+../src/utilities.h:
+
+C:\Archivos\ de\ programa\HP\ webOS\PDK\include/openssl/md5.h:
 
 ../src/ChatState.h:
 
@@ -189,3 +236,13 @@ C:\Archivos\ de\ programa\HP\ webOS\PDK\include/PDL_deprecated.h:
 ../src/cJSON.h:
 
 ../src/fastevents.h:
+
+../src/base64.h:
+
+../src/JpegImageResizer.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jpeglib.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jconfig.h:
+
+C:\Documents\ and\ Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include/jmorecfg.h:

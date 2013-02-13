@@ -1,4 +1,13 @@
-[	{ 
+[	
+	{
+		"source": "app/assistants/password-dialog-assistant.js"
+	}, {
+		"source": "app/models/updater.js"
+	}, { 
+		"source": "app/models/status.js"
+	}, { 
+		"source": "app/models/phonenumber.js"
+	}, { 
 		"source": "app/models/pnglib.js"
 	}, {  
 		"source": "app/models/utilities.js"
@@ -67,5 +76,17 @@
     }, {
     	"scenes": "changelog",
     	"source": "app/assistants/changelog-assistant.js"
+    }, {
+    	"scenes": "help",
+    	"source": "app/assistants/help-assistant.js"
+    }, {
+    	"scenes": "update",
+    	"source": "app/assistants/update-assistant.js"
+    }, {
+    	"scenes": "mystatus",
+    	"source": "app/assistants/mystatus-assistant.js"
+    }, {
+    	"scenes": "group-chooser",
+    	"source": "app/assistants/group-chooser-assistant.js"
     }
 ]

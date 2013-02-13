@@ -160,7 +160,7 @@ LoginAssistant.prototype.waitLoginResult = function(data) {
 			this.controller.stageController.swapScene("main");
 		} else {
 			var window = this.controller.stageController.activeScene().window;
-			Mojo.Controller.errorDialog($L("Login failed"), window);
+			Mojo.Controller.errorDialog($L("Login failure"), window);
 		}
 
 		// the awesome code is finished doing awesome things, so stop the spinner

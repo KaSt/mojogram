@@ -1,4 +1,4 @@
-{
+	{
 	"Login":                                                                                          "Login",
 	"Account settings":                                                                               "Configurazione account",
 	"Country code" :                                                                                  "Codice della nazione",
@@ -131,4 +131,86 @@
 	"Discussion Forums":                                                                              "Forum di discussione",
 	"Change Log":                                                                                     "Lista dei cambiamenti",
 	"Back":                                                                                           "Indietro",
+
+	"Messages text font": "Font dei messaggi",
+	"Size": "Grandezza",
+
+	"Send e-mail": "Invia un email",
+	"Help & Support": "Aiuto & Supporto",
+	
+	"Reduce image before sending": "Riduci immagine prima di inviarla",
+	"No reduce": "Non ridurre",
+	"Phone type": "Tipo di contatti",
+	"All phone types": "Tutti",
+	"Only mobile": "Solo cellulare",
+	"Mobile and work": "Cellulare e Ufficio",
+	
+	"Language": "Linguaggio",
+	"English": "Inglese",
+	"Spanish": "Spagnolo",
+	"French": "Francese",
+	"Italian": "Italiano",
+	"Dutch": "Olandese",
+	"German": "Tedesco",
+	"Chinese (Simplified)": "Cinese (Semplificato)",
+	"Chinese (Traditional)": "Cinese (Tradizionale)",
+	"Chinese (Hong Kong)": "Cinese (Hong Kong)",
+	"Notification": "Avviso",
+	"It is necessary to restart the application so that this change can take effect": "E' necessario riavviare l'applicazione affinchè le modifiche abbiano effetto",
+
+	"Check for updates": "Cerca aggiornamenti",
+	"#{appName} is up to date": "#{appName} è aggiornata",
+	"New version": "Nuova versione",
+	"Russian": "Russo",
+	"Changes": "Cambiamenti",
+	"Update available": "Aggiornamento disponibile",
+	
+	"My status": "Mio stato",
+	"Select your status": "Seleziona il tuo stato",
+	"Your current status": "Stato attuale",
+	"Empty status. Please enter your status.": "Stato vuoto. Per favore introduci il tuo stato",
+	"Status cannot be changed. Try again.": "Lo stato non puo' essere cambiato. Riprova",
+	"Empty subject. Please insert a subject for the group": "Tema vuoto. Per favore inserisci un tema per questo gruppo",
+	"Available": "Disponibile",
+	"Busy": "Occupato",
+	"At school": "A scuola",
+	"At the movies": "Al cinema",
+	"At work": "Al lavoro",
+	"Battery about to die": "Batteria scarica",
+	"In a meeting": "In riunione",
+	"At the gym": "In palestra",
+	"Sleeping": "Dormendo",
+	"Custom": "Personalizzato",
+	
+	"#{id} updated the group picture": "#{id} ha aggiornato l'immagine del gruppo",
+	"#{id} deleted the group picture": "#{id} ha eliminato l'immagine del gruppo",
+	"Change": "Cambia",
+	"View": "Guarda",
+	"Delete": "Cancella",
+	"Profile picture": "Immagine del profilo",
+	"View profile picture": "Guarda l'immagine del profilo",	
+	"This contact does not have a profile picture": "Questo contatto non ha un'immagine per il suo profilo",
+	
+	"Get voice code": "Richiedi il codice vocale",
+	
+	"Delete account": "Elimina Account",
+	"Account can not be deleted": "L'Account non puo' essere cancellato",
+	"Account deleted successfully.": "L'Account è stato cancellato con successo",	
+	"Deleting your account will:\n - Delete your Whatsapp account\n - Erase your message history.\n - Delete you from groups.\nContinue?": "Sei sicuro di voler cancellare l'account:\n - Di cancellare il tuo WhatsApp account\n - Di cancellare la cronologia dei tuoi messaggi.\n - Di cancellare i tuoi gruppi.\nContinuare?",
+	"Forward to group": "Inoltra al gruppo",
+	"Forward to contact": "Inoltra al contatto",
+	"Select a group": "Seleziona un gruppo",
+	
+	"Purchase subscription": "Compra l'abbonamento",
+	"Invalid password. Please, check your account settings.": "Password errata. Per favore, controlla le impostazioni del tuo account",
+	"Your account expired on #{date}. You can purchase one year subscription.": "Il tuo account è scaduto il  #{date}. Puoi comprare un anno di abbonamento e rinnovare il tuo account",
+	"Go to account settings": "Vai alle impostazioni dell'account",
+	"Account expiration date": "Data di scadenza dell'account",
+	
+	"Mute": "Silenzio",
+	"week": "Settimana",
+	"Muted": "Silenzioso",
+	"Unmute": "Rimuovi Silenzioso",
+	"Code": "Codice"
+	
 }

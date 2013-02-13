@@ -60,7 +60,8 @@ int main(int argc, char** argv) {
 //		delete socket;
 //		delete con;
 
-		ApplicationData::setData("34620136534", "Antonio", "35582304009938003"); //"35582304009938003");
+		ApplicationData::setData("34620136534", "Antonio", "iesme3"); //"35582304009938003");
+
 		TestBGApp* app = new TestBGApp();
 		BGApp::setInstance(app);
 		app->_isNetworkConnected = true;

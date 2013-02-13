@@ -37,6 +37,7 @@ public:
 	unsigned char read();
 	void flush();
 	void write(const std::vector<unsigned char>& b, int length);
+	void write(const std::vector<unsigned char>& bytes, int offset, int length);
 	int read(std::vector<unsigned char>& b, int off, int length);
 	void makeNonBlock();
 	int waitForRead();

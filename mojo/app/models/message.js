@@ -21,6 +21,8 @@ Message.STATUS_MEDIA_UPLOADING = 13;
 Message.STATUS_USER_ADDED = 191;
 Message.STATUS_USER_REMOVED = 192;
 Message.STATUS_SUBJECT_CHANGED = 193;
+Message.STATUS_PICTURE_CHANGED_SET = 194;
+Message.STATUS_PICTURE_CHANGED_DELETE = 195;
 
 function Message(remote_jid, data) {
 	this.remote_jid = null;
@@ -29,6 +31,7 @@ function Message(remote_jid, data) {
 	this.status = null;
 	this.data = null;
 	this.timestamp = null;
+	
 	this.media_wa_type = Message.WA_TYPE_UNDEFINED;
 	this.remote_resource = null;
 	this.notifyname = null;
@@ -57,6 +60,8 @@ function Message(remote_jid, data) {
 		// in seconds. Method processMessages() in plugin.js converts it into milliseconds.
 	}
 }
+
+
 
 Message.fromJSONString = function(messageString) {
 	var msgJson = Mojo.parseJSON(messageString);
@@ -102,6 +107,24 @@ Message.removeDomainFromJid = function(jid) {
 	return jid.replace(/@s\.whatsapp\.net/g, "");
 }
 
+Message.prototype.cloneToSend = function(jid) {
+	var msg = new Message(jid, this.data);
+	msg.media_wa_type = this.media_wa_type;
+	msg.remote_resource = this.remote_resource;
+	msg.media_url = this.media_url;
+	msg.media_name = this.media_name;
+	msg.media_size = this.media_size;
+	msg.media_duration_seconds = this.media_duration_seconds;
+	msg.longitude = this.longitude;
+	msg.latitude = this.latitude;
+	if (!this.from_me && this.downloadedFile) {
+		msg.downloadedFile = Media.MOJOWHATSUP_MEDIA_DIR + this.downloadedFile;	
+	} else {
+		msg.downloadedFile = this.downloadedFile;
+	}
+	return msg;
+}
+
 Message.prototype.keyString = function() {
 	return this.remote_jid + "-" + this.from_me + "-" + this.keyId;
 }
@@ -134,10 +157,13 @@ Message.prototype.previewImage = function() {
 	switch (this.media_wa_type) {
 		case Message.WA_TYPE_IMAGE:
 			if (this.data != null && this.data != "") {
-				return '<div class="preview-image image-custom" style="background-image:url(data:image/png;base64,' + this.data + ')"></div>';
+				return '<div class="preview-image image-custom" style="background-image:url(data:image/jpeg;base64,' + this.data + ')"></div>';
 			} else if (this.downloadedFile != null && this.downloadedFile != undefined) {
 				var imageFile = (this.from_me ? '' : Media.MOJOWHATSUP_MEDIA_DIR) + this.downloadedFile;
-				return '<div class="preview-image image-custom" style="background-image:url(/var/luna/data/extractfs' + encodeURIComponent(imageFile) + ':0:0:80:64:3)"></div>';
+				var imgSize = "80:64";
+				if (_appAssistant.isPre3())
+					imgSize = "120:96"; 
+				return '<div class="preview-image image-custom" style="background-image:url(/var/luna/data/extractfs' + encodeURIComponent(imageFile) + ':0:0:' + imgSize + ':3)"></div>';
 			} else {
 				return '<div class="preview-image image-default"></div>';
 			}
@@ -146,7 +172,11 @@ Message.prototype.previewImage = function() {
 			return '<div class="preview-image audio-default"></div>';
 			break;
 		case Message.WA_TYPE_VIDEO:
-			return '<div class="preview-image video-default"></div>';
+			if (this.data != null && this.data != "") {
+				return '<div class="preview-image image-custom" style="background-image:url(data:image/jpeg;base64,' + this.data + ')"></div>';
+			} else {
+				return '<div class="preview-image video-default"></div>';
+			}
 			break;
 		case Message.WA_TYPE_LOCATION:
 			return '<div class="preview-image location-default"></div>';
@@ -173,6 +203,12 @@ Message.prototype.formatTextMessage = function(newlinefyBool, emojifyBool, emoji
 			case Message.STATUS_SUBJECT_CHANGED:
 			    var subject = this.data;
 			    return emojify($L("#{id} has changed the group subject by '#{subject}'").interpolate({id: id, subject: subject}), 16);		
+				break;
+			case Message.STATUS_PICTURE_CHANGED_SET:
+				return $L("#{id} updated the group picture").interpolate({id: id});
+				break;
+			case Message.STATUS_PICTURE_CHANGED_DELETE:
+				return $L("#{id} deleted the group picture").interpolate({id: id});
 				break;
 		}
 	} else if (this.media_wa_type == Message.WA_TYPE_UNDEFINED) {
@@ -230,6 +266,15 @@ Message.prototype.statusIconStyle = function() {
 Message.prototype.isNotification = function() {
 	return (this.status == Message.STATUS_USER_ADDED 
 	    || this.status == Message.STATUS_USER_REMOVED
-	    || this.status == Message.STATUS_SUBJECT_CHANGED);
+	    || this.status == Message.STATUS_SUBJECT_CHANGED
+	    || this.status == Message.STATUS_PICTURE_CHANGED_SET
+	    || this.status == Message.STATUS_PICTURE_CHANGED_DELETE);
+}
+
+Message.prototype.isForwardable = function() {
+	return 	!this.isNotification() && 
+			!(this.status == Message.STATUS_MEDIA_DOWNLOADING || 
+				this.status == Message.STATUS_MEDIA_UPLOADING || 
+				this.status == Message.STATUS_MEDIA_UPLOADERROR);
 }
 

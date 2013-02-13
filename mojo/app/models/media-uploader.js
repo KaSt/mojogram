@@ -19,30 +19,10 @@ MediaUploader.prototype.requestUpload = function(file) {
 	this.uploading = true;
 	this.msg.status = Message.STATUS_MEDIA_UPLOADING;
 	_appDB.updateMessageStatus(this.msg);
-
+	
 	_mojowhatsupPlugin.safePluginCall( function() {
-		_plugin.sendUploadRequest(this.msg.keyString(), file, Media.getMimeType(this.msg, Media.getExt(file)));
+		_plugin.sendUploadRequest(this.msg.keyString(), file, Media.getMimeType(this.msg, Media.getExt(file)), this.msg.media_wa_type, _appPrefs.cookieData.imageResolution);
 	}.bind(this));
-
-	//
-	// this.controller.serviceRequest('palm://com.palm.downloadmanager/', {
-	// method : "upload",
-	// parameters : {
-	// "fileName" : file,
-	// "fileLabel" : "file",
-	// "url" : MediaUploader.ACCOUNT_URL_UPLOADREQUEST,
-	// "contentType" : Media.getMimeType(this.msg, Media.getExt(file)),
-	// "postParameters" : [
-	// // {key:"name" , data: "file"},
-	// // {"key":"password" , "data": "kd9o$#Pk"},
-	// // {key: "User-Agent", data: "WhatsApp/2.7.7811 Android/4.0.3 Device/unknown-sdk"},
-	// ],
-	// "customHttpHeaders" : ["Expect: "],
-	// "subscribe" : true
-	// },
-	// onSuccess : this.uploadSuccess.bind(this),
-	// onFailure : this.uploadFailure.bind(this)
-	// });
 }
 
 MediaUploader.prototype.uploadSuccess = function(response) {
@@ -67,6 +47,7 @@ MediaUploader.prototype.uploadSuccess = function(response) {
 
 		if (this.msg.media_url != null) {
 			this.msg.status = Message.STATUS_UNSENT;
+			this.msg.timestamp = new Date().getTime();
 			Mojo.Log.error("%j", this.msg.downloadedFile);
 
 			_appDB.updateMediaMessage(this.msg, function() {
