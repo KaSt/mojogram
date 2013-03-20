@@ -1,11 +1,9 @@
 {
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-                "Fixed fail-old-version problem",
-                "New improved chat header",
-                "Updated italian and chinese translations",
-                "NOTE: due to a Whatsapp change, contacts status are not updated"
+                "Show all availabe profile pictures in contacts list",
+                "Fixed update contacts status"
 	],
-	"message": "Fixes fail-old-version problem during registration"
+	"message": "Fixes update contacts status"
 }
