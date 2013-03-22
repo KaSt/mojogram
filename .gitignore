@@ -21,4 +21,5 @@ Release ARM Pixi
 Debug Emulator
 Debug ARM Pre-Veer
 Debug
+*.bak
 	
