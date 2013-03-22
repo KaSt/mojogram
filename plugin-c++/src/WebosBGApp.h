@@ -100,6 +100,7 @@ public:
 	static PDL_bool sendDeleteAccount(PDL_JSParameters *params);
 	static PDL_bool sendClientConfig(PDL_JSParameters *params);
 	static PDL_bool sendExistRequest(PDL_JSParameters *params);
+	static PDL_bool getAuthorizationString(PDL_JSParameters *params);
 
 	static void processUserEvent(const SDL_Event& event);
 

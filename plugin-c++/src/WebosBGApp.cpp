@@ -817,6 +817,20 @@ PDL_bool WebosBGApp::sendClientConfig(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
+PDL_bool WebosBGApp::getAuthorizationString(PDL_JSParameters *params) {
+	_LOGDATA("Called getAuthorizationString");
+
+	std::string user(PDL_GetJSParamString(params, 0));
+	std::string password(PDL_GetJSParamString(params, 1));
+	std::string nonce(PDL_GetJSParamString(params, 2));
+	std::string auth = "";
+
+	auth = WALogin::getAuthoritationString(user, password, nonce);
+
+	PDL_JSReply(params, auth.c_str());
+	return PDL_TRUE;
+}
+
 int WebosBGApp::registerJSCallBacks() {
 	int ret = 0;
 	ret += PDL_RegisterJSHandler("testLogin", pluginTestLogin);
@@ -852,6 +866,7 @@ int WebosBGApp::registerJSCallBacks() {
 	ret += PDL_RegisterJSHandler("sendClientConfig", sendClientConfig);
 	ret += PDL_RegisterJSHandler("processPassword", processPassword);
 	ret += PDL_RegisterJSHandler("sendExistRequest", sendExistRequest);
+	ret += PDL_RegisterJSHandler("getAuthorizationString", getAuthorizationString);
 	return ret;
 }
 
@@ -1764,4 +1779,5 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 
 	SDL_mutexV(WebosBGApp::staticMutex);
 }
+
 

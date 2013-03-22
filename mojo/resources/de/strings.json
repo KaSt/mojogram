@@ -162,6 +162,22 @@
 	"#{appName} is up to date": "#{appName} ist auf dem neusten Stand",
 	"New version": "Neue Version",
 	"Russian": "Russisch",
-	"Update available": "Update verfügbar"
+	"Update available": "Update verfügbar",
+	"My status": "Mein Status",
+	"Select your status": "Wähle deinen Status",
+	"Your current status": "Dein aktueller Status",
+	"Available": "Verfügbar",
+	"Busy": "Beschäftigt",
+	"At the movies": "Im Kino",
+	"Change": "Ändern",
+	"View": "Ansehen",
+	"Delete": "Löschen",
+	"Profile picture": "Profilbild",
+	"View profile picture": "Profilbild ansehen",
+	"": "",
+	
+	
+	
+	
 }
 	

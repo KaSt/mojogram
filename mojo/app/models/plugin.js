@@ -271,6 +271,8 @@ MojowhatsupPluginModel.prototype.onSendGetPicture = function(jid, picturePath, i
 				_appDB.updateChatPicture(chat.jid, id, picturePath, function() {
 					this.updatePicture(jid, picturePath);
 				}.bind(this));
+			} else {
+			    this.updatePicture(jid, picturePath);
 			}
 			setTimeout(this.processPictureIdsQueue.bind(this), 1);
 		}.bind(this));
@@ -350,8 +352,13 @@ MojowhatsupPluginModel.prototype.processPictureIdsQueue = function() {
 				Mojo.Log.error("error plugin onSendGetPictureIds %j", e);
 				setTimeout(this.processPictureIdsQueue.bind(this), 1);
 			}
-		} else {
-			setTimeout(this.processPictureIdsQueue.bind(this), 1);
+		} else if (!chat) {
+            try {
+                _plugin.sendGetPicture(item.jid, "preview", "", item.id);
+            } catch (e) {
+                Mojo.Log.error("error plugin onSendGetPictureIds %j", e);
+                setTimeout(this.processPictureIdsQueue.bind(this), 1);
+            }
 		}
 	}.bind(this));
 }

@@ -6,6 +6,7 @@
  */
 
 #include "Account.h"
+#include "WALogin.h"
 #include <PDL.h>
 #include <algorithm>
 #include "utilities.h"
@@ -317,6 +318,52 @@ std::string Account::existsV2(const std::string& cc,
 
 	return response;
 }
+
+std::string Account::waSyncAuth(const std::string& username, const std::string& password) {
+
+	CURLcode res;
+	struct MemoryStruct chunk;
+	chunk.memory = (char*) malloc(1);
+	chunk.size = 0;
+
+	struct curl_slist *headers = NULL;
+
+	std::string authString("Authorization:");
+	authString += WALogin::getAuthoritationString(username, password, "0");
+	_LOGDATA("Auth string %s", authString.c_str());
+	headers = curl_slist_append(headers, authString.c_str());
+	headers = curl_slist_append(headers, "Accept:text/json");
+	headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
+
+
+	curl_easy_setopt(this->urlManager, CURLOPT_URL, SYNC_URL_AUTH);
+	curl_easy_setopt(this->urlManager, CURLOPT_PORT, 443);
+	// curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
+	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
+	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT_REGISTRATION);
+	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
+	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
+			WriteMemoryCallback);
+	curl_easy_setopt(this->urlManager, CURLOPT_WRITEDATA, (void *)&chunk);
+
+	_LOGDATA("curl opts set");
+	res = curl_easy_perform(this->urlManager);
+	_LOGDATA("curl res %d", res);
+	if (res != CURLE_OK) {
+		return "error";
+	}
+
+	_LOGDATA("curl result %s, size %d", chunk.memory, chunk.size);
+
+	std::string response(chunk.memory);
+
+	curl_slist_free_all(headers);
+	if (chunk.memory)
+		free(chunk.memory);
+
+	return response;
+}
+
 
 void Account::addParam(const std::string& name, const std::string& value) {
 	this->params.push_back(name);

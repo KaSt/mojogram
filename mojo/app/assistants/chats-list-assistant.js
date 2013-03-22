@@ -246,8 +246,8 @@ ChatsListAssistant.prototype.activate = function(event) {
     /* put in event handlers here that should only be in effect when this scene is active. For
      example, key handlers that are observing the document */
 
-    if (this.listElement.mojo.getLength() == 0)
-        this.controller.stageController.popScene();
+    // if (this.listElement.mojo.getLength() == 0)
+        // this.controller.stageController.popScene();
 }
 
 ChatsListAssistant.prototype.deactivate = function(event) {

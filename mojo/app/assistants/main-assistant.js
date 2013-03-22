@@ -1,3 +1,4 @@
+
 function MainAssistant() {
     /* this is the creator function for your scene assistant object. It will be passed all the
      additional parameters (after the scene name) that were passed to pushScene. The reference
@@ -165,7 +166,9 @@ MainAssistant.prototype.restart = function() {
 MainAssistant.prototype.requestStatus = function() {
     if (_contactsImported) {
         _statusRequest = new StatusRequest();
-        _statusRequest.start();
+        _statusRequest.getMyStatus();
+        _statusRequest = new StatusRequest();
+        _statusRequest.sync();
     } else {
         setTimeout(this.requestStatus.bind(this), 10);
     }
@@ -273,7 +276,7 @@ MainAssistant.prototype.requestChatPictures = function() {
 		try {
 			_plugin.sendGetPictureIds(JSON.stringify(jidList));
 		} catch (e) {
-			Mojo.Log.error("error updateChats: %j", e);
+			Mojo.Log.error("error requestChatPictures: %j", e);
 		}
 	}.bind(this));
 }

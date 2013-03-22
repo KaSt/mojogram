@@ -1002,9 +1002,6 @@ var emoji_unicode_to_apple = [{
     unicode : "23EA",
     apple : "E23D"
 }, {
-    unicode : "1F52E",
-    apple : "E23E"
-}, {
     unicode : "2648",
     apple : "E23F"
 }, {

@@ -1,6 +1,13 @@
 function ChangelogAssistant() {
 	this.changelog = [
         {
+            version: "v1.5.2",
+            changes: [
+                "Show all availabe profile pictures in contacts list",
+                "Fixed update contacts status"
+            ]               
+        },  	
+        {
             version: "v1.5.1",
             changes: [
                 "Fixed fail-old-version problem",

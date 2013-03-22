@@ -143,7 +143,6 @@ int64_t randLong() {
 
 	for (int i = 0; i < 7 ; i++)
 		r = (r << 8) + ((char) (std::rand() % 256));
-
 	return r;
 }
 

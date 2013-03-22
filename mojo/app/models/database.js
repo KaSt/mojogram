@@ -34,6 +34,7 @@ AppDatabase.prototype.createTables = function() {
 	var sql11 = "ALTER TABLE 'chats' ADD COLUMN pictureid TEXT";	
 	var sql12 = "ALTER TABLE 'chats' ADD COLUMN picturepath TEXT";
 	var sql13 = "ALTER TABLE 'chats' ADD COLUMN muteexpiry DATETIME";
+	var sql14 = "ALTER TABLE 'contacts' ADD COLUMN iswa BOOLEAN DEFAULT 0";
 	this.appDb.transaction( function(t) {
 		t.executeSql(sql1, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 		t.executeSql(sql2, [], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
@@ -48,6 +49,7 @@ AppDatabase.prototype.createTables = function() {
 		t.executeSql(sql11, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));		
 		t.executeSql(sql12, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 		t.executeSql(sql13, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
+		t.executeSql(sql14, [], this.nullDataHandler.bind(this), this.errorHandlerFalse.bind(this));
 	}.bind(this));
 }
 
@@ -99,7 +101,12 @@ AppDatabase.prototype.impersonate = function(e1) {
 				var name = "";
 				if ('name' in e1.results[i] || 'nickname' in e1.results[i]) {
 					if ('name' in e1.results[i])
-						name = (e1.results[i].name.givenName ? e1.results[i].name.givenName : "") + (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "");
+						name = 
+						  (e1.results[i].name.honorificPrefix ? e1.results[i].name.honorificPrefix : "") +  
+						  (e1.results[i].name.givenName ? " " + e1.results[i].name.givenName : "") + 
+						  (e1.results[i].name.middleName ? " " + e1.results[i].name.middleName : "") + 
+						  (e1.results[i].name.familyName ? " " + e1.results[i].name.familyName : "") +
+						  (e1.results[i].name.honorificSuffix ? " " + e1.results[i].name.honorificSuffix : "");
 					name = name.replace(/^\s+/, "").replace(/\s+$/, "");
 					var nickname = ("nickname" in e1.results[i] ? e1.results[i].nickname : "");
 					if (name == "")
@@ -205,16 +212,18 @@ AppDatabase.prototype.updateContacts = function(contacts) {
 
 AppDatabase.prototype.updateContact = function(contact) {
 	Mojo.Log.info("Update Contact = " + JSON.stringify(contact));
-	var sql = "UPDATE contacts SET name=?, mobilePhone=?,favourite=?,cc = ? WHERE jid = ?";
+	var sql = "UPDATE contacts SET name=?, mobilePhone=?,favourite=?,cc = ?,iswa = ? WHERE jid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [contact.name, contact.mobilePhone, (contact.favourite ? 1 : 0), contact.cc, contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql, [contact.name, contact.mobilePhone, (contact.favourite ? 1 : 0), contact.cc, (contact.iswa? 1 : 0), contact.jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
-AppDatabase.prototype.updateContactStatus = function(jid, status) {
-	var sql = "UPDATE contacts SET status = ? WHERE jid = ?";
+AppDatabase.prototype.updateContactStatus = function(jid, status, iswa) {
+    if (!iswa)
+        iswa = false;
+	var sql = "UPDATE contacts SET status = ?, iswa = ? WHERE jid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql, [status, jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
+		t.executeSql(sql, [status, (iswa ? 1 : 0), jid], this.nullDataHandler.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
 
@@ -230,7 +239,8 @@ AppDatabase.prototype.findContact = function(jid, callback) {
 					favourite : (r.rows.item(0).favourite == 0 ? false : true),
 					jid : r.rows.item(0).jid,
 					cc : r.rows.item(0).cc,
-					status : r.rows.item(0).status
+					status : r.rows.item(0).status,
+					iswa: (r.rows.item(0).iswa == 0? false : true)
 				};
 			}
 			callback(contact);
@@ -252,7 +262,8 @@ AppDatabase.prototype.getAllContacts = function(callback) {
 					"favourite" : (r.rows.item(i).favourite == 1 ? true : false),
 					"cc" : (r.rows.item(i).cc),
 					"status" : (r.rows.item(i).status),
-					"picturepath" : (r.rows.item(i).picturepath)
+					"picturepath" : (r.rows.item(i).picturepath),
+					"iswa": (r.rows.item(i).iswa == 1? true: false)
 				};
 				contacts.push(contact);
 			}
@@ -273,7 +284,8 @@ AppDatabase.prototype.getAllContactsByCc = function(callback) {
 					"jid" : r.rows.item(i).jid,
 					"favourite" : (r.rows.item(i).favourite == 1 ? true : false),
 					"cc" : (r.rows.item(i).cc),
-					"status" : (r.rows.item(i).status)
+					"status" : (r.rows.item(i).status),
+					"iswa": (r.rows.item(i).iswa == 1? true: false)
 				};
 				contacts.push(contact);
 			}
@@ -697,4 +709,5 @@ AppDatabase.prototype.errorHandlerFalse = function(transaction, error) {
 AppDatabase.prototype.nullDataHandler = function(transaction, results) {
 
 }
+
 

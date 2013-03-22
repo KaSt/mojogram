@@ -30,6 +30,9 @@ struct MemoryStruct {
 #define ACCOUNT_URL_REGISTERREQUESTV2 "https://v.whatsapp.net/v2/register"
 #define ACCOUNT_URL_UPLOADREQUEST "https://mms.whatsapp.net/client/iphone/upload.php"
 #define ACCOUNT_URL_EXISTSV2 "https://v.whatsapp.net/v2/exist"
+#define SYNC_URL_AUTH "https://sro.whatsapp.net/v2/sync/a"
+#define SYNC_URL_QUERY "https://sro.whatsapp.net/v2/sync/q"
+
 
 // WhatsApp 2.8.0 WP7
 //#define ACCOUNT_USER_AGENT "WhatsApp/2.8.0 WP7/7.50 Device/Nokia-Lumia_900-1.0"
@@ -72,6 +75,7 @@ public:
 	std::string waRegisterRequest(const std::string& cc, const std::string& in, const std::string& udid, const std::string& code);
 	std::string waRegisterRequestV2(const std::string& cc, const std::string& in, const std::string& idx, const std::string& code);
 	std::string existsV2(const std::string& cc, const std::string& in, const std::string& idx);
+	std::string waSyncAuth(const std::string& username, const std::string& password);
 	void waRegisterRequest();
 };
 

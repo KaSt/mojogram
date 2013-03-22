@@ -64,6 +64,16 @@ ContactListAssistant.prototype.setup = function() {
 		dividerFunction : this.firstLetter,
 		delay : 250,
 		filterFunction : this.filterList.bind(this),
+		onItemRendered: function(listWidget, itemModel, itemNode) {
+		  try {
+		      if (itemModel.iswa && !itemModel.rendered) {
+                _plugin.sendGetPictureIds(JSON.stringify([itemModel.jid]));
+                itemModel.rendered = true;
+              }
+          } catch (e) {
+                Mojo.Log.error("error onItemRendered: %j", e);
+          }  
+		},
 		formatters : {
 			status : function(value, model) {
 				if (value)
@@ -95,6 +105,7 @@ ContactListAssistant.prototype.setup = function() {
 
 
 ContactListAssistant.prototype.updateContactPicture = function(jid, picturepath) {
+    Mojo.Log.info("Update Contact Picture called");
 	for (var i = 0; i < this.listModel.items.length; i++) {
 		if (this.listModel.items[i].jid == jid) {
 			this.listModel.items[i].picturepath = picturepath;

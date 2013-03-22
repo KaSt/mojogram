@@ -69,6 +69,7 @@ public:
 	std::vector<unsigned char>* login(const std::vector<unsigned char>& blobLength);
 	BinTreeNodeReader *getTreeNodeReader();
 	BinTreeNodeWriter *getTreeNodeWriter();
+	static std::string getAuthoritationString(const std::string& user, const std::string& password, const std::string& nonce);
 	virtual ~WALogin();
 };
 
