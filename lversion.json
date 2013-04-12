@@ -1,9 +1,12 @@
 {
-	"version": "1.5.2",
+	"version": "1.5.3",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-                "Show all availabe profile pictures in contacts list",
-                "Fixed update contacts status"
+		"Fixed media upload problem",	
+                "Delete gesture in chats list only delete the chat from the list",
+                "Added menu item 'delete all messages from chat' in chat view",
+                "Added menu item 'delete all messages from all chats' in chats list view"
+            ]               
 	],
-	"message": "Fixes update contacts status"
+	"message": "Fixed media upload problem"
 }
