@@ -1,11 +1,8 @@
 {
-	"version": "1.5.3",
+	"version": "1.5.4",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Fixed media upload problem",	
-                "Delete gesture in chats list only delete the chat from the list",
-                "Added menu item 'delete all messages from chat' in chat view",
-                "Added menu item 'delete all messages from all chats' in chats list view"            
+		"Fixed last registration problem (fail-old-version)"
 	],
-	"message": "Fixed media upload problem"
+	"message": "Fixed last registration problem (fail-old-version)"
 }
