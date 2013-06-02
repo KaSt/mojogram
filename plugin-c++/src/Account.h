@@ -21,14 +21,13 @@ struct MemoryStruct {
 };
 
 
-#define WHATSAPP_LOGIN_SERVER "c.whatsapp.net"
-#define ACCOUNT_USER_AGENT "WhatsApp/2.8.3 iPhone_OS/5.0.1 Device/Unknown_(iPhone4,1)"
+#define WHATSAPP_LOGIN_SERVER "c2.whatsapp.net"
 
 #define ACCOUNT_URL_CODEREQUEST "https://r.whatsapp.net/v1/code.php"
 #define ACCOUNT_URL_CODEREQUESTV2 "https://v.whatsapp.net/v2/code"
 #define ACCOUNT_URL_REGISTERREQUEST "https://r.whatsapp.net/v1/register.php"
 #define ACCOUNT_URL_REGISTERREQUESTV2 "https://v.whatsapp.net/v2/register"
-#define ACCOUNT_URL_UPLOADREQUEST "https://mms.whatsapp.net/client/iphone/upload.php"
+// #define ACCOUNT_URL_UPLOADREQUEST "https://mms.whatsapp.net/client/iphone/upload.php"
 #define ACCOUNT_URL_EXISTSV2 "https://v.whatsapp.net/v2/exist"
 #define SYNC_URL_AUTH "https://sro.whatsapp.net/v2/sync/a"
 #define SYNC_URL_QUERY "https://sro.whatsapp.net/v2/sync/q"
@@ -46,10 +45,20 @@ struct MemoryStruct {
 //#define ACCOUNT_TOKEN_PREFIX2 "889d4f44e479e6c38b4a834c6d8417815f999abe"
 
 // WhatsApp Nokia 302 S40
-#define ACCOUNT_RESOURCE  "S40-2.3.53"
-#define ACCOUNT_USER_AGENT_REGISTRATION "WhatsApp/2.3.53 S40Version/14.26 Device/Nokia302"
+// #define ACCOUNT_RESOURCE  "S40-2.4.7"
+// #define ACCOUNT_USER_AGENT_REGISTRATION "WhatsApp/2.3.53 S40Version/14.26 Device/Nokia302"
+// #define ACCOUNT_TOKEN_PREFIX1 "PdA2DJyKoUrwLw1Bg6EIhzh502dF9noR9uFCllGk"
+// #define ACCOUNT_TOKEN_PREFIX2 "1354754753509"
+
+// #define ACCOUNT_RESOURCE  "S40-2.4.7"
+// #define ACCOUNT_USER_AGENT "WhatsApp/2.4.7 S40Version/14.26 Device/Nokia302"
+// #define ACCOUNT_TOKEN_PREFIX1 "PdA2DJyKoUrwLw1Bg6EIhzh502dF9noR9uFCllGk"
+// #define ACCOUNT_TOKEN_PREFIX2 "1359594496554"
+
+#define ACCOUNT_RESOURCE  "S40-2.4.22"
+#define ACCOUNT_USER_AGENT "WhatsApp/2.4.22 S40Version/14.26 Device/Nokia302"
 #define ACCOUNT_TOKEN_PREFIX1 "PdA2DJyKoUrwLw1Bg6EIhzh502dF9noR9uFCllGk"
-#define ACCOUNT_TOKEN_PREFIX2 "1354754753509"
+#define ACCOUNT_TOKEN_PREFIX2 "1366850357035"
 
 
 #define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL   3
@@ -89,14 +98,17 @@ public:
 	std::string filePath;
 	std::string contentType;
 	std::string msgId;
+	std::string url;
 	bool exit;
 	bool isTempFile;
 	int mediaType;
 	int imageResolution;
+	bool uploading;
 
-	MediaUploader(const std::string& msgId, const std::string& filePath, const std::string& contentType, int mediaType, int imageResolution);
+	MediaUploader(const std::string& msgId, const std::string& filePath, const std::string& url, const std::string& contentType, int mediaType, int imageResolution);
 	~MediaUploader();
 	std::string waUploadFile();
+	std::string getUploadFileName();
 	void removeFile();
 };
 

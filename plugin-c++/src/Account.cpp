@@ -107,7 +107,7 @@ std::string Account::waCodeRequestV2(const std::string& cc,
 
 	curl_easy_setopt(this->urlManager, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT,
-			ACCOUNT_USER_AGENT_REGISTRATION);
+			ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -158,7 +158,7 @@ std::string Account::waCodeRequest(const std::string& cc, const std::string& in,
 	curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT,
-			ACCOUNT_USER_AGENT_REGISTRATION);
+			ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -206,7 +206,7 @@ std::string Account::waRegisterRequestV2(const std::string& cc,
 
 	curl_easy_setopt(this->urlManager, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT,
-			ACCOUNT_USER_AGENT_REGISTRATION);
+			ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -254,7 +254,7 @@ std::string Account::waRegisterRequest(const std::string& cc,
 	curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT,
-			ACCOUNT_USER_AGENT_REGISTRATION);
+			ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEDATA, (void *)&chunk);
@@ -296,7 +296,7 @@ std::string Account::existsV2(const std::string& cc,
 
 	curl_easy_setopt(this->urlManager, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT,
-			ACCOUNT_USER_AGENT_REGISTRATION);
+			ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -340,7 +340,7 @@ std::string Account::waSyncAuth(const std::string& username, const std::string& 
 	curl_easy_setopt(this->urlManager, CURLOPT_PORT, 443);
 	// curl_easy_setopt(this->urlManager, CURLOPT_POSTFIELDS, url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_POST, 1L);
-	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT_REGISTRATION);
+	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -428,9 +428,10 @@ int MediaUploader::ProgressCallBack(void *clientp, double dltotal, double dlnow,
 }
 
 MediaUploader::MediaUploader(const std::string& msgId,
-		const std::string& filePath, const std::string& contentType,
+		const std::string& filePath, const std::string& url, const std::string& contentType,
 		int mediaType, int imageResolution) {
 	this->msgId = msgId;
+	this->url = url;
 	this->filePath = filePath;
 	this->contentType = contentType;
 	this->lastruntime = 0;
@@ -438,6 +439,7 @@ MediaUploader::MediaUploader(const std::string& msgId,
 	this->isTempFile = false;
 	this->mediaType = mediaType;
 	this->imageResolution = imageResolution;
+	this->uploading = false;
 }
 
 MediaUploader::~MediaUploader() {
@@ -448,7 +450,13 @@ void MediaUploader::removeFile() {
 	remove(this->filePath.c_str());
 }
 
+std::string MediaUploader::getUploadFileName() {
+	std::string ext = filePath.substr(this->filePath.find_last_of('.'));
+	return Utilities::md5String(this->filePath) + ext;
+}
+
 std::string MediaUploader::waUploadFile() {
+	this->uploading = true;
 	_LOGDATA("filePath %s, contentType %s",
 			filePath.c_str(), this->contentType.c_str());
 
@@ -463,8 +471,8 @@ std::string MediaUploader::waUploadFile() {
 	/* Set the form info */
 	headerlist = curl_slist_append(headerlist, header);
 
-	std::string ext = filePath.substr(this->filePath.find_last_of('.'));
-	std::string filename = Utilities::md5String(this->filePath) + ext;
+
+	std::string filename = this->getUploadFileName();
 
 	_LOGDATA("Filenae upload: %s", filename.c_str());
 
@@ -472,7 +480,7 @@ std::string MediaUploader::waUploadFile() {
 			filePath.c_str(), CURLFORM_CONTENTTYPE, this->contentType.c_str(),
 			CURLFORM_FILENAME, filename.c_str(), CURLFORM_END);
 
-	curl_easy_setopt(this->urlManager, CURLOPT_URL, ACCOUNT_URL_UPLOADREQUEST);
+	curl_easy_setopt(this->urlManager, CURLOPT_URL, this->url.c_str());
 	curl_easy_setopt(this->urlManager, CURLOPT_USERAGENT, ACCOUNT_USER_AGENT);
 	curl_easy_setopt(this->urlManager, CURLOPT_WRITEFUNCTION,
 			WriteMemoryCallback);
@@ -490,6 +498,7 @@ std::string MediaUploader::waUploadFile() {
 
 	cJSON* json = cJSON_CreateObject();
 
+	_LOGDATA("curl result = %d", res);
 	if (res != CURLE_OK) {
 		cJSON_AddItemToObject(json, "returnValue", cJSON_CreateFalse());
 		cJSON_AddItemToObject(json, "msgId",
@@ -514,6 +523,9 @@ std::string MediaUploader::waUploadFile() {
 
 	std: string ret(cJSON_PrintUnformatted(json));
 	cJSON_Delete(json);
+
+	this->uploading = false;
+
 	return ret;
 }
 

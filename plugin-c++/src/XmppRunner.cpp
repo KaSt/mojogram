@@ -133,7 +133,7 @@ void XmppRunner::stayConnectedLoop() {
 		_LOGDATA("trying xmpp login user %s to socket url", chatUserId.c_str());
 
 		int socketPort = XmppRunner::PORTS[XmppRunner::LAST_USED_PORT_INDEX];
-		std::string resource = std::string() + ACCOUNT_RESOURCE + "-" + Utilities::intToStr(socketPort);
+		std::string resource = std::string() + ACCOUNT_RESOURCE; //  + "-" + Utilities::intToStr(socketPort);
 
 		try {
 			this->_inSockectOpen = true;

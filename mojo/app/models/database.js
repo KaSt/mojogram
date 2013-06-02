@@ -460,20 +460,36 @@ AppDatabase.prototype.getNameForJid = function(jid, callback) {
 	}
 }
 
-AppDatabase.prototype.deleteChat = function(chat, callback) {
-	var sql1 = "DELETE FROM messages WHERE remotejid = ?";
-	var sql2 = "DELETE FROM chats WHERE jid = ?";
+AppDatabase.prototype.deleteAllMessagesFromChat = function(chat, callback) {
+	var sql = "DELETE FROM messages WHERE remotejid = ?";
 	this.appDb.transaction( function(t) {
-		t.executeSql(sql1, [chat.jid], function(t, r) {
-			t.executeSql(sql2, [chat.jid], function(t, r) {
-				try {
-					if (chat.picturepath)
-						_plugin.removeFile(chat.picturepath);
-				} catch (e) {
-					Mojo.Log.error("database:deleteChat:error deleting chat picture: %j", e);
-				}
-				callback();
-			}, this.errorHandlerTrue.bind(this));
+		t.executeSql(sql, [chat.jid], function(t, r) {
+			callback();
+		}.bind(this), this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
+AppDatabase.prototype.deleteAllMessages = function(callback) {
+	var sql = "DELETE FROM messages";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [], function(t, r) {
+			callback();
+		}.bind(this), this.errorHandlerTrue.bind(this));
+	}.bind(this));
+}
+
+
+AppDatabase.prototype.deleteChat = function(chat, callback) {
+	var sql = "DELETE FROM chats WHERE jid = ?";
+	this.appDb.transaction( function(t) {
+		t.executeSql(sql, [chat.jid], function(t, r) {
+			try {
+				if (chat.picturepath)
+					_plugin.removeFile(chat.picturepath);
+			} catch (e) {
+				Mojo.Log.error("database:deleteChat:error deleting chat picture: %j", e);
+			}
+			callback();
 		}.bind(this), this.errorHandlerTrue.bind(this));
 	}.bind(this));
 }
@@ -489,9 +505,13 @@ AppDatabase.prototype.deleteGroup = function(group, callback) {
 
 AppDatabase.prototype.deleteGroupAndChat = function(group, chat, callback) {
 	this.deleteGroup(group, function() {
-		this.deleteChat(chat, callback);
+		this.deleteAllMessagesFromChat(chat, function() {
+			this.deleteChat(chat, callback);	
+		}.bind(this));
 	}.bind(this));
 }
+
+
 
 AppDatabase.prototype.findChat = function(jid, callback) {
 	var sql = "SELECT * FROM chats c LEFT OUTER JOIN messages m ON (m.remotejid = c.lmremotejid AND m.fromme = c.lmfromme AND m.keyid = c.lmkeyid) WHERE c.jid = ?";

@@ -37,7 +37,12 @@ ChatsListAssistant.prototype.setup = function() {
         items : [Mojo.Menu.editItem, {
             label : $L("Create new group"),
             command : "createGroup"
-        }, {
+        }, 
+        {
+        	label : $L("Delete all messages"),
+            command : "deleteallmessages"
+        },
+        {
             label : $L("Preferences"),
             command : Mojo.Menu.prefsCmd
         }, {
@@ -154,6 +159,31 @@ ChatsListAssistant.prototype.handleCommand = function(event) {
             case "accountSettings":
                 this.controller.stageController.pushScene("account");
                 break;
+			case "deleteallmessages":
+				this.controller.showAlertDialog({
+						onChoose : function(value) {
+							if (value == "ok") {
+								_appDB.deleteAllMessages(function() {
+									if (_chatsAssistant != null) {
+										_chatsAssistant.updateChats();
+									}
+								}.bind(this));
+							}
+						},
+						title : $L("Confirm"),
+						message : $L("Do you really want to delete all messages from all chats?"),
+						choices : [{
+							label : $L("OK"),
+							value : "ok",
+							type : "affirmative"
+						},
+						{
+							label: $L("Cancel"),
+							value: "cancel",
+							type : "negative"
+						}]
+					});
+				break;                
             case Mojo.Menu.helpCmd:
                 this.controller.stageController.pushScene("help");
                 break;

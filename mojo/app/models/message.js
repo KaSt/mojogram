@@ -256,6 +256,8 @@ Message.prototype.statusIconStyle = function() {
 			return "media-uploading";
 		case Message.STATUS_SERVER_BOUNCE:
 			return "server-bounce";
+		case Message.STATUS_MEDIA_UPLOADERROR:
+			return "upload-error";
 		default:
 			return "none";
 	}
@@ -273,6 +275,7 @@ Message.prototype.isForwardable = function() {
 	return 	!this.isNotification() && 
 			!(this.status == Message.STATUS_MEDIA_DOWNLOADING || 
 				this.status == Message.STATUS_MEDIA_UPLOADING || 
-				this.status == Message.STATUS_MEDIA_UPLOADERROR);
+				this.status == Message.STATUS_MEDIA_UPLOADERROR ||
+				(this.status == Message.STATUS_NONE && this.from_me));
 }
 

@@ -47,6 +47,7 @@ public:
 	virtual void onSendGetPicture(const std::string& jid, const std::vector<unsigned char>& data, const std::string& oldId, const std::string& newId)=0;
 	virtual void onPictureChanged(const std::string& from, const std::string& author, bool set)=0;
 	virtual void onDeleteAccount(bool result)=0;
+	virtual void onMediaUploadRequest(const std::string& status, const std::string& msgId, const std::string& hash, const std::string& url, int resumeFrom)=0;
 };
 
 class WAGroupListener {
@@ -366,6 +367,41 @@ class WAConnection {
 		}
 	};
 
+	class IqResultRequestUploadHandler: public IqResultHandler {
+	private:
+		std::string hash;
+		std::string msgId;
+		int size;
+	public:
+		IqResultRequestUploadHandler(WAConnection* con, const std::string& hash, const std::string& msgId, int size):IqResultHandler(con) {this->hash = hash; this->msgId = msgId; this->size = size;}
+		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
+			ProtocolTreeNode* mediaNode = node->getChild("media");
+			if (mediaNode != NULL) {
+				std::string* url = mediaNode->getAttributeValue("url");
+				std::string* resumeFrom = mediaNode->getAttributeValue("resume");
+				int resumeFromInt = 0;
+				if (resumeFrom != NULL) {
+					resumeFromInt = atoi(resumeFrom->c_str());
+				}
+				if (url != NULL) {
+					this->con->event_handler->onMediaUploadRequest("success", this->msgId, this->hash, *url, resumeFromInt);
+				} else {
+					this->con->event_handler->onMediaUploadRequest("failed", this->msgId, this->hash, "", -1);
+				}
+			} else {
+				ProtocolTreeNode* duplicateNode = node->getChild("duplicate");
+
+				std::string* url = duplicateNode->getAttributeValue("url");
+
+				if (duplicateNode != NULL) {
+					this->con->event_handler->onMediaUploadRequest("duplicate", this->msgId, this->hash, *url, this->size);
+				} else {
+					this->con->event_handler->onMediaUploadRequest("failed", this->msgId, this->hash, "", -1);
+				}
+			}
+		}
+	};
+
 
 	private:
 	WALogin* login;
@@ -458,6 +494,7 @@ class WAConnection {
 	void sendSetPicture(const std::string& jid, std::vector<unsigned char>* data) throw (WAException);
 	void sendNotificationReceived(const std::string& from, const std::string& id) throw(WAException);
 	void sendDeleteAccount() throw(WAException);
+	void sendRequestUpload(const std::string& msgId, const std::string& hash, int size, const std::string& type, const std::string& orighash) throw (WAException);
 };
 
 

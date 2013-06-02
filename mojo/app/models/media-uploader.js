@@ -3,25 +3,35 @@ var _mediaUploads = new HashTable();
 function MediaUploader() {
 }
 
-MediaUploader.ACCOUNT_URL_UPLOADREQUEST = "https://mms.whatsapp.net/client/iphone/upload.php";
-
-function MediaUploader(msg, controllers) {
+function MediaUploader(msg, controllers, file) {
 	this.msg = msg;
 	this.serviceRequest = null;
 	this.progress = 0;
 	this.ticket = null;
 	this.uploading = false;
 	this.controller = controllers;
+	this.file = file;
 }
 
-MediaUploader.prototype.requestUpload = function(file) {
-	Mojo.Log.info("upload file %j", file)
+MediaUploader.prototype.requestUpload = function() {
+	Mojo.Log.info("upload request %j", this.file);
 	this.uploading = true;
 	this.msg.status = Message.STATUS_MEDIA_UPLOADING;
-	_appDB.updateMessageStatus(this.msg);
+	_appDB.updateMessageStatus(this.msg, function() {
+		if (_openChatAssistant != null)
+				_openChatAssistant.updateMessageStatus(this.msg);
+	}.bind(this));
+	
 	
 	_mojowhatsupPlugin.safePluginCall( function() {
-		_plugin.sendUploadRequest(this.msg.keyString(), file, Media.getMimeType(this.msg, Media.getExt(file)), this.msg.media_wa_type, _appPrefs.cookieData.imageResolution);
+		_plugin.sendMediaUploadRequest(this.msg.keyString(), this.file, Message.getTypeString(this.msg.media_wa_type), _appPrefs.cookieData.imageResolution); // Media.getMimeType(this.msg, Media.getExt(file)));		
+	}.bind(this));
+}
+
+MediaUploader.prototype.uploadFile = function(url) {
+	_mojowhatsupPlugin.safePluginCall( function() {
+		Mojo.Log.info("uploadFile file %s url %s", this.file, url);
+		_plugin.uploadFile(this.msg.keyString(), url, Media.getMimeType(this.msg, Media.getExt(this.file)));
 	}.bind(this));
 }
 
@@ -29,23 +39,12 @@ MediaUploader.prototype.uploadSuccess = function(response) {
 	Mojo.Log.error("Uploader Media success: %j", response);
 
 	if (response.completed == true) {
-		var parser = new DOMParser();
-		var xmlObject = parser.parseFromString(response.response, "text/xml");
+		var jsonResponse = MojowhatsupPluginModel.jsonParse(response.response);
+		this.msg.media_url = jsonResponse.url;
+		this.msg.media_name = jsonResponse.name;
+		this.msg.media_size = jsonResponse.size;
 
-		var node = document.evaluate("/plist/dict/key[.='url']/following-sibling::*[1]", xmlObject, null, XPathResult.ANY_TYPE, null).iterateNext();
-		if (node) {
-			this.msg.media_url = node.firstChild.nodeValue;
-		}
-		node = document.evaluate("/plist/dict/key[.='name']/following-sibling::*[1]", xmlObject, null, XPathResult.ANY_TYPE, null).iterateNext();
-		if (node) {
-			this.msg.media_name = node.firstChild.nodeValue;
-		}
-		node = document.evaluate("/plist/dict/key[.='size']/following-sibling::*[1]", xmlObject, null, XPathResult.ANY_TYPE, null).iterateNext();
-		if (node) {
-			this.msg.media_size = parseInt(node.firstChild.nodeValue);
-		}
-
-		if (this.msg.media_url != null) {
+		if (this.msg.media_url) {
 			this.msg.status = Message.STATUS_UNSENT;
 			this.msg.timestamp = new Date().getTime();
 			Mojo.Log.error("%j", this.msg.downloadedFile);
@@ -75,7 +74,7 @@ MediaUploader.prototype.uploadSuccess = function(response) {
 
 MediaUploader.prototype.uploadFailure = function(response) {
 	Mojo.Log.error("Uploader Media failure!, %j", response);
-	this.msg.status = Message.STATUS_NONE;
+	this.msg.status = Message.STATUS_MEDIA_UPLOADERROR;
 
 	_appDB.updateMessageStatus(this.msg, function() {
 		if (_openChatAssistant != null)
@@ -108,11 +107,11 @@ MediaUploader.upload = function(msg, file, controller) {
 		msg.mediaUploader = _mediaUploads.getItem(msg.keyString());
 		msg.mediaUploader.msg = msg;
 	} else {
-		msg.mediaUploader = new MediaUploader(msg, controller);
+		msg.mediaUploader = new MediaUploader(msg, controller, file);
 		_mediaUploads.setItem(msg.keyString(), msg.mediaUploader);
 	}
 	if (!msg.mediaUploader.uploading)
-		msg.mediaUploader.requestUpload(file);
+		msg.mediaUploader.requestUpload();
 }
 
 MediaUploader.stopUpload = function(msg) {
@@ -121,6 +120,12 @@ MediaUploader.stopUpload = function(msg) {
 		msg.mediaUploader.msg = msg;
 		if (msg.mediaUploader.uploading)
 			msg.mediaUploader.stopUpload();
+	} else {
+		msg.status = Message.STATUS_NONE;
+		_appDB.updateMessageStatus(msg, function() {
+			if (_openChatAssistant != null)
+				_openChatAssistant.updateMessageStatus(msg);
+		}.bind(this));		
 	}
 }
 

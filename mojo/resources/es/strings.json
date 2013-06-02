@@ -212,5 +212,9 @@
 	"Muted": "Silenciado",
 	"Unmute": "Anular silencio",
 	"Code": "Código",
-	"Cancel": "Cancelar"
+	"Cancel": "Cancelar",
+	
+	"Delete all messages": "Borrar todos los mensajes",
+	"Do you really want to delete all messages from all chats?": "¿Realmente quiere borrar todos los mensajes de todas las conversaciones?",
+	"Do you really want to delete all messages from this chat?": "¿Realmente quiere borrar todos los mensajes de esta conversación?"
 }

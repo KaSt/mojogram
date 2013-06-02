@@ -1,5 +1,20 @@
 function ChangelogAssistant() {
 	this.changelog = [
+	     {
+            version: "v1.5.4",
+            changes: [
+                "Fixed last registration problem (fail-old-version)"
+            ]               
+        }, 
+	    {
+            version: "v1.5.3",
+            changes: [
+                "Fixed media upload problem",
+                "Delete gesture in chats list only delete the chat from the list",
+                "Added menu item 'delete all messages from chat' in chat view",
+                "Added menu item 'delete all messages from all chats' in chats list view"
+            ]               
+        },  
         {
             version: "v1.5.2",
             changes: [

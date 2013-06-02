@@ -86,7 +86,7 @@ std::string BGApp::testLogin(const std::string& userId, const std::string& passw
 		std::string resource;
 		do {
 			int socketPort = XmppRunner::PORTS[XmppRunner::LAST_USED_PORT_INDEX];
-			resource = std::string() + ACCOUNT_RESOURCE + "-" + Utilities::intToStr(socketPort);
+			resource = std::string() + ACCOUNT_RESOURCE; //  + "-" + Utilities::intToStr(socketPort);
 			try {
 				conn = new MySocketConnection(socketURL, socketPort);
 				done = true;

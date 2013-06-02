@@ -1,4 +1,4 @@
-function MojowhatsupPluginModel() {
+function MojowhatsupPluginModel() {
 	this.isReady = false;
 	this.loginResult = false;
 	this.isRunnerExecuting = false;
@@ -172,7 +172,12 @@ MojowhatsupPluginModel.prototype.registerHandlers = function() {
 	_plugin.onLoginFailure = function(type, expire_date) {
 		setTimeout(this.onLoginFailure.bind(this), 1, type, expire_date);
 	}.bind(this);
+	_plugin.onMediaUploadRequest = function(status, msgId, hash, url, resumeFrom) {
+		setTimeout(this.onMediaUploadRequest.bind(this), 1, status, msgId, hash, url, resumeFrom);
+	}.bind(this);
+
 }
+
 
 MojowhatsupPluginModel.prototype.onLoginFailure = function(type, expire_date) {
 	var message = "";
@@ -359,7 +364,7 @@ MojowhatsupPluginModel.prototype.processPictureIdsQueue = function() {
                 Mojo.Log.error("error plugin onSendGetPictureIds %j", e);
                 setTimeout(this.processPictureIdsQueue.bind(this), 1);
             }
-		}
+		} else {			setTimeout(this.processPictureIdsQueue.bind(this), 1);		}
 	}.bind(this));
 }
 
@@ -373,6 +378,29 @@ MojowhatsupPluginModel.prototype.uploadRequestResponse = function(response) {
 		}
 	}
 }
+
+MojowhatsupPluginModel.prototype.onMediaUploadRequest = function(status, msgId, hash, url, resumeFrom) {
+	var mu = MediaUploader.getUploader(msgId);
+	if (mu != undefined) {
+		if (status == "success") {
+			mu.uploadFile(url);
+		} else if (status == "failed") {
+			mu.uploadFailure({});
+		} else if (status == "duplicate") {
+			mu.uploadSuccess(
+				{
+					completed: true,
+					response: {
+						url: url,
+						name: Media.getFileName(url),
+						size: 0
+					}
+				}
+			);
+		}
+	}
+}
+
 
 MojowhatsupPluginModel.prototype.ready = function() {
 	this.isReady = true;

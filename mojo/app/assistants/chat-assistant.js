@@ -7,8 +7,7 @@ function ChatAssistant(chat, msgToSend) {
 	this.chat = chat;
 	this.nameDisplayHash = new HashTable();
 	this.msgToSend = msgToSend;
-	this.forwardMsg = null;
-	this.messageListModel = {
+	this.forwardMsg = null;	this.messageListModel = {
 		items : []
 	};
 	this.timerTyping = null;
@@ -221,6 +220,10 @@ ChatAssistant.prototype.buildAppMenuItems = function() {
 		// command : "sendContact"
 	// },
 	{
+		label : $L("Delete all messages"),
+		command : "deleteallmessages"
+	},
+	{
 		label : $L("Preferences"),
 		command : Mojo.Menu.prefsCmd
 	}, {
@@ -416,7 +419,7 @@ ChatAssistant.prototype.getPopupMenu = function(msg) {
 					command : 'media-open'
 				});
 			}
-			if (msg.from_me && (msg.status == Message.STATUS_MEDIA_UPLOADING || msg.status == Message.STATUS_NONE)) {
+			if (msg.from_me && (msg.status == Message.STATUS_MEDIA_UPLOADING || msg.status == Message.STATUS_NONE || msg.status == Message.STATUS_MEDIA_UPLOADERROR)) {
 				popupCommands.push({
 					label : $L('Upload and send'),
 					command : 'media-upload'
@@ -696,11 +699,13 @@ ChatAssistant.prototype.handleCommand = function(event) {
 				break;
 			case 'groupProperties':
 				_appDB.findGroup(this.chat.jid, function(group) {
-					var mode = "info";
-					if (group.owner == _myJid) {
-						mode = "edit";
+					if (group) {
+						var mode = "info";
+						if (group.owner == _myJid) {
+							mode = "edit";
+						}
+						this.controller.stageController.pushScene('group', group, this.chat, mode);
 					}
-					this.controller.stageController.pushScene('group', group, this.chat, mode);
 				}.bind(this));
 				break;
 			case Mojo.Menu.prefsCmd:
@@ -716,6 +721,33 @@ ChatAssistant.prototype.handleCommand = function(event) {
 				_exitApp = true;
 				Mojo.Controller.getAppController().closeStage(_mainStage);
 				break;
+			case "deleteallmessages":
+				this.controller.showAlertDialog({
+						onChoose : function(value) {
+							if (value == "ok") {
+								_appDB.deleteAllMessagesFromChat(this.chat, function() {
+									this.messagesToLoad = this.INCREMENT_LOAD;
+									this.loadMessages(this.messagesToLoad);
+									if (_chatsAssistant != null) {
+										_chatsAssistant.updateChats();
+									}
+								}.bind(this));
+							}
+						},
+						title : $L("Confirm"),
+						message : $L("Do you really want to delete all messages from this chat?"),
+						choices : [{
+							label : $L("OK"),
+							value : "ok",
+							type : "affirmative"
+						},
+						{
+							label: $L("Cancel"),
+							value: "cancel",
+							type : "negative"
+						}]
+					});
+				break;
 			case "viewPicture":
 				if (this.chat.picturepath) {
 					this.controller.stageController.pushScene("imageview", {
@@ -723,7 +755,7 @@ ChatAssistant.prototype.handleCommand = function(event) {
 					});
 				} else {
 					this.controller.showAlertDialog({
-						onChooose : function(value) {
+						onChoose : function(value) {
 						},
 						title : $L("Notification"),
 						message : $L("This contact does not have a profile picture"),

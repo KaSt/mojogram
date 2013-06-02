@@ -1685,3 +1685,31 @@ void WAConnection::sendDeleteAccount() throw (WAException) {
 	this->out->write(node2);
 	delete node2;
 }
+
+void WAConnection::sendRequestUpload(const std::string& msgId, const std::string& hash, int size, const std::string& type, const std::string& orighash) throw (WAException) {
+	std::string id = makeId("upload_");
+
+	this->pending_server_requests[id] = new IqResultRequestUploadHandler(this, hash, msgId, size);
+
+	std::map<string, string>* attribs = new std::map<string, string>();
+	(*attribs)["xmlns"] = "w:m";
+	(*attribs)["hash"] = hash;
+	(*attribs)["type"] = type;
+	(*attribs)["size"] = Utilities::intToStr(size);
+
+	if (orighash.compare("") != 0) {
+		(*attribs)["orighash"] = orighash;
+	}
+
+	ProtocolTreeNode* node = new ProtocolTreeNode("media", attribs);
+
+	std::map<string, string>* attribs2 = new std::map<string, string>();
+	(*attribs2)["id"] = id;
+	(*attribs2)["to"] = "s.whatsapp.net";
+	(*attribs2)["type"] = "set";
+
+	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, node);
+	this->out->write(iqNode);
+
+	delete iqNode;
+}

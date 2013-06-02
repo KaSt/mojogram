@@ -24,6 +24,7 @@ private:
 	static FMessage* fromJSONtoMessage(const char *string);
 	static char* fromMessageToJSON(FMessage* message);
 	static int waUploadHandler(void* data);
+	static int waUploadRequestHandler(void* data);
 
 public:
 	static SDL_mutex* staticMutex;
@@ -49,7 +50,7 @@ public:
 	static const int USER_EVENT_SENDACTIVE = 15;
 	static const int USER_EVENT_SENDCODEREQUEST = 16;
 	static const int USER_EVENT_SENDREGISTERREQUEST = 17;
-	static const int USER_EVENT_SENDUPLOADREQUEST = 18;
+	static const int USER_EVENT_UPLOADFILE = 18;
 	static const int USER_EVENT_STOPUPLOADREQUEST = 19;
 	static const int USER_EVENT_SENDLEAVEGROUP = 20;
 	static const int USER_EVENT_SENDENDGROUP = 21;
@@ -64,6 +65,7 @@ public:
 	static const int USER_EVENT_SENDSETPICTURE = 30;
 	static const int USER_EVENT_SENDCLIENTCONFIG = 31;
 	static const int USER_EVENT_SENDEXISTREQUEST = 32;
+	static const int USER_EVENT_SENDMEDIAUPLOADREQUEST= 33;
 
 	static const int USER_EVENT_QUIT = 100;
 
@@ -83,7 +85,7 @@ public:
 	static PDL_bool exitPlugin(PDL_JSParameters *params);
 	static PDL_bool sendCodeRequest(PDL_JSParameters *params);
 	static PDL_bool sendRegisterRequest(PDL_JSParameters *params);
-	static PDL_bool sendUploadRequest(PDL_JSParameters *params);
+	static PDL_bool uploadFile(PDL_JSParameters *params);
 	static PDL_bool stopUploadRequest(PDL_JSParameters *params);
 	static PDL_bool sendLeaveGroup(PDL_JSParameters *params);
 	static PDL_bool sendEndGroup(PDL_JSParameters *params);
@@ -101,6 +103,7 @@ public:
 	static PDL_bool sendClientConfig(PDL_JSParameters *params);
 	static PDL_bool sendExistRequest(PDL_JSParameters *params);
 	static PDL_bool getAuthorizationString(PDL_JSParameters *params);
+	static PDL_bool sendMediaUploadRequest(PDL_JSParameters *params);
 
 	static void processUserEvent(const SDL_Event& event);
 
@@ -116,6 +119,7 @@ public:
 	void onMessageStatusUpdate(FMessage* paramFMessage);
 	void onSendGetPictureIds(std::map<std::string, std::string>* ids);
 	void onSendGetPicture(const std::string& jid, const std::vector<unsigned char>& data, const std::string& oldId, const std::string& newId);
+	void onMediaUploadRequest(const std::string& status, const std::string& msgId, const std::string& hash, const std::string& url, int resumeFrom);
 
 	// de la interfaz WAGroupListener
 	void onGroupAddUser(const std::string& paramString1, const std::string& paramString2);

@@ -33,21 +33,59 @@ WebosBGApp::~WebosBGApp() {
 /****
  * PRIVATE STATIC METHODS
  */
+
+int WebosBGApp::waUploadRequestHandler(void* d) {
+	MediaUploader* mediaUploader = (MediaUploader*) d;
+
+	if ((mediaUploader->mediaType == FMessage::WA_TYPE_IMAGE)
+			&& (mediaUploader->imageResolution != 0)) {
+		char buffer[1024];
+		JpegImageResizer resizer;
+		std::string tempFile = "temp" + mediaUploader->getUploadFileName();
+		PDL_GetDataFilePath(tempFile.c_str(), buffer, 1024);
+		tempFile.assign(buffer);
+
+		if (resizer.resizeImage(mediaUploader->filePath, tempFile,
+				mediaUploader->imageResolution) == 0) {
+			mediaUploader->filePath = tempFile;
+			mediaUploader->isTempFile = true;
+		}
+	}
+
+	SDL_Event event;
+	SDL_UserEvent userEvent;
+	userEvent.type = SDL_USEREVENT;
+	userEvent.code = USER_EVENT_SENDMEDIAUPLOADREQUEST;
+	std::string* data = new std::string[3];
+	data[0] = mediaUploader->msgId;
+	data[1] = mediaUploader->filePath;
+	data[2] = FMessage::getMessage_WA_Type_StrValue(mediaUploader->mediaType);
+	userEvent.data1 = data;
+	event.type = SDL_USEREVENT;
+	event.user = userEvent;
+	FE_PushEvent(&event);
+
+	return 0;
+}
+
 int WebosBGApp::waUploadHandler(void* d) {
 	MediaUploader* mediaUploader = (MediaUploader*) d;
 	try {
-		if ((mediaUploader->mediaType == FMessage::WA_TYPE_IMAGE) && (mediaUploader->imageResolution != 0)) {
-			char buffer[1024];
-			JpegImageResizer resizer;
-			std::string tempFile = "temp" + Utilities::getNameFromPath(mediaUploader->filePath);
-			PDL_GetDataFilePath(tempFile.c_str(), buffer, 1024);
-			tempFile.assign(buffer);
-
-			if (resizer.resizeImage(mediaUploader->filePath, tempFile, mediaUploader->imageResolution) == 0) {
-				mediaUploader->filePath = tempFile;
-				mediaUploader->isTempFile = true;
-			}
-		}
+//		if ((mediaUploader->mediaType == FMessage::WA_TYPE_IMAGE)
+//				&& (mediaUploader->imageResolution != 0)) {
+//			char buffer[1024];
+//			JpegImageResizer resizer;
+//			std::string tempFile = "temp"
+//					+ Utilities::getNameFromPath(mediaUploader->filePath);
+//			PDL_GetDataFilePath(tempFile.c_str(), buffer, 1024);
+//			tempFile.assign(buffer);
+//
+//			if (resizer.resizeImage(mediaUploader->filePath, tempFile,
+//					mediaUploader->imageResolution) == 0) {
+//				mediaUploader->filePath = tempFile;
+//				mediaUploader->isTempFile = true;
+//			}
+//		}
 
 		std::string response = mediaUploader->waUploadFile();
 
@@ -377,24 +415,26 @@ PDL_bool WebosBGApp::sendExistRequest(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
-PDL_bool WebosBGApp::sendUploadRequest(PDL_JSParameters *params) {
+PDL_bool WebosBGApp::uploadFile(PDL_JSParameters *params) {
 	_LOGDATA("Called sendUploadRequest");
 	std::string msgId(PDL_GetJSParamString(params, 0));
-	std::string filePath(PDL_GetJSParamString(params, 1));
+	// std::string filePath(PDL_GetJSParamString(params, 1));
+	std::string url(PDL_GetJSParamString(params, 1));
 	std::string contentType(PDL_GetJSParamString(params, 2));
-	std::string mediaType(PDL_GetJSParamString(params, 3));
-	std::string resolution(PDL_GetJSParamString(params, 4));
+	// std::string mediaType(PDL_GetJSParamString(params, 3));
+	// std::string resolution(PDL_GetJSParamString(params, 5));
 
 	SDL_Event event;
 	SDL_UserEvent userEvent;
 	userEvent.type = SDL_USEREVENT;
-	userEvent.code = USER_EVENT_SENDUPLOADREQUEST;
-	std::string* data = new std::string[5];
+	userEvent.code = USER_EVENT_UPLOADFILE;
+	std::string* data = new std::string[3];
 	data[0] = msgId;
-	data[1] = filePath;
+	// data[1] = filePath;
+	data[1] = url;
 	data[2] = contentType;
-	data[3] = mediaType;
-	data[4] = resolution;
+	// data[3] = mediaType;
+	// data[5] = resolution;
 	userEvent.data1 = data;
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
@@ -627,7 +667,7 @@ PDL_bool WebosBGApp::resizeImage(PDL_JSParameters *params) {
 	JpegImageResizer imgResizer;
 	std::string newTarget(buffer);
 	int r = imgResizer.resizeImage(source, newTarget, resolution);
-	PDL_JSReply(params, (r == 0?buffer:"false"));
+	PDL_JSReply(params, (r == 0 ? buffer : "false"));
 
 	return PDL_TRUE;
 }
@@ -671,7 +711,6 @@ PDL_bool WebosBGApp::sendStatusUpdate(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
-
 PDL_bool WebosBGApp::md5String(PDL_JSParameters *params) {
 	std::string data(PDL_GetJSParamString(params, 0));
 	std::string result = Utilities::md5String(data);
@@ -681,7 +720,8 @@ PDL_bool WebosBGApp::md5String(PDL_JSParameters *params) {
 }
 
 PDL_bool WebosBGApp::getExpirationDate(PDL_JSParameters *params) {
-	if ((_instance->_xmpprunner != NULL) && (_instance->_xmpprunner->_connection != NULL)) {
+	if ((_instance->_xmpprunner != NULL)
+			&& (_instance->_xmpprunner->_connection != NULL)) {
 		time_t expire_date = _instance->_xmpprunner->_connection->expire_date;
 		PDL_JSReply(params, Utilities::intToStr(expire_date).c_str());
 	} else {
@@ -799,7 +839,6 @@ PDL_bool WebosBGApp::sendDeleteAccount(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
-
 PDL_bool WebosBGApp::sendClientConfig(PDL_JSParameters *params) {
 	_LOGDATA("Called sendClientConfig");
 
@@ -831,6 +870,30 @@ PDL_bool WebosBGApp::getAuthorizationString(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
+PDL_bool WebosBGApp::sendMediaUploadRequest(PDL_JSParameters *params) {
+	_LOGDATA("Called sendMediaUploadRequest");
+
+	std::string msgId(PDL_GetJSParamString(params, 0));
+	std::string filePath(PDL_GetJSParamString(params, 1));
+	std::string mediaTypeS(PDL_GetJSParamString(params, 2));
+	int resolution = PDL_GetJSParamInt(params, 3);
+
+	int mediaType = FMessage::getMessage_WA_Type(&mediaTypeS);
+
+	MediaUploader* mediaUploader = new MediaUploader(msgId, filePath, "", "",
+			mediaType, resolution);
+
+	if ((mediaUploader->thread = SDL_CreateThread(
+			WebosBGApp::waUploadRequestHandler, mediaUploader)) == NULL) {
+		_LOGDATA("error: %s\n", SDL_GetError());
+		delete mediaUploader;
+	} else {
+		WebosBGApp::uploads[msgId] = mediaUploader;
+	}
+
+	return PDL_TRUE;
+}
+
 int WebosBGApp::registerJSCallBacks() {
 	int ret = 0;
 	ret += PDL_RegisterJSHandler("testLogin", pluginTestLogin);
@@ -848,12 +911,13 @@ int WebosBGApp::registerJSCallBacks() {
 	ret += PDL_RegisterJSHandler("exitPlugin", exitPlugin);
 	ret += PDL_RegisterJSHandler("sendCodeRequest", sendCodeRequest);
 	ret += PDL_RegisterJSHandler("sendRegisterRequest", sendRegisterRequest);
-	ret += PDL_RegisterJSHandler("sendUploadRequest", sendUploadRequest);
+	ret += PDL_RegisterJSHandler("uploadFile", uploadFile);
 	ret += PDL_RegisterJSHandler("stopUploadRequest", stopUploadRequest);
 	ret += PDL_RegisterJSHandler("sendLeaveGroup", sendLeaveGroup);
 	ret += PDL_RegisterJSHandler("sendEndGroup", sendEndGroup);
 	ret += PDL_RegisterJSHandler("sendAddParticipants", sendAddParticipants);
-	ret += PDL_RegisterJSHandler("sendRemoveParticipants", sendRemoveParticipants);
+	ret += PDL_RegisterJSHandler("sendRemoveParticipants",
+			sendRemoveParticipants);
 	ret += PDL_RegisterJSHandler("sendSetNewSubject", sendSetNewSubject);
 	ret += PDL_RegisterJSHandler("resizeImage", resizeImage);
 	ret += PDL_RegisterJSHandler("sendStatusUpdate", sendStatusUpdate);
@@ -866,7 +930,10 @@ int WebosBGApp::registerJSCallBacks() {
 	ret += PDL_RegisterJSHandler("sendClientConfig", sendClientConfig);
 	ret += PDL_RegisterJSHandler("processPassword", processPassword);
 	ret += PDL_RegisterJSHandler("sendExistRequest", sendExistRequest);
-	ret += PDL_RegisterJSHandler("getAuthorizationString", getAuthorizationString);
+	ret += PDL_RegisterJSHandler("getAuthorizationString",
+			getAuthorizationString);
+	ret += PDL_RegisterJSHandler("sendMediaUploadRequest",
+			sendMediaUploadRequest);
 	return ret;
 }
 
@@ -874,8 +941,41 @@ int WebosBGApp::registerJSCallBacks() {
  * Whatsup EVENTS
  ****************************/
 
+void WebosBGApp::onMediaUploadRequest(const std::string& status,
+		const std::string& msgId, const std::string& hash,
+		const std::string& url, int resumeFrom) {
+
+	_LOGDATA("Media upload request result: %s %s %s %d",
+			status.c_str(), hash.c_str(), url.c_str(), resumeFrom);
+
+	if ((status.compare("failed") == 0)
+			|| (status.compare("duplicated") == 0)) {
+		std::map<std::string, MediaUploader*>::iterator it =
+				WebosBGApp::uploads.find(msgId);
+		if (it != WebosBGApp::uploads.end()) {
+			MediaUploader* mediaUploader = it->second;
+			if (mediaUploader->isTempFile)
+				mediaUploader->removeFile();
+			WebosBGApp::uploads.erase(mediaUploader->msgId);
+			delete mediaUploader;
+		}
+	}
+
+	const char* params[5];
+	params[0] = status.c_str();
+	params[1] = msgId.c_str();
+	params[2] = hash.c_str();
+	params[3] = url.c_str();
+	params[4] = Utilities::intToStr(resumeFrom).c_str();
+
+	PDL_Err err = PDL_CallJS("onMediaUploadRequest", params, 5);
+	if (err != PDL_NOERROR) {
+		_LOGDATA("error: %s\n", PDL_GetError());
+	}
+}
+
 void WebosBGApp::onMessageForMe(FMessage* message, bool duplicate)
-throw (WAException) {
+		throw (WAException) {
 	_LOGDATA("new incoming message %s from %s",
 			message->key->id.c_str(), message->key->remote_jid.c_str());
 
@@ -935,7 +1035,6 @@ void WebosBGApp::onMessageStatusUpdate(FMessage* message) {
 
 	free((char*) params[0]);
 
-
 //	SDL_Event event;
 //	SDL_UserEvent userEvent;
 //	userEvent.type = SDL_USEREVENT;
@@ -948,7 +1047,7 @@ void WebosBGApp::onMessageStatusUpdate(FMessage* message) {
 
 void WebosBGApp::onSendGetPictureIds(std::map<std::string, std::string>* ids) {
 	cJSON* json = cJSON_CreateArray();
-	std::map<std::string,std::string>::iterator it;
+	std::map<std::string, std::string>::iterator it;
 	for (it = ids->begin(); it != ids->end(); it++) {
 		cJSON* object = cJSON_CreateObject();
 		cJSON_AddStringToObject(object, "jid", it->first.c_str());
@@ -965,12 +1064,15 @@ void WebosBGApp::onSendGetPictureIds(std::map<std::string, std::string>* ids) {
 	cJSON_Delete(json);
 }
 
-void WebosBGApp::onSendGetPicture(const std::string& jid, const std::vector<unsigned char>& data, const std::string& oldId, const std::string& newId) {
+void WebosBGApp::onSendGetPicture(const std::string& jid,
+		const std::vector<unsigned char>& data, const std::string& oldId,
+		const std::string& newId) {
 	char buffer[1024];
 	buffer[0] = '\0';
 
 	if (jid.compare("error") != 0) {
-		std::string fileName = Utilities::removeWaDomainFromJid(jid) + "-" + oldId + ".jpg";
+		std::string fileName = Utilities::removeWaDomainFromJid(jid) + "-"
+				+ oldId + ".jpg";
 
 		PDL_GetDataFilePath(fileName.c_str(), buffer, 1024);
 		remove(buffer);
@@ -1087,8 +1189,10 @@ void WebosBGApp::onGroupAddUser(const std::string& gjid,
 	delete msg;
 }
 
-void WebosBGApp::onPictureChanged(const std::string& jid, const std::string& author, bool set) {
-	_LOGDATA("seeing picture changed for %s author %s", jid.c_str(), author.c_str());
+void WebosBGApp::onPictureChanged(const std::string& jid,
+		const std::string& author, bool set) {
+	_LOGDATA("seeing picture changed for %s author %s",
+			jid.c_str(), author.c_str());
 
 	//	if (set) {
 	//		try {
@@ -1101,7 +1205,7 @@ void WebosBGApp::onPictureChanged(const std::string& jid, const std::string& aut
 	const char* params[3];
 	params[0] = jid.c_str();
 	params[1] = author.c_str();
-	params[2] = (set? "true": "false");
+	params[2] = (set ? "true" : "false");
 
 	PDL_Err err = PDL_CallJS("onPictureChanged", params, 3);
 	if (err != PDL_NOERROR) {
@@ -1215,7 +1319,6 @@ void WebosBGApp::onGroupInfo(const std::string& gjid, const std::string& owner,
 		_LOGDATA("onGoupInfo: %s", ex.what());
 	}
 
-
 	cJSON* json = cJSON_CreateObject();
 	cJSON_AddStringToObject(json, "gjid", gjid.c_str());
 	cJSON_AddStringToObject(json, "owner", owner.c_str());
@@ -1279,14 +1382,13 @@ void WebosBGApp::onDeleteAccount(bool result) {
 	}
 
 	const char* params[1];
-	params[0] = (result? "ok":"error");
+	params[0] = (result ? "ok" : "error");
 
 	PDL_Err err = PDL_CallJS("onAccountDeleted", params, 1);
 	if (err != PDL_NOERROR) {
 		_LOGDATA("error: %s\n", PDL_GetError());
 	}
 }
-
 
 /****************************************************************************************
  * EVENT PROCESS
@@ -1333,7 +1435,8 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 		std::string* data = (std::string*) Event.user.data1;
 		try {
 			Account* account = new Account();
-			std::string response = account->waCodeRequestV2(data[0], data[1], data[2], data[3]);
+			std::string response = account->waCodeRequestV2(data[0], data[1],
+					data[2], data[3]);
 
 			const char *params[1];
 			params[0] = response.c_str();
@@ -1354,7 +1457,8 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 		std::string* data = (std::string*) Event.user.data1;
 		try {
 			Account* account = new Account();
-			std::string response = account->waRegisterRequestV2(data[0], data[1], data[2], data[3]);
+			std::string response = account->waRegisterRequestV2(data[0],
+					data[1], data[2], data[3]);
 
 			const char *params[1];
 			params[0] = response.c_str();
@@ -1392,21 +1496,56 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 		delete[] data;
 		break;
 	}
-	case USER_EVENT_SENDUPLOADREQUEST: {
+	case USER_EVENT_UPLOADFILE: {
 		std::string* data = (std::string*) Event.user.data1;
 
-		int mediaType = atoi(data[3].c_str());
-		int resolution = atoi(data[4].c_str());
+		std::map<std::string, MediaUploader*>::iterator it =
+				WebosBGApp::uploads.find(data[0]);
 
-		MediaUploader* mediaUploader = new MediaUploader(data[0], data[1],
-				data[2], mediaType, resolution);
+		if (it != WebosBGApp::uploads.end()) {
+			MediaUploader* mediaUploader = it->second;
+			mediaUploader->url = data[1];
+			mediaUploader->contentType = data[2];
 
-		if ((mediaUploader->thread = SDL_CreateThread(
-				WebosBGApp::waUploadHandler, mediaUploader)) == NULL) {
-			_LOGDATA("error: %s\n", SDL_GetError());
-		} else {
-			WebosBGApp::uploads[data[0]] = mediaUploader;
+			if ((mediaUploader->thread = SDL_CreateThread(
+					WebosBGApp::waUploadHandler, mediaUploader)) == NULL) {
+				_LOGDATA("error: %s\n", SDL_GetError());
+
+				if (mediaUploader->isTempFile)
+					mediaUploader->removeFile();
+				WebosBGApp::uploads.erase(mediaUploader->msgId);
+				delete mediaUploader;
+			}
 		}
+
+		delete[] data;
+		break;
+	}
+	case USER_EVENT_SENDMEDIAUPLOADREQUEST: {
+		std::string* data = (std::string*) Event.user.data1;
+
+		std::string msgId(data[0]);
+		std::string filePath(data[1]);
+		std::string type(data[2]);
+
+		if (BGApp::getInstance()->_xmpprunner != NULL) {
+			WAConnection* fConn = BGApp::getInstance()->_xmpprunner->_connection;
+			if (fConn != NULL) {
+				std::string hash = Utilities::calc_sha256(filePath);
+				int size = Utilities::getFileSize(filePath);
+				_LOGDATA("msgId %s path %s type %s hash %s size %d",
+						msgId.c_str(), filePath.c_str(), type.c_str(), hash.c_str(), size);
+
+				if (size != -1) {
+					fConn->sendRequestUpload(msgId, hash, size, type, "");
+				}
+				delete [] data;
+				break;
+			}
+		}
+
+		BGApp::getInstance()->onMediaUploadRequest("failed", msgId, "", "", -1);
+
 		delete[] data;
 		break;
 	}
@@ -1415,8 +1554,16 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 		std::map<std::string, MediaUploader*>::iterator it =
 				WebosBGApp::uploads.find(data[0]);
 		if (it != WebosBGApp::uploads.end()) {
-			SDL_Thread* thread = it->second->thread;
-			it->second->exit = true;
+			MediaUploader* mediaUploader = it->second;
+			if (mediaUploader->uploading) {
+				mediaUploader->exit = true;
+				mediaUploader->uploading = false;
+			} else {
+				if (mediaUploader->isTempFile)
+					mediaUploader->removeFile();
+				WebosBGApp::uploads.erase(mediaUploader->msgId);
+				delete mediaUploader;
+			}
 		}
 
 		delete[] data;
@@ -1679,7 +1826,8 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				try {
 					std::vector<string> jids;
 					for (int i = 0; i < cJSON_GetArraySize(json); i++) {
-						jids.push_back(cJSON_GetArrayItem(json, i)->valuestring);
+						jids.push_back(
+								cJSON_GetArrayItem(json, i)->valuestring);
 					}
 					fConn->sendGetPictureIds(jids);
 				} catch (WAException& ex) {
@@ -1701,7 +1849,7 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				} catch (WAException& ex) {
 					_LOGDATA("error sending get picture");
 				}
-				delete [] data;
+				delete[] data;
 			}
 		}
 		break;
@@ -1720,20 +1868,25 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 					if (path.compare("") != 0) {
 						cJSON* json = cJSON_Parse(data[2].c_str());
 						int size = cJSON_GetObjectItem(json, "size")->valueint;
-						double scale = cJSON_GetObjectItem(json, "scale")->valuedouble;
+						double scale =
+								cJSON_GetObjectItem(json, "scale")->valuedouble;
 						int x = cJSON_GetObjectItem(json, "x")->valueint;
 						int y = cJSON_GetObjectItem(json, "y")->valueint;
 
 						char buffer[1024];
-						std::string tempFile = "temp" + Utilities::getNameFromPath(path);
+						std::string tempFile = "temp"
+								+ Utilities::getNameFromPath(path);
 						PDL_GetDataFilePath(tempFile.c_str(), buffer, 1024);
 						std::string destFile(buffer);
 						_LOGDATA("Temp file %s", destFile.c_str());
-						if (resizer.makeProfileImage2(path, destFile, size, scale, x, y, 64512) == 0) {
+						if (resizer.makeProfileImage2(path, destFile, size,
+								scale, x, y, 64512) == 0) {
 							std::vector<unsigned char>* bytes;
-							if ((bytes = Utilities::loadFileToBytes(destFile)) != NULL) {
+							if ((bytes = Utilities::loadFileToBytes(destFile))
+									!= NULL) {
 								remove(destFile.c_str());
-								_LOGDATA("sending picture data %d", bytes->size());
+								_LOGDATA("sending picture data %d",
+										bytes->size());
 								fConn->sendSetPicture(jid, bytes);
 							}
 						}
@@ -1744,9 +1897,9 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				} catch (WAException& ex) {
 					_LOGDATA("error sending get picture %s", ex.what());
 					std::vector<unsigned char> v;
-					WebosBGApp::_instance->onSendGetPicture("error",v,"","");
+					WebosBGApp::_instance->onSendGetPicture("error", v, "", "");
 				}
-				delete [] data;
+				delete[] data;
 			}
 		}
 		break;
@@ -1757,14 +1910,20 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 			WAConnection* fConn = BGApp::getInstance()->_xmpprunner->_connection;
 			if (fConn != NULL) {
 				cJSON* json = (cJSON*) Event.user.data1;
-				std::vector<GroupSetting>* data = new std::vector<GroupSetting>(cJSON_GetArraySize(json));
+				std::vector<GroupSetting>* data = new std::vector<GroupSetting>(
+						cJSON_GetArraySize(json));
 				for (int i = 0; i < data->size(); i++) {
-					(*data)[i].jid = cJSON_GetObjectItem(cJSON_GetArrayItem(json, i), "jid")->valuestring;
-					(*data)[i].enabled = cJSON_GetObjectItem(cJSON_GetArrayItem(json, i), "enabled")->valueint;
-					(*data)[i].muteExpiry = cJSON_GetObjectItem(cJSON_GetArrayItem(json, i), "muteExpiry")->valueint;
+					(*data)[i].jid = cJSON_GetObjectItem(
+							cJSON_GetArrayItem(json, i), "jid")->valuestring;
+					(*data)[i].enabled = cJSON_GetObjectItem(
+							cJSON_GetArrayItem(json, i), "enabled")->valueint;
+					(*data)[i].muteExpiry =
+							cJSON_GetObjectItem(cJSON_GetArrayItem(json, i),
+									"muteExpiry")->valueint;
 				}
 				try {
-					fConn->sendClientConfig("", true, "microsoft", true, true, *data);
+					fConn->sendClientConfig("", true, "microsoft", true, true,
+							*data);
 				} catch (WAException& ex) {
 					_LOGDATA("error sending get picture");
 				}
@@ -1776,8 +1935,6 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 	}
 	}
 
-
 	SDL_mutexV(WebosBGApp::staticMutex);
 }
-
 

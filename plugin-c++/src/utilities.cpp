@@ -11,6 +11,8 @@
 #include <time.h>
 #include <fstream>
 #include <iomanip>
+#include <openssl/sha.h>
+#include "base64.h"
 
 namespace Utilities{
 
@@ -262,6 +264,38 @@ bool saveBytesToFile(const string& data, const string& filePath) {
 	return true;
 }
 
+string calc_sha256(const string& filePath) {
+	FILE* file = fopen(filePath.c_str(), "rb");
+	if(!file) return "";
+
+	unsigned char hash[SHA256_DIGEST_LENGTH];
+	SHA256_CTX sha256;
+	SHA256_Init(&sha256);
+	const int bufSize = 32768;
+	char* buffer = (char *) malloc(bufSize);
+	int bytesRead = 0;
+	if(!buffer) return "";
+	while((bytesRead = fread(buffer, 1, bufSize, file)))
+	{
+		SHA256_Update(&sha256, buffer, bytesRead);
+	}
+	SHA256_Final(hash, &sha256);
+
+	fclose(file);
+	free(buffer);
+	return base64_encode(hash, SHA256_DIGEST_LENGTH);
+}
+
+
+int getFileSize(const string& filePath) {
+	std::ifstream in(filePath.c_str(), ios::in | ios::binary | ios::ate);
+	if (in.fail()) return -1;
+	int size = in.tellg();
+	in.close();
+	if (in.fail()) return -1;
+	return size;
+}
+
 vector<unsigned char>* loadFileToBytes(const string& path) {
 	vector<unsigned char>* bytes = NULL;
 	std::ifstream in(path.c_str(), ios::in | ios::binary | ios::ate);
@@ -319,6 +353,8 @@ vector<unsigned char>* getChallengeData(const std::string& challengeFile) {
 bool saveChallengeData(const std::vector<unsigned char>& data, const std::string& challengeFile) {
 	return saveBytesToFile(data, challengeFile);
 }
+
+
 
 std::string utf8_to_utf16(const std::string& utf8)
 {
@@ -382,24 +418,25 @@ std::string utf8_to_utf16(const std::string& utf8)
 			utf16 += (char) uni;
 		}
 		else
-		if (uni <= 0xFFFF)
-		{
-			stringstream value;
-			value << std::setw(4) << std::setfill('0') << Utilities::itoa(uni, 16).c_str();
-			utf16 += "\\u" + value.str();
-		}
-		else
-		{
-			stringstream value1, value2;
-			uni -= 0x10000;
-			value1 << std::setw(4) << std::setfill('0') << Utilities::itoa(((uni >> 10) + 0xD800), 16);
-			utf16 += "\\u" + value1.str();
+			if (uni <= 0xFFFF)
+			{
+				stringstream value;
+				value << std::setw(4) << std::setfill('0') << Utilities::itoa(uni, 16).c_str();
+				utf16 += "\\u" + value.str();
+			}
+			else
+			{
+				stringstream value1, value2;
+				uni -= 0x10000;
+				value1 << std::setw(4) << std::setfill('0') << Utilities::itoa(((uni >> 10) + 0xD800), 16);
+				utf16 += "\\u" + value1.str();
 
-			value2 << std::setw(4) << std::setfill('0') << Utilities::itoa(((uni & 0x3FF) + 0xDC00), 16);
-			utf16 += "\\u" + value2.str();
-		}
+				value2 << std::setw(4) << std::setfill('0') << Utilities::itoa(((uni & 0x3FF) + 0xDC00), 16);
+				utf16 += "\\u" + value2.str();
+			}
 	}
 	return utf16;
 }
+
 
 }

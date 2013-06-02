@@ -72,10 +72,12 @@ namespace Utilities{
 	extern string removeWaDomainFromJid(const string& jid);
 	extern string getNameFromPath(const std::string& path);
 	extern vector<unsigned char>* loadFileToBytes(const string& path);
+	extern int getFileSize(const string& filePath);
 	extern bool fileExists(const std::string& path);
 	extern std::vector<unsigned char>* getChallengeData(const std::string& file);
 	extern bool saveChallengeData(const std::vector<unsigned char>& data, const std::string& file);
 	extern std::string utf8_to_utf16(const std::string& utf8);
+	extern string calc_sha256(const string& filePath);
 }
 #endif
 
