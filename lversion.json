@@ -1,8 +1,8 @@
 {
-	"version": "1.5.5",
+	"version": "1.5.6",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Fixes the problem getting the sms/voice code."
+		"Fixed last registration problem (fail-old-version)"
 	],
-	"message": "Fixes the problem getting the sms/voice code."
+	"message": "Fixed last registration problem (fail-old-version)"
 }
