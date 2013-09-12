@@ -1,8 +1,14 @@
 {
-	"version": "1.5.6",
+	"version": "1.6.0",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Fixed last registration problem (fail-old-version)"
+		"Fixed last registration problem (fail-old-version)",
+		"Send audio memos using microphone button in chat view",
+		"Added support for broadcast messages",
+		"Send/forward message to multiple recipients",
+		"Export chat messages into html file",
+		"See online status in contacts list",
+		"Solved some other minor bugs"
 	],
-	"message": "Fixed last registration problem (fail-old-version)"
+	"message": "Fixed last registration problem (fail-old-version) and other new features."
 }
