@@ -1,14 +1,13 @@
 {
-	"version": "1.6.0",
+	"version": "1.6.1",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Fixed last registration problem (fail-old-version)",
-		"Send audio memos using microphone button in chat view",
-		"Added support for broadcast messages",
-		"Send/forward message to multiple recipients",
-		"Export chat messages into html file",
-		"See online status in contacts list",
+		"Added functionality to mute individual group chats",
+		"Added option to change the background image of the chat (in Preferences)",
+		"Attempt to solve the problem of emojis on iPhone (please try it and tell me)",
+		"Changed speech bubbles",
+		"Updated Chinese, Italian and Netherlands translations",
 		"Solved some other minor bugs"
 	],
-	"message": "Fixed last registration problem (fail-old-version) and other new features."
+	"message": "Added functionallity to mute individual group chats and some visual changes."
 }
