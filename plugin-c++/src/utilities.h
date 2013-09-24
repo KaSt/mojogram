@@ -66,6 +66,7 @@ namespace Utilities{
 	extern unsigned char* bytesToHex(unsigned char* bytes, int length);
 	extern unsigned char forDigit(int b);
 	extern string md5String(const string& data);
+	extern bool appendStringToFile(const string& data, const string& filePath);
 	extern bool saveStringToFile(const string& data, const string& filePath);
 	extern bool saveBytesToFile(const string& data, const string& filePath);
 	extern bool saveBytesToFile(const std::vector<unsigned char>& data, const string& filePath);

@@ -9,7 +9,8 @@ function AccountAssistant() {
 }
 
 AccountAssistant.prototype.setup = function() {
-	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+	
+	if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
 		var menuModel = {
 			visible : true,
 			items : [{
@@ -51,7 +52,8 @@ AccountAssistant.prototype.setup = function() {
 		pushN = appdata.pushName;
 		passw = appdata.password;
 	}
-
+	
+		
 	this.controller.get("headerTitle").update($L("Account settings"));
 	this.controller.get("ccLabel").update($L("CC"));
 	this.controller.get("mobilePhoneLabel").update($L("Mobile Phone"));
@@ -476,11 +478,11 @@ AccountAssistant.prototype.waitLoginResult = function(data) {
 			data.registered = true;
 			_appData.put(data);
 			this.login = true;
-			if (_mainAssistant == null)
-				this.controller.stageController.swapScene("main");
+			if (_chatsAssistant == null)
+				this.controller.stageController.swapScene("chats-list");
 			else {
-				this.controller.stageController.popScenesTo("main");
-				_mainAssistant.restart();
+				this.controller.stageController.popScenesTo("chats-list");
+				_chatsAssistant.restart();
 			}
 		} else {
 			var window = this.controller.stageController.activeScene().window;
@@ -564,11 +566,11 @@ AccountAssistant.prototype.waitAccountResponse = function(data, type, method) {
 				onChoose : function(value) {
 					if ((this.response.status != 'fail') && (this.response.pw)) {
                         this.login = true;
-						if (_mainAssistant == null)
-							this.controller.stageController.swapScene("main");
+						if (_chatsAssistant == null)
+							this.controller.stageController.swapScene("chats-list");
 						else {
-							this.controller.stageController.popScenesTo("main");
-							_mainAssistant.restart();
+							this.controller.stageController.popScenesTo("chats-list");
+							_chatsAssistant.restart();
 						}
 					}
 				}.bind(this)

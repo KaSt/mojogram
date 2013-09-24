@@ -1,3 +1,38 @@
+Utilities.statusChoices = [{
+        label: $L("Available"),
+        value: $L("Available")
+    }, {
+        label: $L("Busy"),
+        value: $L("Busy")
+    }, {
+        label: $L("At school"),
+        value: $L("At school")
+    }, {
+        label: $L("At the movies"),
+        value: $L("At the movies")
+    }, {
+        label: $L("At work"),
+        value: $L("At work")
+    }, {
+        label: $L("Battery about to die"),
+        value: $L("Battery about to die")
+    }, {
+        label: $L("In a meeting"),
+        value: $L("In a meeting")
+    }, {
+        label: $L("At the gym"),
+        value: $L("At the gym")
+    }, {
+        label: $L("Sleeping"),
+        value: $L("Sleeping")
+    }, {
+        label: $L("Custom"),
+        value: "_custom_"
+    }];
+	
+function Utilities() {
+}
+
 function formatBytes(bytes, precision)
 {  
     var kilobyte = 1024;
@@ -41,3 +76,5 @@ function Error(assistant, msg) {
         }
     }
 }
+
+

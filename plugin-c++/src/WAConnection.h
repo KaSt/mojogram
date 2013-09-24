@@ -5,9 +5,6 @@
  *      Author: Antonio
  */
 
-
-
-
 #ifndef WACONNECTION_H_
 #define WACONNECTION_H_
 
@@ -40,10 +37,10 @@ public:
 	virtual void onAccountChange(int paramInt, long paramLong)=0;
 	virtual void onPrivacyBlockListAdd(const std::string& paramString)=0;
 	virtual void onPrivacyBlockListClear()=0;
-	virtual void onDirty(const std::map<string,string>& paramHashtable)=0;
+	virtual void onDirty(const std::map<string, string>& paramHashtable)=0;
 	virtual void onDirtyResponse(int paramHashtable)=0;
 	virtual void onRelayRequest(const std::string& paramString1, int paramInt, const std::string& paramString2)=0;
-	virtual void onSendGetPictureIds(std::map<string,string>* ids)=0;
+	virtual void onSendGetPictureIds(std::map<string, string>* ids)=0;
 	virtual void onSendGetPicture(const std::string& jid, const std::vector<unsigned char>& data, const std::string& oldId, const std::string& newId)=0;
 	virtual void onPictureChanged(const std::string& from, const std::string& author, bool set)=0;
 	virtual void onDeleteAccount(bool result)=0;
@@ -58,7 +55,8 @@ public:
 	virtual void onServerProperties(std::map<std::string, std::string>* nameValueMap)=0;
 	virtual void onGroupCreated(const std::string& paramString1, const std::string& paramString2)=0;
 	virtual void onGroupInfo(const std::string& paramString1, const std::string& paramString2, const std::string& paramString3, const std::string& paramString4, int paramInt1, int paramInt2)=0;
-	virtual void onGroupInfoFromList(const std::string& paramString1, const std::string& paramString2, const std::string& paramString3, const std::string& paramString4, int paramInt1, int paramInt2)=0;
+	virtual void onGroupInfoFromList(const std::string& paramString1, const std::string& paramString2, const std::string& paramString3, const std::string& paramString4, int paramInt1,
+			int paramInt2)=0;
 	virtual void onOwningGroups(const std::vector<string>& paramVector)=0;
 	virtual void onSetSubject(const std::string& paramString)=0;
 	virtual void onAddGroupParticipants(const std::string& paramString, const std::vector<string>& paramVector, int paramHashtable)=0;
@@ -68,8 +66,6 @@ public:
 	virtual void onLeaveGroup(const std::string& paramString)=0;
 };
 
-
-
 class MessageStore {
 public:
 	MessageStore();
@@ -78,7 +74,6 @@ public:
 
 	virtual ~MessageStore();
 };
-
 
 class GroupSetting {
 public:
@@ -99,7 +94,9 @@ class WAConnection {
 	protected:
 		WAConnection* con;
 	public:
-		IqResultHandler(WAConnection* con) {this->con = con;}
+		IqResultHandler(WAConnection* con) {
+			this->con = con;
+		}
 		virtual void parse(ProtocolTreeNode* paramProtocolTreeNode, const std::string& paramString) throw (WAException)=0;
 		void error(ProtocolTreeNode* node, int code) {
 			_LOGDATA("WAConnection: error node %s: code = %d", node->getAttributeValue("id")->c_str(), code);
@@ -119,13 +116,16 @@ class WAConnection {
 			delete nodes;
 		}
 
-		virtual ~IqResultHandler() {}
+		virtual ~IqResultHandler() {
+		}
 
 	};
 
 	class IqResultPingHandler: public IqResultHandler {
 	public:
-		IqResultPingHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultPingHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			if (this->con->event_handler != NULL)
 				this->con->event_handler->onPingResponseReceived();
@@ -141,9 +141,12 @@ class WAConnection {
 	private:
 		std::string type;
 	public:
-		IqResultGetGroupsHandler(WAConnection* con, const std::string& type ):IqResultHandler(con) {this->type = type;}
+		IqResultGetGroupsHandler(WAConnection* con, const std::string& type) :
+				IqResultHandler(con) {
+			this->type = type;
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
-			std::vector<std::string> groups;
+			std::vector < std::string > groups;
 			this->con->readGroupList(node, groups);
 			if (this->con->group_event_handler != NULL) {
 				if (this->type.compare("participating") == 0)
@@ -156,11 +159,13 @@ class WAConnection {
 
 	class IqResultServerPropertiesHandler: public IqResultHandler {
 	public:
-		IqResultServerPropertiesHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultServerPropertiesHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			std::vector<ProtocolTreeNode*>* nodes = node->getAllChildren("prop");
-			std::map<std::string,std::string> nameValueMap;
-			for (size_t i = 0; i < nodes->size();i++) {
+			std::map < std::string, std::string > nameValueMap;
+			for (size_t i = 0; i < nodes->size(); i++) {
 				ProtocolTreeNode* propNode = (*nodes)[i];
 				std::string* nameAttr = propNode->getAttributeValue("name");
 				std::string* valueAttr = propNode->getAttributeValue("value");
@@ -174,7 +179,9 @@ class WAConnection {
 
 	class IqResultPrivayListHandler: public IqResultHandler {
 	public:
-		IqResultPrivayListHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultPrivayListHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			ProtocolTreeNode* queryNode = node->getChild(0);
 			ProtocolTreeNode::require(queryNode, "query");
@@ -198,9 +205,11 @@ class WAConnection {
 
 	class IqResultGetGroupInfoHandler: public IqResultHandler {
 	public:
-		IqResultGetGroupInfoHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultGetGroupInfoHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
-			ProtocolTreeNode* groupNode =  node->getChild(0);
+			ProtocolTreeNode* groupNode = node->getChild(0);
 			ProtocolTreeNode::require(groupNode, "group");
 			// std::string* gid = groupNode->getAttributeValue("id");
 			std::string* owner = groupNode->getAttributeValue("owner");
@@ -215,9 +224,11 @@ class WAConnection {
 
 	class IqResultGetGroupParticipantsHandler: public IqResultHandler {
 	public:
-		IqResultGetGroupParticipantsHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultGetGroupParticipantsHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
-			std::vector<std::string> participants;
+			std::vector < std::string > participants;
 			this->con->readAttributeList(node, participants, "participant", "jid");
 			if (this->con->group_event_handler != NULL)
 				this->con->group_event_handler->onGetParticipants(from, participants);
@@ -226,7 +237,9 @@ class WAConnection {
 
 	class IqResultCreateGroupChatHandler: public IqResultHandler {
 	public:
-		IqResultCreateGroupChatHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultCreateGroupChatHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			ProtocolTreeNode* groupNode = node->getChild(0);
 			ProtocolTreeNode::require(groupNode, "group");
@@ -238,7 +251,9 @@ class WAConnection {
 
 	class IqResultQueryLastOnlineHandler: public IqResultHandler {
 	public:
-		IqResultQueryLastOnlineHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultQueryLastOnlineHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			ProtocolTreeNode* firstChild = node->getChild(0);
 			ProtocolTreeNode::require(firstChild, "query");
@@ -259,7 +274,8 @@ class WAConnection {
 		std::string oldId;
 		std::string newId;
 	public:
-		IqResultGetPhotoHandler(WAConnection* con, const std::string& jid, const std::string& oldId, const std::string& newId):IqResultHandler(con) {
+		IqResultGetPhotoHandler(WAConnection* con, const std::string& jid, const std::string& oldId, const std::string& newId) :
+				IqResultHandler(con) {
 			this->jid = jid;
 			this->oldId = oldId;
 			this->newId = newId;
@@ -294,7 +310,10 @@ class WAConnection {
 	private:
 		std::string jid;
 	public:
-		IqResultSetPhotoHandler(WAConnection* con, const std::string& jid):IqResultHandler(con) {this->jid = jid;}
+		IqResultSetPhotoHandler(WAConnection* con, const std::string& jid) :
+				IqResultHandler(con) {
+			this->jid = jid;
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			if (this->con->event_handler != NULL) {
 				std::string* photoId = NULL;
@@ -308,20 +327,21 @@ class WAConnection {
 		}
 	};
 
-
 	class IqResultGetPictureIdsHandler: public IqResultHandler {
 	public:
-		IqResultGetPictureIdsHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultGetPictureIdsHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			// _LOGDATA("onGetPhotoIds %s", node->toString().c_str());
 			ProtocolTreeNode* groupNode = node->getChild("list");
 			std::vector<ProtocolTreeNode*>* children = groupNode->getAllChildren("user");
-			std::map<std::string, std::string> ids;
+			std::map < std::string, std::string > ids;
 			for (int i = 0; i < children->size(); i++) {
 				std::string* jid = (*children)[i]->getAttributeValue("jid");
 				std::string* id = (*children)[i]->getAttributeValue("id");
 				if (jid != NULL) {
-					ids[*jid] = (id == NULL? "": *id);
+					ids[*jid] = (id == NULL ? "" : *id);
 				}
 			}
 			delete children;
@@ -334,7 +354,9 @@ class WAConnection {
 
 	class IqResultSendDeleteAccount: public IqResultHandler {
 	public:
-		IqResultSendDeleteAccount(WAConnection* con):IqResultHandler(con) {}
+		IqResultSendDeleteAccount(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			if (this->con->event_handler != NULL) {
 				this->con->event_handler->onDeleteAccount(true);
@@ -350,14 +372,18 @@ class WAConnection {
 
 	class IqResultClearDirtyHandler: public IqResultHandler {
 	public:
-		IqResultClearDirtyHandler(WAConnection* con):IqResultHandler(con) {}
+		IqResultClearDirtyHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 		}
 	};
 
 	class IqSendClientConfigHandler: public IqResultHandler {
 	public:
-		IqSendClientConfigHandler(WAConnection* con):IqResultHandler(con) {}
+		IqSendClientConfigHandler(WAConnection* con) :
+				IqResultHandler(con) {
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			_LOGDATA("Clientconfig response %s", node->toString().c_str());
 		}
@@ -373,7 +399,12 @@ class WAConnection {
 		std::string msgId;
 		int size;
 	public:
-		IqResultRequestUploadHandler(WAConnection* con, const std::string& hash, const std::string& msgId, int size):IqResultHandler(con) {this->hash = hash; this->msgId = msgId; this->size = size;}
+		IqResultRequestUploadHandler(WAConnection* con, const std::string& hash, const std::string& msgId, int size) :
+				IqResultHandler(con) {
+			this->hash = hash;
+			this->msgId = msgId;
+			this->size = size;
+		}
 		virtual void parse(ProtocolTreeNode* node, const std::string& from) throw (WAException) {
 			ProtocolTreeNode* mediaNode = node->getChild("media");
 			if (mediaNode != NULL) {
@@ -402,8 +433,7 @@ class WAConnection {
 		}
 	};
 
-
-	private:
+private:
 	WALogin* login;
 	BinTreeNodeReader* in;
 	BinTreeNodeWriter* out;
@@ -417,11 +447,14 @@ class WAConnection {
 	// std::<string, FMessage* > message_store;
 
 	void init(WAListener* event_handler, WAGroupListener* group_event_handler);
-	void sendMessageWithMedia(FMessage* message) throw(WAException);
-	void sendMessageWithBody(FMessage* message) throw(WAException);
-	std::map<string, string>* parseCategories(ProtocolTreeNode* node) throw(WAException);
-	void parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* node) throw(WAException);
-	ProtocolTreeNode* getReceiptAck(const std::string& to, const std::string& id, const std::string& receiptType) throw(WAException);
+	void sendMessageWithMedia(FMessage* message) throw (WAException);
+	void sendMessageWithBody(FMessage* message) throw (WAException);
+	void sendBroadcastMessageWithBody(const std::vector<std::string>& jids, FMessage* message) throw (WAException);
+	void sendBroadcastMessageWithMedia(const std::vector<std::string>& jids, FMessage* message) throw (WAException);
+	ProtocolTreeNode* getMediaNode(FMessage* message) throw (WAException);
+	std::map<string, string>* parseCategories(ProtocolTreeNode* node) throw (WAException);
+	void parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* node) throw (WAException);
+	ProtocolTreeNode* getReceiptAck(const std::string& to, const std::string& id, const std::string& receiptType) throw (WAException);
 	std::string makeId(const std::string& prefix);
 	void sendGetGroups(const std::string& id, const std::string& type) throw (WAException);
 	void readGroupList(ProtocolTreeNode* node, std::vector<std::string>& groups) throw (WAException);
@@ -429,11 +462,11 @@ class WAConnection {
 	void readAttributeList(ProtocolTreeNode* node, std::vector<std::string>& vector, const std::string& tag, const std::string& attribute) throw (WAException);
 	void sendVerbParticipants(const std::string& gjid, const std::vector<std::string>& participants, const std::string& id, const std::string& inner_tag) throw (WAException);
 	bool supportsReceiptAcks();
-	static ProtocolTreeNode* getMessageNode(FMessage* message, ProtocolTreeNode* node);
+	static ProtocolTreeNode* getMessageNode(FMessage* message, ProtocolTreeNode* node1, ProtocolTreeNode* node2 = NULL);
 	static ProtocolTreeNode* getSubjectMessage(const std::string& to, const std::string& id, ProtocolTreeNode* child) throw (WAException);
 	std::vector<ProtocolTreeNode*>* processGroupSettings(const std::vector<GroupSetting>& gruops);
 
-	public:
+public:
 	WAConnection(WAListener* event_handler = NULL, WAGroupListener* group_event_handler = NULL);
 	virtual ~WAConnection();
 	std::string jid;
@@ -450,30 +483,30 @@ class WAConnection {
 	KeyStream* inputKey;
 	KeyStream* outputKey;
 
-
 	static std::string removeResourceFromJid(const std::string& jid);
 
 	WALogin* getLogin();
 	void setLogin(WALogin* login);
 	void setVerboseId(bool b);
-	void sendMessage(FMessage* message) throw(WAException);
-	void sendAvailableForChat() throw(WAException);
-	bool read() throw(WAException);
-	void sendNop() throw(WAException);
-	void sendPing() throw(WAException);
+	void sendMessage(FMessage* message) throw (WAException);
+	void sendBroadcastMessage(const std::vector<std::string>& jids, FMessage* message) throw (WAException);
+	void sendAvailableForChat() throw (WAException);
+	bool read() throw (WAException);
+	void sendNop() throw (WAException);
+	void sendPing() throw (WAException);
 	void sendQueryLastOnline(const std::string& jid) throw (WAException);
-	void sendPong(const std::string& id) throw(WAException);
-	void sendComposing(const std::string& to) throw(WAException);
-	void sendActive() throw(WAException);
-	void sendInactive() throw(WAException);
-	void sendPaused(const std::string& to) throw(WAException);
-	void sendSubjectReceived(const std::string& to, const std::string& id) throw(WAException);
-	void sendMessageReceived(FMessage* message) throw(WAException);
-	void sendDeliveredReceiptAck(const std::string& to, const std::string& id) throw(WAException);
+	void sendPong(const std::string& id) throw (WAException);
+	void sendComposing(const std::string& to) throw (WAException);
+	void sendActive() throw (WAException);
+	void sendInactive() throw (WAException);
+	void sendPaused(const std::string& to) throw (WAException);
+	void sendSubjectReceived(const std::string& to, const std::string& id) throw (WAException);
+	void sendMessageReceived(FMessage* message) throw (WAException);
+	void sendDeliveredReceiptAck(const std::string& to, const std::string& id) throw (WAException);
 	void sendVisibleReceiptAck(const std::string& to, const std::string& id) throw (WAException);
 	void sendPresenceSubscriptionRequest(const std::string& to) throw (WAException);
-	void sendClientConfig(const std::string& sound,  const std::string& pushID, bool preview, const std::string& platform) throw(WAException);
-	void sendClientConfig(const std::string& pushID, bool preview, const std::string& platform, bool defaultSettings, bool groupSettings, const std::vector<GroupSetting>& groups) throw(WAException);
+	void sendClientConfig(const std::string& sound, const std::string& pushID, bool preview, const std::string& platform) throw (WAException);
+	void sendClientConfig(const std::string& pushID, bool preview, const std::string& platform, bool defaultSettings, bool groupSettings, const std::vector<GroupSetting>& groups) throw (WAException);
 	void sendClose() throw (WAException);
 	void sendGetPrivacyList() throw (WAException);
 	void sendGetServerProperties() throw (WAException);
@@ -492,10 +525,9 @@ class WAConnection {
 	void sendGetPicture(const std::string& jid, const std::string& type, const std::string& oldId, const std::string& newId) throw (WAException);
 	void sendGetPictureIds(const std::vector<std::string>& jids) throw (WAException);
 	void sendSetPicture(const std::string& jid, std::vector<unsigned char>* data) throw (WAException);
-	void sendNotificationReceived(const std::string& from, const std::string& id) throw(WAException);
-	void sendDeleteAccount() throw(WAException);
+	void sendNotificationReceived(const std::string& from, const std::string& id) throw (WAException);
+	void sendDeleteAccount() throw (WAException);
 	void sendRequestUpload(const std::string& msgId, const std::string& hash, int size, const std::string& type, const std::string& orighash) throw (WAException);
 };
-
 
 #endif /* WACONNECTION_H_ */

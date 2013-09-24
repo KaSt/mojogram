@@ -3,7 +3,7 @@ function UpdateAssistant(updateInfo) {
 }
 
 UpdateAssistant.prototype.setup = function() {
-	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+	if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
 		var menuModel = {
 			visible : true,
 			items : [{

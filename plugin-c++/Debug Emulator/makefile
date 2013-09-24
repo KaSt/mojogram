@@ -44,7 +44,7 @@ all: ../../mojo/mojowhatsup_service_plugin
 ../../mojo/mojowhatsup_service_plugin: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	i686-pc-linux-gnu-g++ -L"C:\Archivos de programa\HP Webos\PDK\emulator\lib" -Wl,--allow-shlib-undefined -o "../../mojo/mojowhatsup_service_plugin" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-g++ -L"C:\HP Webos\PDK\emulator\lib" -Wl,--allow-shlib-undefined -o "../../mojo/mojowhatsup_service_plugin" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

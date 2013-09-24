@@ -16,6 +16,7 @@
 #include "ChatState.h"
 #include "fastevents.h"
 #include <curl/curl.h>
+#include <sys/stat.h>
 
 
 #define PACKAGEID "com.palm.mojowhatsup"
@@ -139,6 +140,7 @@ int main(int argc, char** argv) {
 
 	_LOGDATA("Set Select Timeout to %d seconds, send ping %d, ping interval %d", ApplicationData::SELECT_TIMEOUT, ChatState::SEND_PING, ChatState::MAX_SILENT_INTERVAL);
 	_LOGDATA("Set media dir %s", WebosBGApp::MOJOWHATSUP_MEDIA_DIR.c_str());
+	mkdir(WebosBGApp::MOJOWHATSUP_MEDIA_DIR.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
 
 	try {
 		int ret = plugin_initialize();

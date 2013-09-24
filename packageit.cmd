@@ -1,0 +1,1 @@
+palm-package mojowhatsup.application mojowhatsup.package mojowhatsup.service

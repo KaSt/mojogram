@@ -1,6 +1,8 @@
 <div class='palm-row chat-entry chatRow #{msgTypeFormatted}' style="font-size: #{textSizeFormatted}px" x-mojo-tap-highlight="momentary">
 	<div class="palm-row-wrapper">
-		<div class="chat-balloon message message-container">
+		<div class="chat-balloon #{bubbleclassFormatted} message message-container">
+			<div class="arrow-before #{bubbleclassFormatted}"></div>			
+			<div class="arrow-after #{bubbleclassFormatted}"></div>
 			<div class="chat-balloon-wrapper">
 				<div class="message-body">
 					<div class="title truncating-text" style="display: #{nameVisibleFormatted}; color:#{contactColorFormatted}">

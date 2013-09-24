@@ -1,16 +1,26 @@
 <div class='palm-row' style="min-height: 70px" x-mojo-tap-highlight="momentary">
-	<div class='palm-row-wrapper'>
-		#{-iconFormatted}
-		<div class="list-unread-container#{unreadBoolFormatted} icon right">
-			<div class="list-unread#{unreadBoolFormatted}">#{unreadFormatted}</div>
-		</div>
-		<div class="title truncating-text" style="padding: 0 0 0 0">#{-chatNameFormatted}</div>		
-		<div class="preview truncating-text" style="padding: 0 0 0 0">
-			<div class="info-container">
-				<div class="status-icon #{statusIconFormatted}"></div>
-				<div class="message-preview">#{-textMessageFormatted}</div>
-			</div>
-		</div>
-		<div class="time-info label">#{timeFormatted}</div>
-	</div>
+    <div class='palm-row-wrapper'>
+        #{-iconFormatted}
+        <div class="icon right list-unread-container#{unreadBoolFormatted} ">
+            <div class="list-unread#{unreadBoolFormatted}">
+                #{unreadFormatted}
+            </div>
+        </div>
+        <div class="title truncating-text" style="padding: 0 0 0 0">
+            #{-chatNameFormatted}		
+        </div>
+		<div class="muted" style="display:#{mutedFormatted}"></div>			
+        <div class="preview truncating-text" style="padding: 0 0 0 0">
+            <div class="info-container">
+                <div class="status-icon #{statusIconFormatted}">
+                </div>
+                <div class="message-preview">
+                    #{-textMessageFormatted}
+                </div>
+            </div>
+        </div>
+        <div class="time-info label">
+            #{timeFormatted}
+        </div>
+    </div>
 </div>

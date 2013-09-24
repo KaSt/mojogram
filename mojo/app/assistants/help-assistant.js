@@ -24,7 +24,7 @@ function HelpAssistant() {
 			{
 				label: $L("Donate"),
 				type: "web",
-				url: "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=N3SZKECYCN6HN&lc=ES&item_name=Antonio%20Morales&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+				url: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R2JN6AUDPYHGU"
 			},
 			{
 				label: $L("Send e-mail"),
@@ -37,7 +37,7 @@ function HelpAssistant() {
 }
 
 HelpAssistant.prototype.setup = function() {
-	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+	if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
 		var menuModel = {
 			visible : true,
 			items : [{

@@ -48,6 +48,7 @@ public:
 	int media_duration_seconds;
 	double latitude;
 	double longitude;
+	bool isBroadcast;
 
 	static const unsigned char WA_TYPE_UNDEFINED = 0;
 	static const unsigned char WA_TYPE_IMAGE = 1;

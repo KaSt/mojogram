@@ -14,6 +14,8 @@
 #include "Account.h"
 #include "base64.h"
 #include "JpegImageResizer.h"
+#include <cerrno>
+#include <cstring>
 #include <PDL.h>
 
 SDL_mutex* WebosBGApp::staticMutex = SDL_CreateMutex();
@@ -129,6 +131,10 @@ char* WebosBGApp::fromMessageToJSON(FMessage* message) {
 			cJSON_AddTrueToObject(json, "wants_receipt") :
 			cJSON_AddFalseToObject(json, "wants_receipt"));
 
+	(message->isBroadcast ?
+			cJSON_AddTrueToObject(json, "isbroadcast") :
+			cJSON_AddFalseToObject(json, "isbroadcast"));
+
 	cJSON_AddStringToObject(json, "media_url", message->media_url.c_str());
 	cJSON_AddStringToObject(json, "media_name", message->media_name.c_str());
 	cJSON_AddNumberToObject(json, "media_size", (double) message->media_size);
@@ -148,7 +154,9 @@ FMessage* WebosBGApp::fromJSONtoMessage(const char *string) {
 	std::string remote_jid(
 			cJSON_GetObjectItem(json, "remote_jid")->valuestring);
 	std::string keyId(cJSON_GetObjectItem(json, "keyId")->valuestring);
-	std::string data(cJSON_GetObjectItem(json, "data")->valuestring);
+	std::string data("");
+	if (cJSON_GetObjectItem(json, "data")->type != cJSON_NULL)
+		data = std::string(cJSON_GetObjectItem(json, "data")->valuestring);
 	Key* key = new Key(remote_jid,
 			cJSON_GetObjectItem(json, "from_me")->valueint, keyId);
 	FMessage* fmsg = new FMessage(key);
@@ -234,6 +242,20 @@ PDL_bool WebosBGApp::sendMessage(PDL_JSParameters *params) {
 	userEvent.type = SDL_USEREVENT;
 	userEvent.code = USER_EVENT_SENDMESSAGE;
 	userEvent.data1 = new std::string(PDL_GetJSParamString(params, 0));
+	event.type = SDL_USEREVENT;
+	event.user = userEvent;
+	FE_PushEvent(&event);
+
+	return PDL_TRUE;
+}
+
+PDL_bool WebosBGApp::sendBroadcastMessage(PDL_JSParameters *params) {
+	SDL_Event event;
+	SDL_UserEvent userEvent;
+	userEvent.type = SDL_USEREVENT;
+	userEvent.code = USER_EVENT_SENDBROADCASTMESSAGE;
+	userEvent.data1 = new std::string(PDL_GetJSParamString(params, 0));
+	userEvent.data2 = new std::string(PDL_GetJSParamString(params, 1));
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
 	FE_PushEvent(&event);
@@ -794,6 +816,35 @@ PDL_bool WebosBGApp::sendSetPicture(PDL_JSParameters *params) {
 	return PDL_TRUE;
 }
 
+
+PDL_bool WebosBGApp::saveStringToFile(PDL_JSParameters *params) {
+	_LOGDATA("Called saveFile");
+	std::string data(PDL_GetJSParamString(params, 0));
+	std::string filePath(PDL_GetJSParamString(params, 1));
+
+	if (!Utilities::saveStringToFile(data, filePath)) {
+		_LOGDATA(strerror( errno ));
+		PDL_JSReply(params, "error");
+	} else {
+		PDL_JSReply(params, "ok");
+	}
+	return PDL_TRUE;
+}
+
+PDL_bool WebosBGApp::appendStringToFile(PDL_JSParameters *params) {
+	_LOGDATA("Called appendFile");
+	std::string data(PDL_GetJSParamString(params, 0));
+	std::string filePath(PDL_GetJSParamString(params, 1));
+
+	if (!Utilities::appendStringToFile(data, filePath)) {
+		_LOGDATA(strerror( errno ));
+		PDL_JSReply(params, "error");
+	} else {
+		PDL_JSReply(params, "ok");
+	}
+	return PDL_TRUE;
+}
+
 PDL_bool WebosBGApp::removeFile(PDL_JSParameters *params) {
 	_LOGDATA("Called removeFile");
 	std::string filePath(PDL_GetJSParamString(params, 0));
@@ -901,6 +952,7 @@ int WebosBGApp::registerJSCallBacks() {
 	ret += PDL_RegisterJSHandler("networkStatusChanged", networkStatusChanged);
 	ret += PDL_RegisterJSHandler("nextMessageKeyId", nextMessageKeyId);
 	ret += PDL_RegisterJSHandler("sendMessage", sendMessage);
+	ret += PDL_RegisterJSHandler("sendBroadcastMessage", sendBroadcastMessage);
 	ret += PDL_RegisterJSHandler("sendTyping", sendTyping);
 	ret += PDL_RegisterJSHandler("doStateRequest", doStateRequest);
 	ret += PDL_RegisterJSHandler("sendCreateGroupChat", sendCreateGroupChat);
@@ -934,6 +986,8 @@ int WebosBGApp::registerJSCallBacks() {
 			getAuthorizationString);
 	ret += PDL_RegisterJSHandler("sendMediaUploadRequest",
 			sendMediaUploadRequest);
+	ret += PDL_RegisterJSHandler("appendStringToFile", appendStringToFile);
+	ret += PDL_RegisterJSHandler("saveStringToFile", saveStringToFile);
 	return ret;
 }
 
@@ -1576,6 +1630,7 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				std::string* message = (std::string*) Event.user.data1;
 				FMessage* fmsg = WebosBGApp::fromJSONtoMessage(
 						message->c_str());
+
 				try {
 					fConn->sendMessage(fmsg);
 				} catch (WAException& ex) {
@@ -1587,6 +1642,44 @@ void WebosBGApp::processUserEvent(const SDL_Event& Event) {
 				BGApp::getInstance()->_chatState->userTypingWakeUp();
 				_LOGDATA(
 						"no connection in bgApp's funrunner, trying typing wakeup");
+			}
+		}
+		break;
+	}
+
+	case USER_EVENT_SENDBROADCASTMESSAGE: {
+		if (BGApp::getInstance()->_xmpprunner != NULL) {
+			WAConnection* fConn = BGApp::getInstance()->_xmpprunner->_connection;
+			if (fConn != NULL) {
+				std::string* jids = (std::string*) Event.user.data1;
+				_LOGDATA("Receptores %s", jids->c_str());
+				cJSON* jsonJids = cJSON_Parse(jids->c_str());
+				int size = cJSON_GetArraySize(jsonJids);
+				std::vector<std::string> jidsVector(size);
+				for (int i = 0; i < size; i++) {
+					std::string jid(cJSON_GetArrayItem(jsonJids, i)->valuestring);
+					_LOGDATA("JID %s", jid.c_str());
+					jidsVector[i] = jid;
+				}
+
+				std::string* message = (std::string*) Event.user.data2;
+				FMessage* fmsg = WebosBGApp::fromJSONtoMessage(
+						message->c_str());
+				try {
+					_LOGDATA("ANTES BROADCAST");
+					fConn->sendBroadcastMessage(jidsVector, fmsg);
+					_LOGDATA("DESPUES BROADCAST");
+				} catch (WAException& ex) {
+					_LOGDATA("error sending broadcast message: %s", ex.what());
+				}
+				delete jids;
+				delete message;
+				delete fmsg;
+				cJSON_Delete(jsonJids);
+			} else {
+				BGApp::getInstance()->_chatState->userTypingWakeUp();
+				_LOGDATA(
+						"no connection in bgApp's funrunner, sending broadcast message");
 			}
 		}
 		break;

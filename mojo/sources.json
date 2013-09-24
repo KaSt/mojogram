@@ -1,4 +1,9 @@
-[	
+[	{
+		"source": "app/models/mojowhatsup-service.js"
+	},
+	{
+		"source": "app/models/CaptureHelper.js"
+	},
 	{
 		"source": "app/assistants/password-dialog-assistant.js"
 	}, {
@@ -53,9 +58,6 @@
 		"scenes": "chat",
 		"source": "app/assistants/chat-assistant.js"
 	}, {
-        "scenes": "chats-list",
-        "source": "app/assistants/chats-list-assistant.js"
-    }, {
         "scenes": "dashboard",
         "source": "app/assistants/dashboard-assistant.js"
     }, {
@@ -86,7 +88,13 @@
     	"scenes": "mystatus",
     	"source": "app/assistants/mystatus-assistant.js"
     }, {
+        "scenes": "chats-list",
+        "source": "app/assistants/chats-list-assistant.js"
+    }, {
     	"scenes": "group-chooser",
     	"source": "app/assistants/group-chooser-assistant.js"
+    }, {
+    	"scenes": "broadcast",
+    	"source": "app/assistants/broadcast-assistant.js"
     }
 ]

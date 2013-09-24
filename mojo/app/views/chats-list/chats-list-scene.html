@@ -1,10 +1,25 @@
 <div class="palm-hasheader">
-	<div class="palm-header" id="headerTitle">
-	</div>
 </div>
-
-<div class="palm-header-spacer"></div>
-
-<div class="palm-list" >
-		<div x-mojo-element="FilterList" id="chatsList">
+<div class="palm-header-spacer" style="height: 50px;">
+</div>
+<div class="palm-group unlabeled mystatus">
+    <div class="palm-list">
+        <div class="palm-row single" x-mojo-touch-feedback="inmediate"  id="rowStatus">
+            <div class="palm-row-wrapper">
+	            <div class="label" id="myStatusLabel">
+	            	My status
+                </div>
+                <div id="myStatusTitle" class="title">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id ='Scrim' class='palm-scrim'>
+    <div x-mojo-element="Spinner" id="spinnerId" class="spinnerClass" name="spinnerName">
+    </div>
+</div>
+<div class="palm-list">
+    <div x-mojo-element="FilterList" id="chatsList">
+    </div>
 </div>

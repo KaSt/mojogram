@@ -79,16 +79,16 @@ StatusRequest.prototype.processResponse = function(contacts) {
             _appDB.updateContactStatus(jid, status, iswa);
             if (jid == _myJid) {
                 _appData.put("statusMessage", status);
-                if (_mainAssistant != null)
-                    _mainAssistant.updateMyStatus();
+                if (_chatsAssistant != null)
+                    _chatsAssistant.updateMyStatus();
             }
         }
     }
     this.end();
     if (_contactsAssistant != null) {
         _contactsAssistant.loadContacts();
-    } else if (_mainAssistant != null) {
-        _mainAssistant.loadContacts();
+    } else if (_chatsAssistant != null) {
+        _chatsAssistant.loadContacts();
     }
 }
 

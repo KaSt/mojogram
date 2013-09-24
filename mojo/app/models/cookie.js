@@ -165,7 +165,9 @@ PreferencesCookie.prototype.get = function(reload) {
                 chatTextSize : 16,
                 imageResolution: 800,
                 phoneTypes: "mobile",
-                language: Mojo.Locale.getCurrentLocale()
+                language: Mojo.Locale.getCurrentLocale(),
+				backimageType: "default",
+				bubbleclass: "modern"
             };
 
             this.put(this.cookieData);
@@ -179,15 +181,24 @@ PreferencesCookie.prototype.get = function(reload) {
 };
 
 
-PreferencesCookie.prototype.setDefaultNewValues = function() {
+PreferencesCookie.prototype.setDefaultNewValues = function(){
 	if (!("chatTextSize" in this.cookieData)) 
 		this.cookieData.chatTextSize = 16;
-	if (!("imageResolution" in this.cookieData))
+	if (!("imageResolution" in this.cookieData)) 
 		this.cookieData.imageResolution = 800;
-	if (!("phoneTypes" in this.cookieData))
+	if (!("phoneTypes" in this.cookieData)) 
 		this.cookieData.phoneTypes = "mobile";
-	if (!("language" in this.cookieData))
+	if (!("language" in this.cookieData)) 
 		this.cookieData.language = Mojo.Locale.getCurrentLocale();
-	this.put(this.cookieData);				
+	if (!("backimageType" in this.cookieData)) 
+		this.cookieData.backimageType = "default";
+	if (!("backimagePath" in this.cookieData)) 
+		this.cookieData.backimagePath = "";
+	if (!("bubbleclass" in this.cookieData)) 
+		this.cookieData.bubbleclass = "modern";
+		
+	this.put(this.cookieData);
 }
+
+PreferencesCookie.DEFAULT_BACKGROUND_IMAGE = "images/default-background.jpg";
 

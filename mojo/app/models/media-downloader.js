@@ -26,7 +26,7 @@ MediaDownloader.prototype.requestDownload = function(fileName) {
             target : useUrl,
             mime : Media.getMimeType(this.msg, Media.getExt(useUrl)),
             targetDir : Media.MOJOWHATSUP_MEDIA_DIR,
-            targetFilename : (fileName != null && fileName != undefined ? fileName : new Date().getTime() + "-" + Media.selectFilename(this.msg, useUrl)),
+            targetFilename : (fileName != null && fileName != undefined ? fileName : Media.getDateFormatted() + "-" + Media.selectFilename(this.msg, useUrl)),
             keepFilenameOnRedirect : true,
             subscribe : true
         },

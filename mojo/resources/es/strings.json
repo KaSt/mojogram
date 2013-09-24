@@ -216,5 +216,42 @@
 	
 	"Delete all messages": "Borrar todos los mensajes",
 	"Do you really want to delete all messages from all chats?": "¿Realmente quiere borrar todos los mensajes de todas las conversaciones?",
-	"Do you really want to delete all messages from this chat?": "¿Realmente quiere borrar todos los mensajes de esta conversación?"
+	"Do you really want to delete all messages from this chat?": "¿Realmente quiere borrar todos los mensajes de esta conversación?",
+	
+	"Recording": "Grabando",
+	"seconds": "segundos",
+	"Groups": "Grupos",
+	"Export messages to file": "Exportar mensajes a fichero",
+	"Message history saved successfully!": "¡Mensajes guardados correctamente!",
+	"Error saving message history!": "¡Error guardando los mensajes!",
+	"New broadcast message": "Nuevo mensaje de difusión",
+	"Broadcast message": "Mensaje de difusión",
+	"Broadcast messages": "Mensajes de difusión",
+	"Select recipients": "Seleccione los destinatarios",
+	"selected": "seleccionados",
+	"You must select at least one recipient": "Debes seleccionar al menos un destinatario",
+	"Only recipients who have you in their contact list will recieve the message": "Sólo los destinatarios que te tengan en su lista de contactos recibirán el mensaje",
+	"You can only select up to #{max} recipients": "Sólo puedes seleccionar un máximo de #{max} destinatarios",
+	"recipients": "destinatarios",
+	"Recipients who have received": "Destinatarios que lo han recibido",
+	"Message": "Mensaje",
+	"Message to multiple recipients": "Mensaje a multiples destinatarios",
+	"Multiple recipients": "Multiples destinatarios",
+	"Contact chat" : "Contacto",
+	"Group chat" : "Grupo",
+	"All": "Todas",
+	"Forward message": "Reenviar mensaje",
+	"#{unread} unread messages": "#{unread} mensajes sin leer",
+	
+	"Chat background": "Fondo del chat",
+	"Default": "Por defecto",
+	"Custom image" : "Imagen personalizada",
+	"None": "Ninguna",
+	"Image": "Imagen",
+	"Image path": "Ruta de imagen",
+	"Select": "Seleccionar",
+	
+	"Bubble class": "Tipo burbuja",
+	"All chats": "Todos los chats",
+	"Chat with": "Conversar con"
 }

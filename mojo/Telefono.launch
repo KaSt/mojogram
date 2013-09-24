@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.palm.pdt.debug.core.launch.basicLaunch">
+<stringAttribute key="bad_container_name" value="emulado"/>
+<stringAttribute key="com.palm.pdt.debug.core.launch.appId" value="com.palm.mojowhatsup"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.copyProjects" value="true"/>
+<stringAttribute key="com.palm.pdt.debug.core.launch.deviceName" value="broadway-linux"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.debuggingEnabled" value="true"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.escapeHtml" value="true"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.logEvents" value="true"/>
+<intAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.logLevel" value="99"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.timingEnabled" value="true"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.frameworkConfig.useNativeJson" value="true"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.inspectable" value="false"/>
+<stringAttribute key="com.palm.pdt.debug.core.launch.projectList" value="whatsappwebos-sdk"/>
+<booleanAttribute key="com.palm.pdt.debug.core.launch.useDefaultDevice" value="false"/>
+</launchConfiguration>

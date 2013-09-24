@@ -51,7 +51,7 @@ ImageviewAssistant.prototype.setup = function() {
     var cmdMenuModel = {
         items : [{}, {}, {}, {}]
     };
-    if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+    if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
         cmdMenuModel.items[0] = {
             visible : true,
             items : [{
@@ -478,7 +478,7 @@ ImageviewAssistant.prototype.deactivate = function(event) {
 };
 
 ImageviewAssistant.prototype.cleanup = function(event) {
-    if (_mainAssistant != null && !_appAssistant.isTouchPad()) {	
+    if (_chatsAssistant != null && !_appAssistant.isTouchPad()) {	
 		this.controller.stageController.setWindowOrientation("up");
 	}
 };

@@ -9,7 +9,7 @@ GroupChooserAssistant.prototype.setup = function() {
 		visible : true,
 		items : []
 	};
-	if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+	if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
 		this.menuModel.items = [{
 			icon : "back",
 			command : "goBack"
@@ -49,7 +49,7 @@ GroupChooserAssistant.prototype.setup = function() {
 
 	this.controller.setupWidget("chatsList", {
 		itemTemplate : "group-chooser/list-entry",
-		dividerFunction : this.firstLetter,
+		// dividerFunction : this.firstLetter,
 		delay : 250,
 		filterFunction : this.filterList.bind(this),
 		formatters : {

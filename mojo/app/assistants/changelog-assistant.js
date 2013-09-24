@@ -1,5 +1,51 @@
 function ChangelogAssistant() {
 	this.changelog = [
+	    {
+            version: "v1.6.2",
+            changes: [
+				"GUI simplification (removed main-menu scene)",
+				"Solved the problem of image preview",
+				"Solved the problem of unread message display",
+				"Choose between Palm or Whatsapp speech bubles in Preferences",
+				"Open a private chat with a group participant tapping on his/her message",
+				"Solved some other minor bugs"
+            ]               
+        }, 		
+	    {
+            version: "v1.6.1",
+            changes: [
+				"Added functionality to mute individual group chats",
+				"Added option to change the background image of the chat (in Preferences)",
+				"Attempt to solve the problem of emojis on iPhone (please try it and tell me)",
+				"Changed speech bubbles",
+				"Updated Chinese, Italian and Netherlands translations",
+				"Solved some other minor bugs"
+            ]               
+        }, 	
+	    {
+            version: "v1.6.0",
+            changes: [
+                "Fixed last registration problem (fail-old-version)",
+				"Send audio memos using microphone button in chat view",
+				"Added support for broadcast messages",
+				"Send/forward message to multiple recipients",
+				"Export chat messages into html file",
+				"See online status in contacts list",
+				"Solved some other minor bugs",
+            ]               
+        }, 
+	    {
+            version: "v1.5.6",
+            changes: [
+                "Fixed last registration problem (fail-old-version)"
+            ]               
+        }, 
+                {
+            version: "v1.5.5",
+            changes: [
+                "Fixes the problem getting the sms/voice code."
+            ]               
+        }, 
 	     {
             version: "v1.5.4",
             changes: [
@@ -147,7 +193,7 @@ function ChangelogAssistant() {
 }
 
 ChangelogAssistant.prototype.setup = function() {
-    if (_mainAssistant != null && _appAssistant.isTouchPad()) {
+    if (_chatsAssistant != null && _appAssistant.isTouchPad()) {
         var menuModel = {
             visible : true,
             items : [{

@@ -43,7 +43,7 @@ string ProtocolTreeNode::toString() {
 	if (this->attributes != NULL) {
 		map<string,string>::iterator ii;
 		for (ii = attributes->begin(); ii != attributes->end(); ii++)
-			out += "" + ii->first + "=\"" + ii->second + "\"";
+			out += " " + ii->first + "=\"" + ii->second + "\"";
 	}
 	out += ">\n";
 	std::string* data = getDataAsString();

@@ -157,7 +157,7 @@ LoginAssistant.prototype.waitLoginResult = function(data) {
 		if (_mojowhatsupPlugin.loginResult == "true") {
 			Mojo.Log.info("%j", data);
 			_appData.put(data);
-			this.controller.stageController.swapScene("main");
+			this.controller.stageController.swapScene("chats-list");
 		} else {
 			var window = this.controller.stageController.activeScene().window;
 			Mojo.Controller.errorDialog($L("Login failure"), window);

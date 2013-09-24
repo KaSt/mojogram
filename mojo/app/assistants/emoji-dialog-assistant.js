@@ -112,7 +112,6 @@ EmojiDialogAssistant.prototype.handleCommand = function(event) {
 		if (!event.open)
 			_emojiSelectedIndex = 0; 
         if (this.emojiListWidget.mojo) {
-        	Mojo.Log.error("Selected index %d", _emojiSelectedIndex);
         	this.emojiListWidget.mojo.revealItem(_emojiSelectedIndex, false);
         }        
     }

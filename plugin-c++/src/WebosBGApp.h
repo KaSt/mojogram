@@ -66,6 +66,7 @@ public:
 	static const int USER_EVENT_SENDCLIENTCONFIG = 31;
 	static const int USER_EVENT_SENDEXISTREQUEST = 32;
 	static const int USER_EVENT_SENDMEDIAUPLOADREQUEST= 33;
+	static const int USER_EVENT_SENDBROADCASTMESSAGE= 34;
 
 	static const int USER_EVENT_QUIT = 100;
 
@@ -79,6 +80,7 @@ public:
 	static PDL_bool networkStatusChanged(PDL_JSParameters *params);
 	static PDL_bool nextMessageKeyId(PDL_JSParameters *params);
 	static PDL_bool sendMessage(PDL_JSParameters *params);
+	static PDL_bool sendBroadcastMessage(PDL_JSParameters *params);
 	static PDL_bool sendMessageReceived(PDL_JSParameters *params);
 	static PDL_bool closeConnection(PDL_JSParameters *params);
 	static PDL_bool sendActive(PDL_JSParameters *params);
@@ -99,6 +101,8 @@ public:
 	static PDL_bool sendGetPicture(PDL_JSParameters *params);
 	static PDL_bool sendSetPicture(PDL_JSParameters *params);
 	static PDL_bool removeFile(PDL_JSParameters *params);
+	static PDL_bool saveStringToFile(PDL_JSParameters *params);
+	static PDL_bool appendStringToFile(PDL_JSParameters *params);
 	static PDL_bool sendDeleteAccount(PDL_JSParameters *params);
 	static PDL_bool sendClientConfig(PDL_JSParameters *params);
 	static PDL_bool sendExistRequest(PDL_JSParameters *params);

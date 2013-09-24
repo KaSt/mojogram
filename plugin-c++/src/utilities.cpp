@@ -233,6 +233,17 @@ string md5String(const string& data) {
 	return result;
 }
 
+
+bool appendStringToFile(const string& data, const string& filePath) {
+	std::ofstream out(filePath.c_str(), std::ofstream::out | std::ofstream::app);
+	if (out.fail()) return false;
+	out << data;
+	if (out.fail()) return false;
+	out.close();
+	if (out.fail()) return false;
+	return true;
+}
+
 bool saveStringToFile(const string& data, const string& filePath) {
 	std::ofstream out(filePath.c_str());
 	if (out.fail()) return false;

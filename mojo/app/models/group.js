@@ -35,12 +35,14 @@ Group.prototype.existsParticipant = function(jid) {
 }
 
 Group.prototype.removeParticipant = function(contact) {
-	this.participants.replace('/' + contact.jid + '/g', "");
-	Mojo.Log.error("group participants: %j", this.participants);
+	this.participants = this.participants.replace(new RegExp(contact.jid + ";", "g"), "");
 }
 
 Group.prototype.addParticipant = function(contact) {
-	this.participants += contact.jid + ";";
+	if (contact.jid)
+		this.participants += contact.jid + ";";
+	else
+		this.participants += contact + ";";
 }
 
 Group.prototype.setParticipantsArray = function(participants) {

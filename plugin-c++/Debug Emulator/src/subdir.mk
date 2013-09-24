@@ -80,7 +80,7 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	i686-pc-linux-gnu-g++ -D_DEBUG -I"C:\Archivos de programa\HP webOS\PDK\include" -I"C:\Documents and Settings\Antonio\workspacewebos\mojowhatsup\plugin-c++\include" -I"C:\Archivos de programa\HP webOS\PDK\include\SDL" -I"C:\Archivos de programa\HP webOS\PDK\include\openssl" -O0 -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	i686-pc-linux-gnu-g++ -D_DEBUG -I"C:\HP webOS\PDK\include" -I"C:\Users\usuario\workspacewebos\mojowhatsup\plugin-c++\include" -I"C:\HP webOS\PDK\include\SDL" -I"C:\HP webOS\PDK\include\openssl" -O0 -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

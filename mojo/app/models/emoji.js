@@ -308,6 +308,19 @@ function unicode_to_apple(unicode) {
     return null;
 }
 
+function unicodeEscape(str) {
+    var code, pref = {1: '\\x0', 2: '\\x', 3: '\\u0', 4: '\\u'};
+    return str.replace(/\W/g, function(c) {
+		code = c.charCodeAt(0).toString(16);
+		if (code.length == 3) {
+			return "\\u0" + code;			
+		} else if (code.length == 4) {
+			return "\\u" + code;
+		}
+		return c;
+    });
+}
+
 var emoji_unicode_to_apple = [{
     unicode : "1F466",
     apple : "E001"

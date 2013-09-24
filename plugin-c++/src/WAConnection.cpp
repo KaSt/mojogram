@@ -12,246 +12,22 @@
 #include "utilities.h"
 #include "base64.h"
 
-const char* WAConnection::dictionary[] = {
-		"",
-		"",
-		"",
-		"",
-		"",
-		"account",
-		"ack",
-		"action",
-		"active",
-		"add",
-		"after",
-		"ib",
-		"all",
-		"allow",
-		"apple",
-		"audio",
-		"auth",
-		"author",
-		"available",
-		"bad-protocol",
-		"bad-request",
-		"before",
-		"Bell.caf",
-		"body",
-		"Boing.caf",
-		"cancel",
-		"category",
-		"challenge",
-		"chat",
-		"clean",
-		"code",
-		"composing",
-		"config",
-		"conflict",
-		"contacts",
-		"count",
-		"create",
-		"creation",
-		"default",
-		"delay",
-		"delete",
-		"delivered",
-		"deny",
-		"digest",
-		"DIGEST-MD5-1",
-		"DIGEST-MD5-2",
-		"dirty",
-		"elapsed",
-		"broadcast",
-		"enable",
-		"encoding",
-		"duplicate",
-		"error",
-		"event",
-		"expiration",
-		"expired",
-		"fail",
-		"failure",
-		"false",
-		"favorites",
-		"feature",
-		"features",
-		"field",
-		"first",
-		"free",
-		"from",
-		"g.us",
-		"get",
-		"Glass.caf",
-		"google",
-		"group",
-		"groups",
-		"g_notify",
-		"g_sound",
-		"Harp.caf",
-		"http://etherx.jabber.org/streams",
-		"http://jabber.org/protocol/chatstates",
-		"id",
-		"image",
-		"img",
-		"inactive",
-		"index",
-		"internal-server-error",
-		"invalid-mechanism",
-		"ip",
-		"iq",
-		"item",
-		"item-not-found",
-		"user-not-found",
-		"jabber:iq:last",
-		"jabber:iq:privacy",
-		"jabber:x:delay",
-		"jabber:x:event",
-		"jid",
-		"jid-malformed",
-		"kind",
-		"last",
-		"latitude",
-		"lc",
-		"leave",
-		"leave-all",
-		"lg",
-		"list",
-		"location",
-		"longitude",
-		"max",
-		"max_groups",
-		"max_participants",
-		"max_subject",
-		"mechanism",
-		"media",
-		"message",
-		"message_acks",
-		"method",
-		"microsoft",
-		"missing",
-		"modify",
-		"mute",
-		"name",
-		"nokia",
-		"none",
-		"not-acceptable",
-		"not-allowed",
-		"not-authorized",
-		"notification",
-		"notify",
-		"off",
-		"offline",
-		"order",
-		"owner",
-		"owning",
-		"paid",
-		"participant",
-		"participants",
-		"participating",
-		"password",
-		"paused",
-		"picture",
-		"pin",
-		"ping",
-		"platform",
-		"pop_mean_time",
-		"pop_plus_minus",
-		"port",
-		"presence",
-		"preview",
-		"probe",
-		"proceed",
-		"prop",
-		"props",
-		"p_o",
-		"p_t",
-		"query",
-		"raw",
-		"reason",
-		"receipt",
-		"receipt_acks",
-		"received",
-		"registration",
-		"relay",
-		"remote-server-timeout",
-		"remove",
-		"Replaced by new connection",
-		"request",
-		"required",
-		"resource",
-		"resource-constraint",
-		"response",
-		"result",
-		"retry",
-		"rim",
-		"s.whatsapp.net",
-		"s.us",
-		"seconds",
-		"server",
-		"server-error",
-		"service-unavailable",
-		"set",
-		"show",
-		"sid",
-		"silent",
-		"sound",
-		"stamp",
-		"unsubscribe",
-		"stat",
-		"status",
-		"stream:error",
-		"stream:features",
-		"subject",
-		"subscribe",
-		"success",
-		"sync",
-		"system-shutdown",
-		"s_o",
-		"s_t",
-		"t",
-		"text",
-		"timeout",
-		"TimePassing.caf",
-		"timestamp",
-		"to",
-		"Tri-tone.caf",
-		"true",
-		"type",
-		"unavailable",
-		"uri",
-		"url",
-		"urn:ietf:params:xml:ns:xmpp-sasl",
-		"urn:ietf:params:xml:ns:xmpp-stanzas",
-		"urn:ietf:params:xml:ns:xmpp-streams",
-		"urn:xmpp:delay",
-		"urn:xmpp:ping",
-		"urn:xmpp:receipts",
-		"urn:xmpp:whatsapp",
-		"urn:xmpp:whatsapp:account",
-		"urn:xmpp:whatsapp:dirty",
-		"urn:xmpp:whatsapp:mms",
-		"urn:xmpp:whatsapp:push",
-		"user",
-		"username",
-		"value",
-		"vcard",
-		"version",
-		"video",
-		"w",
-		"w:g",
-		"w:p",
-		"w:p:r",
-		"w:profile:picture",
-		"wait",
-		"x",
-		"xml-not-well-formed",
-		"xmlns",
-		"xmlns:stream",
-		"Xylophone.caf",
-		"1",
-		"WAUTH-1"
-};
-
+const char* WAConnection::dictionary[] = { "", "", "", "", "", "account", "ack", "action", "active", "add", "after", "ib", "all", "allow", "apple", "audio", "auth", "author", "available",
+		"bad-protocol", "bad-request", "before", "Bell.caf", "body", "Boing.caf", "cancel", "category", "challenge", "chat", "clean", "code", "composing", "config", "conflict", "contacts", "count",
+		"create", "creation", "default", "delay", "delete", "delivered", "deny", "digest", "DIGEST-MD5-1", "DIGEST-MD5-2", "dirty", "elapsed", "broadcast", "enable", "encoding", "duplicate", "error",
+		"event", "expiration", "expired", "fail", "failure", "false", "favorites", "feature", "features", "field", "first", "free", "from", "g.us", "get", "Glass.caf", "google", "group", "groups",
+		"g_notify", "g_sound", "Harp.caf", "http://etherx.jabber.org/streams", "http://jabber.org/protocol/chatstates", "id", "image", "img", "inactive", "index", "internal-server-error",
+		"invalid-mechanism", "ip", "iq", "item", "item-not-found", "user-not-found", "jabber:iq:last", "jabber:iq:privacy", "jabber:x:delay", "jabber:x:event", "jid", "jid-malformed", "kind", "last",
+		"latitude", "lc", "leave", "leave-all", "lg", "list", "location", "longitude", "max", "max_groups", "max_participants", "max_subject", "mechanism", "media", "message", "message_acks",
+		"method", "microsoft", "missing", "modify", "mute", "name", "nokia", "none", "not-acceptable", "not-allowed", "not-authorized", "notification", "notify", "off", "offline", "order", "owner",
+		"owning", "paid", "participant", "participants", "participating", "password", "paused", "picture", "pin", "ping", "platform", "pop_mean_time", "pop_plus_minus", "port", "presence", "preview",
+		"probe", "proceed", "prop", "props", "p_o", "p_t", "query", "raw", "reason", "receipt", "receipt_acks", "received", "registration", "relay", "remote-server-timeout", "remove",
+		"Replaced by new connection", "request", "required", "resource", "resource-constraint", "response", "result", "retry", "rim", "s.whatsapp.net", "s.us", "seconds", "server", "server-error",
+		"service-unavailable", "set", "show", "sid", "silent", "sound", "stamp", "unsubscribe", "stat", "status", "stream:error", "stream:features", "subject", "subscribe", "success", "sync",
+		"system-shutdown", "s_o", "s_t", "t", "text", "timeout", "TimePassing.caf", "timestamp", "to", "Tri-tone.caf", "true", "type", "unavailable", "uri", "url", "urn:ietf:params:xml:ns:xmpp-sasl",
+		"urn:ietf:params:xml:ns:xmpp-stanzas", "urn:ietf:params:xml:ns:xmpp-streams", "urn:xmpp:delay", "urn:xmpp:ping", "urn:xmpp:receipts", "urn:xmpp:whatsapp", "urn:xmpp:whatsapp:account",
+		"urn:xmpp:whatsapp:dirty", "urn:xmpp:whatsapp:mms", "urn:xmpp:whatsapp:push", "user", "username", "value", "vcard", "version", "video", "w", "w:g", "w:p", "w:p:r", "w:profile:picture", "wait",
+		"x", "xml-not-well-formed", "xmlns", "xmlns:stream", "Xylophone.caf", "1", "WAUTH-1" };
 
 //const char* WAConnection::dictionary[] = {
 //		"",
@@ -551,18 +327,19 @@ WALogin* WAConnection::getLogin() {
 	return this->login;
 }
 
-void WAConnection::sendMessageWithMedia(FMessage* message)  throw (WAException) {
-	_LOGDATA("Send message with media %s %d", message->media_name.c_str(), message->media_size);
+
+ProtocolTreeNode* WAConnection::getMediaNode(FMessage* message) throw (WAException) {
 	_LOGDATA("media-url:%s", message->media_url.c_str());
 	if (message->media_wa_type == FMessage::WA_TYPE_SYSTEM)
 		throw new WAException("Cannot send system message over the network");
-	std::map<string, string>* attribs = new std::map<string, string>();
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["xmlns"] = "urn:xmpp:whatsapp:mms";
 	(*attribs)["type"] = FMessage::getMessage_WA_Type_StrValue(message->media_wa_type);
 
 	if (message->media_wa_type == FMessage::WA_TYPE_LOCATION) {
 		(*attribs)["latitude"] = Utilities::doubleToStr(message->latitude);
-		(*attribs)["longitude"] = Utilities::doubleToStr(message->longitude);;
+		(*attribs)["longitude"] = Utilities::doubleToStr(message->longitude);
+		;
 	} else {
 		if (message->media_wa_type != FMessage::WA_TYPE_CONTACT && !message->media_name.empty() && !message->media_url.empty() && message->media_size > 0L) {
 			(*attribs)["file"] = message->media_name;
@@ -578,7 +355,7 @@ void WAConnection::sendMessageWithMedia(FMessage* message)  throw (WAException) 
 
 	ProtocolTreeNode* mediaNode;
 	if (message->media_wa_type == FMessage::WA_TYPE_CONTACT && !message->media_name.empty()) {
-		std::map<string, string>* attribs2 = new std::map<string, string>();
+		std::map < string, string > *attribs2 = new std::map<string, string>();
 		(*attribs2)["name"] = message->media_name;
 		ProtocolTreeNode* vcardNode = new ProtocolTreeNode("vcard", attribs2, new std::vector<unsigned char>(message->data.begin(), message->data.end()));
 		mediaNode = new ProtocolTreeNode("media", attribs, vcardNode);
@@ -587,6 +364,13 @@ void WAConnection::sendMessageWithMedia(FMessage* message)  throw (WAException) 
 		mediaNode = new ProtocolTreeNode("media", attribs, new std::vector<unsigned char>(message->data.begin(), message->data.end()), NULL);
 	}
 
+	return mediaNode;
+}
+
+void WAConnection::sendMessageWithMedia(FMessage* message) throw (WAException) {
+	_LOGDATA("Send message with media %s %d", message->media_name.c_str(), message->media_size);
+
+	ProtocolTreeNode* mediaNode = getMediaNode(message);
 	ProtocolTreeNode* root = WAConnection::getMessageNode(message, mediaNode);
 	this->out->write(root);
 	delete root;
@@ -599,15 +383,57 @@ void WAConnection::sendMessageWithBody(FMessage* message) throw (WAException) {
 	delete root;
 }
 
-ProtocolTreeNode* WAConnection::getMessageNode(FMessage* message, ProtocolTreeNode* child) {
+void WAConnection::sendBroadcastMessage(const std::vector<std::string>& jids, FMessage* message) throw (WAException) {
+	if (message->media_wa_type != 0)
+		sendBroadcastMessageWithMedia(jids, message);
+	else
+		sendBroadcastMessageWithBody(jids, message);
+}
+
+void WAConnection::sendBroadcastMessageWithBody(const std::vector<std::string>& jids, FMessage* message) throw (WAException) {
+	std::vector<ProtocolTreeNode*>* jidsnodes = new std::vector<ProtocolTreeNode*>(jids.size());
+	for (int i = 0; i < jids.size(); i++) {
+		std::map < string, string > *attrib = new std::map<string, string>();
+		(*attrib)["jid"] = jids[i];
+		(*jidsnodes)[i] = new ProtocolTreeNode("to", attrib, NULL, NULL);
+	}
+
+	ProtocolTreeNode* broadcastNode = new ProtocolTreeNode("broadcast", NULL, NULL, jidsnodes);
+	ProtocolTreeNode* bodyNode = new ProtocolTreeNode("body", NULL, new std::vector<unsigned char>(message->data.begin(), message->data.end()));
+	message->key->remote_jid = "broadcast";
+	ProtocolTreeNode* root = WAConnection::getMessageNode(message, broadcastNode, bodyNode);
+	this->out->write(root);
+	delete root;
+}
+
+void WAConnection::sendBroadcastMessageWithMedia(const std::vector<std::string>& jids, FMessage* message) throw (WAException) {
+	std::vector<ProtocolTreeNode*>* jidsnodes = new std::vector<ProtocolTreeNode*>(jids.size());
+	for (int i = 0; i < jids.size(); i++) {
+		std::map < string, string > *attrib = new std::map<string, string>();
+		(*attrib)["jid"] = jids[i];
+		(*jidsnodes)[i] = new ProtocolTreeNode("to", attrib, NULL, NULL);
+	}
+
+	ProtocolTreeNode* broadcastNode = new ProtocolTreeNode("broadcast", NULL, NULL, jidsnodes);
+	ProtocolTreeNode* mediaNode = getMediaNode(message);
+	message->key->remote_jid = "broadcast";
+	ProtocolTreeNode* root = WAConnection::getMessageNode(message, broadcastNode, mediaNode);
+	this->out->write(root);
+	delete root;
+}
+
+ProtocolTreeNode* WAConnection::getMessageNode(FMessage* message, ProtocolTreeNode* child, ProtocolTreeNode* child2) {
 	ProtocolTreeNode* requestNode = NULL;
 	ProtocolTreeNode* serverNode = new ProtocolTreeNode("server", NULL);
-	std::map<string, string>* attrib = new std::map<string, string>();
+	std::map < string, string > *attrib = new std::map<string, string>();
 	(*attrib)["xmlns"] = "jabber:x:event";
 	std::vector<ProtocolTreeNode*>* children = new std::vector<ProtocolTreeNode*>(1);
 	(*children)[0] = serverNode;
 	ProtocolTreeNode* xNode = new ProtocolTreeNode("x", attrib, NULL, children);
-	int childCount = (requestNode == NULL? 0 : 1) + 2;
+	int childCount = (requestNode == NULL ? 0 : 1) + 2;
+	if (child2 != NULL)
+		childCount++;
+
 	std::vector<ProtocolTreeNode*>* messageChildren = new std::vector<ProtocolTreeNode*>(childCount);
 	int i = 0;
 	if (requestNode != NULL) {
@@ -618,8 +444,10 @@ ProtocolTreeNode* WAConnection::getMessageNode(FMessage* message, ProtocolTreeNo
 	i++;
 	(*messageChildren)[i] = child;
 	i++;
+	if (child2 != NULL)
+		(*messageChildren)[i] = child2;
 
-	std::map<string, string>* attrib2 = new std::map<string, string>();
+	std::map < string, string > *attrib2 = new std::map<string, string>();
 	(*attrib2)["to"] = message->key->remote_jid;
 	(*attrib2)["type"] = "chat";
 	(*attrib2)["id"] = message->key->id;
@@ -627,13 +455,12 @@ ProtocolTreeNode* WAConnection::getMessageNode(FMessage* message, ProtocolTreeNo
 	return new ProtocolTreeNode("message", attrib2, NULL, messageChildren);
 }
 
-void WAConnection::sendMessage(FMessage* message) throw(WAException) {
+void WAConnection::sendMessage(FMessage* message) throw (WAException) {
 	if (message->media_wa_type != 0)
 		sendMessageWithMedia(message);
 	else
 		sendMessageWithBody(message);
 }
-
 
 WAConnection::~WAConnection() {
 	if (this->login != NULL)
@@ -649,20 +476,19 @@ WAConnection::~WAConnection() {
 	SDL_DestroyMutex(this->mutex);
 }
 
-
 void WAConnection::setVerboseId(bool b) {
 	this->verbose = b;
 }
 
-void WAConnection::sendAvailableForChat() throw(WAException) {
-	std::map<string, string>* attribs = new std::map<string, string>();
+void WAConnection::sendAvailableForChat() throw (WAException) {
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["name"] = this->login->push_name;
 	ProtocolTreeNode *presenceNode = new ProtocolTreeNode("presence", attribs);
 	this->out->write(presenceNode);
 	delete presenceNode;
 }
 
-bool WAConnection::read() throw(WAException) {
+bool WAConnection::read() throw (WAException) {
 	ProtocolTreeNode* node;
 	try {
 		node = this->in->nextTree();
@@ -675,9 +501,11 @@ bool WAConnection::read() throw(WAException) {
 		return false;
 	}
 
+	// _LOGDATA("Message node %s", node->toString().c_str());
+
 	if (ProtocolTreeNode::tagEquals(node, "iq")) {
 		std::string* type = node->getAttributeValue("type");
-		std::string* id  = node->getAttributeValue("id");
+		std::string* id = node->getAttributeValue("id");
 		std::string* from = node->getAttributeValue("from");
 		std::string f;
 		if (from == NULL)
@@ -693,7 +521,7 @@ bool WAConnection::read() throw(WAException) {
 				throw WAException("missing 'id' attribute in iq stanza", WAException::CORRUPT_STREAM_EX, 0);
 
 			std::map<string, IqResultHandler*>::iterator it = this->pending_server_requests.find(*id);
-			if (it!= this->pending_server_requests.end()) {
+			if (it != this->pending_server_requests.end()) {
 				it->second->parse(node, f);
 				delete it->second;
 				this->pending_server_requests.erase(*id);
@@ -719,7 +547,7 @@ bool WAConnection::read() throw(WAException) {
 			}
 		} else if (type->compare("error") == 0) {
 			std::map<string, IqResultHandler*>::iterator it = this->pending_server_requests.find(*id);
-			if (it!= this->pending_server_requests.end()) {
+			if (it != this->pending_server_requests.end()) {
 				it->second->error(node);
 				delete it->second;
 				this->pending_server_requests.erase(*id);
@@ -729,12 +557,12 @@ bool WAConnection::read() throw(WAException) {
 			if (ProtocolTreeNode::tagEquals(childNode, "ping")) {
 				if (this->event_handler != NULL)
 					this->event_handler->onPing(*id);
-			} else if (ProtocolTreeNode::tagEquals(childNode, "query") && (from != NULL)? false : // (childNode->getAttributeValue("xmlns") != NULL) && ((*childNode->getAttributeValue("xmlns")).compare("http://jabber.org/protocol/disco#info") == 0) :
+			} else if (ProtocolTreeNode::tagEquals(childNode, "query") && (from != NULL) ? false : // (childNode->getAttributeValue("xmlns") != NULL) && ((*childNode->getAttributeValue("xmlns")).compare("http://jabber.org/protocol/disco#info") == 0) :
 					(ProtocolTreeNode::tagEquals(childNode, "relay")) && (from != NULL)) {
 				std::string* pin = childNode->getAttributeValue("pin");
 				std::string* timeoutString = childNode->getAttributeValue("timeout");
 				int timeoutSeconds;
-				timeoutSeconds = timeoutString == NULL? 0 : atoi(timeoutString->c_str());
+				timeoutSeconds = timeoutString == NULL ? 0 : atoi(timeoutString->c_str());
 				if (pin != NULL)
 					if (this->event_handler != NULL)
 						this->event_handler->onRelayRequest(*pin, timeoutSeconds, *id);
@@ -780,7 +608,7 @@ bool WAConnection::read() throw(WAException) {
 				if (this->group_event_handler != NULL)
 					this->group_event_handler->onGroupRemoveUser(*from, *remove);
 			} else if ((status != NULL) && (status->compare("dirty") == 0)) {
-				std::map<string, string>* categories = parseCategories(node);
+				std::map < string, string > *categories = parseCategories(node);
 				if (this->event_handler != NULL)
 					this->event_handler->onDirty(*categories);
 				delete categories;
@@ -794,19 +622,19 @@ bool WAConnection::read() throw(WAException) {
 	return true;
 }
 
-void WAConnection::sendNop() throw(WAException) {
+void WAConnection::sendNop() throw (WAException) {
 	this->out->write(NULL);
 }
 
-void WAConnection::sendPing() throw(WAException) {
+void WAConnection::sendPing() throw (WAException) {
 	std::string id = makeId("ping_");
 	this->pending_server_requests[id] = new IqResultPingHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:p";
 	ProtocolTreeNode* pingNode = new ProtocolTreeNode("ping", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, pingNode);
@@ -815,8 +643,8 @@ void WAConnection::sendPing() throw(WAException) {
 	delete iqNode;
 }
 
-void WAConnection::sendPong(const std::string& id) throw(WAException) {
-	std::map<string, string>* attribs = new std::map<string, string>();
+void WAConnection::sendPong(const std::string& id) throw (WAException) {
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["type"] = "result";
 	(*attribs)["to"] = this->login->domain;
 	(*attribs)["id"] = id;
@@ -825,12 +653,12 @@ void WAConnection::sendPong(const std::string& id) throw(WAException) {
 	delete iqNode;
 }
 
-void WAConnection::sendComposing(const std::string& to) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendComposing(const std::string& to) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "http://jabber.org/protocol/chatstates";
 	ProtocolTreeNode* composingNode = new ProtocolTreeNode("composing", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["to"] = to;
 	(*attribs2)["type"] = "chat";
 	ProtocolTreeNode* messageNode = new ProtocolTreeNode("message", attribs2, composingNode);
@@ -840,9 +668,8 @@ void WAConnection::sendComposing(const std::string& to) throw(WAException) {
 	delete messageNode;
 }
 
-
-void WAConnection::sendActive() throw(WAException) {
-	std::map<string, string>* attribs = new std::map<string, string>();
+void WAConnection::sendActive() throw (WAException) {
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["type"] = "active";
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs);
 
@@ -851,8 +678,8 @@ void WAConnection::sendActive() throw(WAException) {
 	delete presenceNode;
 }
 
-void WAConnection::sendInactive() throw(WAException) {
-	std::map<string, string>* attribs = new std::map<string, string>();
+void WAConnection::sendInactive() throw (WAException) {
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["type"] = "inactive";
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs);
 
@@ -861,12 +688,12 @@ void WAConnection::sendInactive() throw(WAException) {
 	delete presenceNode;
 }
 
-void WAConnection::sendPaused(const std::string& to) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendPaused(const std::string& to) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "http://jabber.org/protocol/chatstates";
 	ProtocolTreeNode* pausedNode = new ProtocolTreeNode("paused", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["to"] = to;
 	(*attribs2)["type"] = "chat";
 	ProtocolTreeNode* messageNode = new ProtocolTreeNode("message", attribs2, pausedNode);
@@ -876,8 +703,8 @@ void WAConnection::sendPaused(const std::string& to) throw(WAException) {
 	delete messageNode;
 }
 
-void WAConnection::sendSubjectReceived(const std::string& to, const std::string& id)throw(WAException)  {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendSubjectReceived(const std::string& to, const std::string& id) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "urn:xmpp:receipts";
 	ProtocolTreeNode* receivedNode = new ProtocolTreeNode("received", attribs1);
 
@@ -889,7 +716,7 @@ void WAConnection::sendSubjectReceived(const std::string& to, const std::string&
 }
 
 ProtocolTreeNode* WAConnection::getSubjectMessage(const std::string& to, const std::string& id, ProtocolTreeNode* child) throw (WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["to"] = to;
 	(*attribs1)["type"] = "subject";
 	(*attribs1)["id"] = id;
@@ -898,12 +725,12 @@ ProtocolTreeNode* WAConnection::getSubjectMessage(const std::string& to, const s
 	return messageNode;
 }
 
-void WAConnection::sendMessageReceived(FMessage* message) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendMessageReceived(FMessage* message) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "urn:xmpp:receipts";
 	ProtocolTreeNode* receivedNode = new ProtocolTreeNode("received", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["to"] = message->key->remote_jid;
 	(*attribs2)["type"] = "chat";
 	(*attribs2)["id"] = message->key->id;
@@ -914,8 +741,7 @@ void WAConnection::sendMessageReceived(FMessage* message) throw(WAException) {
 	delete messageNode;
 }
 
-void WAConnection::sendDeliveredReceiptAck(const std::string& to,
-		const std::string& id) throw(WAException) {
+void WAConnection::sendDeliveredReceiptAck(const std::string& to, const std::string& id) throw (WAException) {
 	ProtocolTreeNode *root = getReceiptAck(to, id, "delivered");
 	this->out->write(root);
 	delete root;
@@ -927,8 +753,8 @@ void WAConnection::sendVisibleReceiptAck(const std::string& to, const std::strin
 	delete root;
 }
 
-void WAConnection::sendPresenceSubscriptionRequest(const std::string& to) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendPresenceSubscriptionRequest(const std::string& to) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["type"] = "subscribe";
 	(*attribs1)["to"] = to;
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs1);
@@ -936,10 +762,10 @@ void WAConnection::sendPresenceSubscriptionRequest(const std::string& to) throw(
 	delete presenceNode;
 }
 
-void WAConnection::sendClientConfig(const std::string& sound,  const std::string& pushID, bool preview, const std::string& platform) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
-	(*attribs1)["xmlns"] ="urn:xmpp:whatsapp:push";
-	(*attribs1)["sound"] =sound;
+void WAConnection::sendClientConfig(const std::string& sound, const std::string& pushID, bool preview, const std::string& platform) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "urn:xmpp:whatsapp:push";
+	(*attribs1)["sound"] = sound;
 	(*attribs1)["id"] = pushID;
 	(*attribs1)["preview"] = preview ? "1" : "0";
 	(*attribs1)["platform"] = platform;
@@ -949,7 +775,7 @@ void WAConnection::sendClientConfig(const std::string& sound,  const std::string
 
 	this->pending_server_requests[id] = new IqSendClientConfigHandler(this);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
 	(*attribs2)["to"] = this->login->domain;
@@ -961,21 +787,22 @@ void WAConnection::sendClientConfig(const std::string& sound,  const std::string
 
 }
 
-void WAConnection::sendClientConfig(const std::string& pushID, bool preview, const std::string& platform, bool defaultSettings, bool groupSettings, const std::vector<GroupSetting>& groups) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
-	(*attribs1)["xmlns"] ="urn:xmpp:whatsapp:push";
+void WAConnection::sendClientConfig(const std::string& pushID, bool preview, const std::string& platform, bool defaultSettings, bool groupSettings, const std::vector<GroupSetting>& groups)
+		throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
+	(*attribs1)["xmlns"] = "urn:xmpp:whatsapp:push";
 	(*attribs1)["id"] = pushID;
 	(*attribs1)["lg"] = "en";
 	(*attribs1)["lc"] = "US";
 	(*attribs1)["clear"] = "0";
 	(*attribs1)["preview"] = preview ? "1" : "0";
 	(*attribs1)["platform"] = platform;
-	(*attribs1)["default"] = defaultSettings? "1": "0";
-	(*attribs1)["groups"] = groupSettings? "1" : "0";
+	(*attribs1)["default"] = defaultSettings ? "1" : "0";
+	(*attribs1)["groups"] = groupSettings ? "1" : "0";
 	ProtocolTreeNode* configNode = new ProtocolTreeNode("config", attribs1, NULL, this->processGroupSettings(groups));
 	std::string id = makeId("config_");
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
 	(*attribs2)["to"] = this->login->domain;
@@ -990,10 +817,10 @@ std::vector<ProtocolTreeNode*>* WAConnection::processGroupSettings(const std::ve
 	if (!groups.empty()) {
 		time_t now = time(NULL);
 		for (int i = 0; i < groups.size(); i++) {
-			std::map<string, string>* attribs = new std::map<string, string>();
+			std::map < string, string > *attribs = new std::map<string, string>();
 			(*attribs)["jid"] = groups[i].jid;
-			(*attribs)["notify"] = (groups[i].enabled? "1": "0");
-			(*attribs)["mute"] = Utilities::intToStr(groups[i].muteExpiry > now? (groups[i].muteExpiry - now): 0);
+			(*attribs)["notify"] = (groups[i].enabled ? "1" : "0");
+			(*attribs)["mute"] = Utilities::intToStr(groups[i].muteExpiry > now ? (groups[i].muteExpiry - now) : 0);
 			_LOGDATA("mute group %s, %s", (*attribs)["jid"].c_str(), (*attribs)["mute"].c_str());
 
 			(*result)[i] = new ProtocolTreeNode("item", attribs);
@@ -1014,14 +841,13 @@ std::string WAConnection::makeId(const std::string& prefix) {
 	return id;
 }
 
-
-ProtocolTreeNode* WAConnection::getReceiptAck(const std::string& to, const std::string& id, const std::string& receiptType) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+ProtocolTreeNode* WAConnection::getReceiptAck(const std::string& to, const std::string& id, const std::string& receiptType) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "urn:xmpp:receipts";
 	(*attribs1)["type"] = receiptType;
 	ProtocolTreeNode* ackNode = new ProtocolTreeNode("ack", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["to"] = to;
 	(*attribs2)["type"] = "chat";
 	(*attribs2)["id"] = id;
@@ -1031,7 +857,7 @@ ProtocolTreeNode* WAConnection::getReceiptAck(const std::string& to, const std::
 }
 
 std::map<string, string>* WAConnection::parseCategories(ProtocolTreeNode* dirtyNode) throw (WAException) {
-	std::map<string, string>* categories = new std::map<string,string>();
+	std::map < string, string > *categories = new std::map<string, string>();
 	if (dirtyNode->children != NULL) {
 		for (size_t i = 0; i < dirtyNode->children->size(); i++) {
 			ProtocolTreeNode* childNode = (*dirtyNode->children)[i];
@@ -1046,12 +872,14 @@ std::map<string, string>* WAConnection::parseCategories(ProtocolTreeNode* dirtyN
 	return categories;
 }
 
-void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messageNode) throw (WAException){
+void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messageNode) throw (WAException) {
 	std::string* id = messageNode->getAttributeValue("id");
 	std::string* attribute_t = messageNode->getAttributeValue("t");
 	std::string* from = messageNode->getAttributeValue("from");
 	std::string* authoraux = messageNode->getAttributeValue("author");
 	std::string author = "";
+
+	// _LOGDATA("Message node %s", messageNode->toString().c_str());
 
 	if (authoraux != NULL)
 		author = *authoraux;
@@ -1086,7 +914,7 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 			delete requestNodes;
 
 			ProtocolTreeNode* bodyNode = messageNode->getChild("body");
-			std::string* newSubject = bodyNode == NULL? NULL : bodyNode->getDataAsString();
+			std::string* newSubject = bodyNode == NULL ? NULL : bodyNode->getDataAsString();
 			if ((newSubject != NULL) && (this->group_event_handler != NULL))
 				this->group_event_handler->onGroupNewSubject(*from, author, *newSubject, atoi(attribute_t->c_str()));
 			if (newSubject != NULL)
@@ -1096,12 +924,15 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 		} else if (typeAttribute->compare("chat") == 0) {
 			FMessage* fmessage = new FMessage();
 			fmessage->wants_receipt = false;
+			fmessage->isBroadcast = false;
 			bool duplicate = false;
 			std::vector<ProtocolTreeNode*> myVector(0);
-			std::vector<ProtocolTreeNode*>* messageChildren = messageNode->children == NULL? &myVector: messageNode->getAllChildren();
+			std::vector<ProtocolTreeNode*>* messageChildren = messageNode->children == NULL ? &myVector : messageNode->getAllChildren();
 			for (size_t i = 0; i < messageChildren->size(); i++) {
 				ProtocolTreeNode* childNode = (*messageChildren)[i];
-				if (ProtocolTreeNode::tagEquals(childNode, "composing")) {
+				if (ProtocolTreeNode::tagEquals(childNode, "broadcast")) {
+					fmessage->isBroadcast = true;
+				} else if (ProtocolTreeNode::tagEquals(childNode, "composing")) {
 					if (this->event_handler != NULL)
 						this->event_handler->onIsTyping(*from, true);
 				} else if (ProtocolTreeNode::tagEquals(childNode, "paused")) {
@@ -1118,8 +949,8 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 						delete message;
 				} else if (ProtocolTreeNode::tagEquals(childNode, "media") && (id != NULL)) {
 					fmessage->media_wa_type = FMessage::getMessage_WA_Type(childNode->getAttributeValue("type"));
-					fmessage->media_url = (childNode->getAttributeValue("url") == NULL? "": *childNode->getAttributeValue("url"));
-					fmessage->media_name = (childNode->getAttributeValue("file") == NULL? "": *childNode->getAttributeValue("file"));
+					fmessage->media_url = (childNode->getAttributeValue("url") == NULL ? "" : *childNode->getAttributeValue("url"));
+					fmessage->media_name = (childNode->getAttributeValue("file") == NULL ? "" : *childNode->getAttributeValue("file"));
 
 					if (childNode->getAttributeValue("size") != NULL)
 						fmessage->media_size = Utilities::parseLongLong(*childNode->getAttributeValue("size"));
@@ -1146,9 +977,9 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 					if (fmessage->media_wa_type == FMessage::WA_TYPE_CONTACT) {
 						ProtocolTreeNode* contactChildNode = childNode->getChild(0);
 						if (contactChildNode != NULL) {
-							fmessage->media_name = (contactChildNode->getAttributeValue("name") == NULL? "": *contactChildNode->getAttributeValue("name"));
+							fmessage->media_name = (contactChildNode->getAttributeValue("name") == NULL ? "" : *contactChildNode->getAttributeValue("name"));
 							std::string* data = contactChildNode->getDataAsString();
-							fmessage->data = (data == NULL? "": *data);
+							fmessage->data = (data == NULL ? "" : *data);
 							if (data != NULL)
 								delete data;
 						}
@@ -1159,9 +990,9 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 							data = childNode->getDataAsString();
 						} else {
 							_LOGDATA("Media data encoding type '%s'", (encoding == NULL? "text":encoding->c_str()));
-							data = (childNode->data == NULL? NULL : new std::string(base64_encode(childNode->data->data(), childNode->data->size())));
+							data = (childNode->data == NULL ? NULL : new std::string(base64_encode(childNode->data->data(), childNode->data->size())));
 						}
-						fmessage->data = (data == NULL? "": *data);
+						fmessage->data = (data == NULL ? "" : *data);
 						if (data != NULL)
 							delete data;
 					}
@@ -1173,7 +1004,7 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 					if (ProtocolTreeNode::tagEquals(childNode, "request")) {
 						fmessage->wants_receipt = true;
 					} else if (ProtocolTreeNode::tagEquals(childNode, "notify")) {
-						fmessage->notifyname = (childNode->getAttributeValue("name") == NULL)? "": *childNode->getAttributeValue("name");
+						fmessage->notifyname = (childNode->getAttributeValue("name") == NULL) ? "" : *childNode->getAttributeValue("name");
 					} else if (ProtocolTreeNode::tagEquals(childNode, "x")) {
 						std::string* xmlns = childNode->getAttributeValue("xmlns");
 						if ((xmlns != NULL) && (xmlns->compare("jabber:x:event") == 0) && (id != NULL)) {
@@ -1230,25 +1061,25 @@ void WAConnection::parseMessageInitialTagAlreadyChecked(ProtocolTreeNode* messag
 			_LOGDATA("Notification node %s", messageNode->toString().c_str());
 			bool flag = false;
 			std::vector<ProtocolTreeNode*> myVector(0);
-			std::vector<ProtocolTreeNode*>* children = messageNode->children == NULL? &myVector: messageNode->getAllChildren();
+			std::vector<ProtocolTreeNode*>* children = messageNode->children == NULL ? &myVector : messageNode->getAllChildren();
 			for (int i = 0; i < children->size(); i++) {
 				ProtocolTreeNode* child = (*children)[i];
 				if (ProtocolTreeNode::tagEquals(child, "notification")) {
 					std::string* type = child->getAttributeValue("type");
 					if ((type != NULL) && (type->compare("picture") == 0) && (this->event_handler != NULL)) {
 						std::vector<ProtocolTreeNode*> myVector2(0);
-						std::vector<ProtocolTreeNode*>* children2 = child->children == NULL? &myVector2: child->getAllChildren();
+						std::vector<ProtocolTreeNode*>* children2 = child->children == NULL ? &myVector2 : child->getAllChildren();
 						for (int j = 0; j < children2->size(); j++) {
 							ProtocolTreeNode* child2 = (*children2)[j];
 							if (ProtocolTreeNode::tagEquals(child2, "set")) {
 								std::string* id = child2->getAttributeValue("id");
 								std::string* author = child2->getAttributeValue("author");
 								if (id != NULL) {
-									this->event_handler->onPictureChanged(*from, ((author == NULL)?"":*author), true);
+									this->event_handler->onPictureChanged(*from, ((author == NULL) ? "" : *author), true);
 								}
 							} else if (ProtocolTreeNode::tagEquals(child2, "delete")) {
 								std::string* author = child2->getAttributeValue("author");
-								this->event_handler->onPictureChanged(*from, ((author == NULL)?"":*author), false);
+								this->event_handler->onPictureChanged(*from, ((author == NULL) ? "" : *author), false);
 							}
 						}
 					}
@@ -1267,12 +1098,12 @@ bool WAConnection::supportsReceiptAcks() {
 	return (this->login != NULL) && (this->login->supports_receipt_acks);
 }
 
-void WAConnection::sendNotificationReceived(const std::string& jid, const std::string& id) throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendNotificationReceived(const std::string& jid, const std::string& id) throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "urn:xmpp:receipts";
 	ProtocolTreeNode* child = new ProtocolTreeNode("received", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "notification";
 	(*attribs2)["to"] = jid;
@@ -1282,8 +1113,8 @@ void WAConnection::sendNotificationReceived(const std::string& jid, const std::s
 	delete node;
 }
 
-void WAConnection::sendClose() throw(WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+void WAConnection::sendClose() throw (WAException) {
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["type"] = "unavailable";
 	ProtocolTreeNode* presenceNode = new ProtocolTreeNode("presence", attribs1);
 	this->out->write(presenceNode);
@@ -1295,15 +1126,15 @@ void WAConnection::sendGetPrivacyList() throw (WAException) {
 	std::string id = makeId("privacylist_");
 	this->pending_server_requests[id] = new IqResultPrivayListHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["name"] = "default";
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("list", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["xmlns"] = "jabber:iq:privacy";
 	ProtocolTreeNode* queryNode = new ProtocolTreeNode("query", attribs2, listNode);
 
-	std::map<string, string>* attribs3 = new std::map<string, string>();
+	std::map < string, string > *attribs3 = new std::map<string, string>();
 	(*attribs3)["id"] = id;
 	(*attribs3)["type"] = "get";
 	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs3, queryNode);
@@ -1316,12 +1147,12 @@ void WAConnection::sendGetServerProperties() throw (WAException) {
 	std::string id = makeId("get_server_properties_");
 	this->pending_server_requests[id] = new IqResultServerPropertiesHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	(*attribs1)["type"] = "props";
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("list", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = "g.us";
@@ -1350,12 +1181,12 @@ void WAConnection::sendGetOwningGroups() throw (WAException) {
 }
 
 void WAConnection::sendGetGroups(const std::string& id, const std::string& type) throw (WAException) {
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	(*attribs1)["type"] = type;
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("list", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = "g.us";
@@ -1387,16 +1218,15 @@ std::string WAConnection::gidToGjid(const std::string& gid) {
 	return gid + "@g.us";
 }
 
-
 void WAConnection::sendQueryLastOnline(const std::string& jid) throw (WAException) {
 	std::string id = makeId("last_");
 	this->pending_server_requests[id] = new IqResultQueryLastOnlineHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "jabber:iq:last";
 	ProtocolTreeNode* queryNode = new ProtocolTreeNode("query", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = jid;
@@ -1410,11 +1240,11 @@ void WAConnection::sendGetGroupInfo(const std::string& gjid) throw (WAException)
 	std::string id = makeId("get_g_info_");
 	this->pending_server_requests[id] = new IqResultGetGroupInfoHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	ProtocolTreeNode* queryNode = new ProtocolTreeNode("query", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = gjid;
@@ -1428,11 +1258,11 @@ void WAConnection::sendGetParticipants(const std::string& gjid) throw (WAExcepti
 	std::string id = makeId("get_participants_");
 	this->pending_server_requests[id] = new IqResultGetGroupParticipantsHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("list", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = gjid;
@@ -1452,18 +1282,18 @@ void WAConnection::readAttributeList(ProtocolTreeNode* node, std::vector<std::st
 	delete nodes;
 }
 
-void WAConnection::sendCreateGroupChat(const std::string& subject) throw (WAException){
+void WAConnection::sendCreateGroupChat(const std::string& subject) throw (WAException) {
 	_LOGDATA("sending create group: %s", subject.c_str());
 	std::string id = makeId("create_group_");
 	this->pending_server_requests[id] = new IqResultCreateGroupChatHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	(*attribs1)["action"] = "create";
 	(*attribs1)["subject"] = subject;
 	ProtocolTreeNode* groupNode = new ProtocolTreeNode("group", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
 	(*attribs2)["to"] = "g.us";
@@ -1473,18 +1303,18 @@ void WAConnection::sendCreateGroupChat(const std::string& subject) throw (WAExce
 	delete iqNode;
 }
 
-void WAConnection::sendEndGroupChat(const std::string& gjid) throw (WAException){
+void WAConnection::sendEndGroupChat(const std::string& gjid) throw (WAException) {
 	std::string id = makeId("remove_group_");
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	(*attribs1)["action"] = "delete";
 	ProtocolTreeNode* groupNode = new ProtocolTreeNode("group", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
-	(*attribs2)["to"] = gjid ;
+	(*attribs2)["to"] = gjid;
 	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, groupNode);
 
 	this->out->write(iqNode);
@@ -1495,15 +1325,15 @@ void WAConnection::sendClearDirty(const std::string& category) throw (WAExceptio
 	std::string id = makeId("clean_dirty_");
 	this->pending_server_requests[id] = new IqResultClearDirtyHandler(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["name"] = category;
 	ProtocolTreeNode* categoryNode = new ProtocolTreeNode("category", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["xmlns"] = "urn:xmpp:whatsapp:dirty";
 	ProtocolTreeNode* cleanNode = new ProtocolTreeNode("clean", attribs2, categoryNode);
 
-	std::map<string, string>* attribs3 = new std::map<string, string>();
+	std::map < string, string > *attribs3 = new std::map<string, string>();
 	(*attribs3)["id"] = id;
 	(*attribs3)["type"] = "set";
 	(*attribs3)["to"] = "s.whatsapp.net";
@@ -1516,15 +1346,15 @@ void WAConnection::sendClearDirty(const std::string& category) throw (WAExceptio
 void WAConnection::sendLeaveGroup(const std::string& gjid) throw (WAException) {
 	std::string id = makeId("leave_group_");
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["id"] = gjid;
 	ProtocolTreeNode* groupNode = new ProtocolTreeNode("group", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["xmlns"] = "w:g";
 	ProtocolTreeNode* leaveNode = new ProtocolTreeNode("leave", attribs2, groupNode);
 
-	std::map<string, string>* attribs3 = new std::map<string, string>();
+	std::map < string, string > *attribs3 = new std::map<string, string>();
 	(*attribs3)["id"] = id;
 	(*attribs3)["type"] = "set";
 	(*attribs3)["to"] = "g.us";
@@ -1548,16 +1378,16 @@ void WAConnection::sendVerbParticipants(const std::string& gjid, const std::vect
 	size_t size = participants.size();
 	std::vector<ProtocolTreeNode*>* children = new std::vector<ProtocolTreeNode*>(size);
 	for (int i = 0; i < size; i++) {
-		std::map<string, string>* attribs1 = new std::map<string, string>();
+		std::map < string, string > *attribs1 = new std::map<string, string>();
 		(*attribs1)["jid"] = participants[i];
 		(*children)[i] = new ProtocolTreeNode("participant", attribs1);
 	}
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["xmlns"] = "w:g";
 	ProtocolTreeNode* innerNode = new ProtocolTreeNode(inner_tag, attribs2, NULL, children);
 
-	std::map<string, string>* attribs3 = new std::map<string, string>();
+	std::map < string, string > *attribs3 = new std::map<string, string>();
 	(*attribs3)["id"] = id;
 	(*attribs3)["type"] = "set";
 	(*attribs3)["to"] = gjid;
@@ -1570,12 +1400,12 @@ void WAConnection::sendVerbParticipants(const std::string& gjid, const std::vect
 void WAConnection::sendSetNewSubject(const std::string& gjid, const std::string& subject) throw (WAException) {
 	std::string id = this->makeId("set_group_subject_");
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:g";
 	(*attribs1)["value"] = subject;
 	ProtocolTreeNode* subjectNode = new ProtocolTreeNode("subject", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
 	(*attribs2)["to"] = gjid;
@@ -1603,18 +1433,16 @@ void WAConnection::sendStatusUpdate(std::string& status) throw (WAException) {
 	delete message;
 }
 
-
-
 void WAConnection::sendSetPicture(const std::string& jid, std::vector<unsigned char>* data) throw (WAException) {
 	std::string id = this->makeId("set_photo_");
 	this->pending_server_requests[id] = new IqResultSetPhotoHandler(this, jid);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:profile:picture";
 	// (*attribs1)["type"] = "image";
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("picture", attribs1, data, NULL);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "set";
 	(*attribs2)["to"] = jid;
@@ -1628,12 +1456,12 @@ void WAConnection::sendGetPicture(const std::string& jid, const std::string& typ
 	std::string id = makeId("get_picture_");
 	this->pending_server_requests[id] = new IqResultGetPhotoHandler(this, jid, oldId, newId);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:profile:picture";
 	(*attribs1)["type"] = type;
 	ProtocolTreeNode* listNode = new ProtocolTreeNode("picture", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["to"] = jid;
 	(*attribs2)["type"] = "get";
@@ -1649,17 +1477,17 @@ void WAConnection::sendGetPictureIds(const std::vector<std::string>& jids) throw
 
 	std::vector<ProtocolTreeNode*>* children = new std::vector<ProtocolTreeNode*>();
 	for (int i = 0; i < jids.size(); i++) {
-		std::map<string, string>* attribs = new std::map<string, string>();
+		std::map < string, string > *attribs = new std::map<string, string>();
 		(*attribs)["jid"] = jids[i];
 		ProtocolTreeNode* child = new ProtocolTreeNode("user", attribs);
 		children->push_back(child);
 	}
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "w:profile:picture";
 	ProtocolTreeNode* queryNode = new ProtocolTreeNode("list", attribs1, NULL, children);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	ProtocolTreeNode* iqNode = new ProtocolTreeNode("iq", attribs2, queryNode);
@@ -1672,11 +1500,11 @@ void WAConnection::sendDeleteAccount() throw (WAException) {
 	std::string id = makeId("del_acct_");
 	this->pending_server_requests[id] = new IqResultSendDeleteAccount(this);
 
-	std::map<string, string>* attribs1 = new std::map<string, string>();
+	std::map < string, string > *attribs1 = new std::map<string, string>();
 	(*attribs1)["xmlns"] = "urn:xmpp:whatsapp:account";
 	ProtocolTreeNode* node1 = new ProtocolTreeNode("remove", attribs1);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["type"] = "get";
 	(*attribs2)["to"] = "s.whatsapp.net";
@@ -1691,7 +1519,7 @@ void WAConnection::sendRequestUpload(const std::string& msgId, const std::string
 
 	this->pending_server_requests[id] = new IqResultRequestUploadHandler(this, hash, msgId, size);
 
-	std::map<string, string>* attribs = new std::map<string, string>();
+	std::map < string, string > *attribs = new std::map<string, string>();
 	(*attribs)["xmlns"] = "w:m";
 	(*attribs)["hash"] = hash;
 	(*attribs)["type"] = type;
@@ -1703,7 +1531,7 @@ void WAConnection::sendRequestUpload(const std::string& msgId, const std::string
 
 	ProtocolTreeNode* node = new ProtocolTreeNode("media", attribs);
 
-	std::map<string, string>* attribs2 = new std::map<string, string>();
+	std::map < string, string > *attribs2 = new std::map<string, string>();
 	(*attribs2)["id"] = id;
 	(*attribs2)["to"] = "s.whatsapp.net";
 	(*attribs2)["type"] = "set";

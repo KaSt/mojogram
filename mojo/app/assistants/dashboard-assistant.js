@@ -114,7 +114,7 @@ DashboardAssistant.prototype.updateDashboardText = function(chat, msg) {
 		} else {
 			var title = emojify(this.lastChat.chatName);
 			var jidName = _appAssistant.getNameForJid(this.lastChat, this.lastChat.lastMessage);
-			var message = this.lastChat.lastMessage.formatTextMessage(false, true, null);
+			var message = this.lastChat.lastMessage.formatTextMessage(false, true, null, true);
 			var subtitle = (jidName == null || !this.lastChat.isGroup ? message : jidName + ": " + message);
 			renderInfo = Mojo.View.render({
 				object : {
@@ -126,6 +126,6 @@ DashboardAssistant.prototype.updateDashboardText = function(chat, msg) {
 			});
 		}
 		this.controller.get('dashboardinfo').innerHTML = renderInfo;
-	}.bind(this));
+	}.bind(this), true);
 }
 

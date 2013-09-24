@@ -1,30 +1,36 @@
 <!-- <div class="palm-hasheader" x-mojo-touch-feedback="inmediatePersistent">
-	<div class="palm-header truncating-text" id="header"></div>
+<div class="palm-header truncating-text" id="header"></div>
 </div>
 -->
-
-<div class="palm-header-spacer"></div>
-
-<div id="moreMessages" x-mojo-element="Button"></div>
-
-<div class="palm-list" >
-	<div x-mojo-element="List" id="messageList"></div>
-	<div class="scene-footer-spacer"></div>
+<div class="my-container" id="my-container">
+    <div class="palm-header-spacer">
+    </div>
+    <div id="moreMessages" x-mojo-element="Button">
+    </div>
+    <div class="palm-list">
+        <div x-mojo-element="List" id="messageList">
+        </div>
+        <div class="scene-footer-spacer">
+        </div>
+    </div>
+    <div class="scene-footer">
+        <div class="palm-row">
+            <div class="palm-row-wrapper  textfield-group focused">
+                <div class="subtitle timer-text" id="timer-text">
+                </div>
+                <div class="title">
+                    <div class="icon right empty">
+                        <div class="stuck sendButton" x-mojo-focus-highlight="inmediate">
+                        </div>
+                    </div>
+                    <div class="icon left empty" id="emoticon-Button">
+                        <div class="stuck emoticonButton" x-mojo-focus-highlight="inmediate">
+                        </div>
+                    </div>
+                    <div x-mojo-element="TextField" id="messageText" class="messageTextWidget">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="scene-footer">
-	<div class="palm-row">
-		<div class="palm-row-wrapper  textfield-group focused">
-			<div class="title">
-				<div class="icon right empty">
-					<div class="stuck sendButton" x-mojo-focus-highlight="inmediate"></div>
-				</div>
-				<div class="icon left empty" id="emoticon-Button">
-					<div class="stuck emoticonButton" x-mojo-focus-highlight="inmediate"></div>
-				</div>
-				<div x-mojo-element="TextField" id="messageText" class="messageTextWidget"></div>
-			</div>
-		</div>
-	</div>
-</div>
-
