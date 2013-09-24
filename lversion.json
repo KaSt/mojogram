@@ -1,13 +1,13 @@
 {
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Added functionality to mute individual group chats",
-		"Added option to change the background image of the chat (in Preferences)",
-		"Attempt to solve the problem of emojis on iPhone (please try it and tell me)",
-		"Changed speech bubbles",
-		"Updated Chinese, Italian and Netherlands translations",
+		"GUI simplification (removed main-menu scene)",
+		"Solved the problem of image preview",
+		"Solved the problem of unread message display",
+		"Choose between Palm or Whatsapp speech bubles in Preferences",
+		"Open a private chat with a group participant tapping on his/her message",
 		"Solved some other minor bugs"
 	],
-	"message": "Added functionallity to mute individual group chats and some visual changes."
+	"message": "Fixes some bugs and problems from previous version."
 }
