@@ -1,13 +1,9 @@
 {
-	"version": "1.6.2",
+	"version": "1.6.4",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"GUI simplification (removed main-menu scene)",
-		"Solved the problem of image preview",
-		"Solved the problem of unread message display",
-		"Choose between Palm or Whatsapp speech bubles in Preferences",
-		"Open a private chat with a group participant tapping on his/her message",
-		"Solved some other minor bugs"
+		"Added functionality to block contacts (in Settings menu)",
+		"Fixed several bugs from previous versions"		
 	],
-	"message": "Fixes some bugs and problems from previous version."
+	"message": "Fixes some bugs and problems from previous version. Added functionality to block contacts."
 }
