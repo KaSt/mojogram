@@ -1,9 +1,13 @@
 {
-	"version": "1.6.4",
+	"version": "1.6.5",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Added functionality to block contacts (in Settings menu)",
-		"Fixed several bugs from previous versions"		
+		"Added 'add to contacts' option for unknown contacts in group and personal chats",
+		"Added control panel for audio media (play, pause, stop)",
+		"Added auto-download media in preferences",
+		"Added option in preferences to display status (online, typing) on chats/contact lists",
+		"Fixed several bugs from previous versions",
+		"Updated Chinese, German and Netherlands translations"	
 	],
-	"message": "Fixes some bugs and problems from previous version. Added functionality to block contacts."
+	"message": "Fixes some bugs and problems from previous version."
 }
