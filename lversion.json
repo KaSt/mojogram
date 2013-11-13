@@ -1,13 +1,11 @@
 {
-	"version": "1.6.5",
+	"version": "1.6.6",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Added 'add to contacts' option for unknown contacts in group and personal chats",
-		"Added control panel for audio media (play, pause, stop)",
-		"Added auto-download media in preferences",
-		"Added option in preferences to display status (online, typing) on chats/contact lists",
-		"Fixed several bugs from previous versions",
-		"Updated Chinese, German and Netherlands translations"	
+		"Fixed sms registration",
+		"Fixed spinning circle problem",
+		"Voice notes max. duration set to 120 seconds",
+		"Updated Italian, German and Netherlands translations"
 	],
-	"message": "Fixes some bugs and problems from previous version."
+	"message": "Fixes spinning circle problem and other issues"
 }
