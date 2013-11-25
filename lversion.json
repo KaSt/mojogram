@@ -1,11 +1,9 @@
 {
-	"version": "1.6.6",
+	"version": "1.6.7",
 	"url": "https://github.com/amoralico/mojowhatsup/wiki/Download-links",
 	"comments": [
-		"Fixed sms registration",
-		"Fixed spinning circle problem",
-		"Voice notes max. duration set to 120 seconds",
-		"Updated Italian, German and Netherlands translations"
+		"Invisible mode in preferences (your contacts will not see your oline/typing status and your last seen timestamp will not be updated)",
+		"Minor bugs fixed"
 	],
-	"message": "Fixes spinning circle problem and other issues"
+	"message": "Added invisible mode"
 }
