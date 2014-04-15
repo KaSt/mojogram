@@ -1,3 +1,5 @@
+This is the README even before starting to adapt the code (if possible) to Telegram.
+
 MojoWhatsup
 ===========
 
